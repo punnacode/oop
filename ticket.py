@@ -27,4 +27,4 @@ class Ticket:
     def get_ticket():
         pass
     
-    
+
