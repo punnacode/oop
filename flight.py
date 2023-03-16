@@ -4,7 +4,7 @@ class Flight:
         self._flight_duration = flight_duration
         self._international = international
     
-    def get_airport():
+    def get_flight():
         pass
 
 class FlightInstance:
@@ -13,7 +13,14 @@ class FlightInstance:
         self._time_arrive = time_arrive
         self._time_depart = time_depart
     
-    def get_book_seat():
+
+    def get_seat__book_detail():
+        pass
+    
+    def get_date():
+        pass
+
+    def get_filght_info():
         pass
 
     def change_seat(aircraft_seat):
