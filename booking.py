@@ -30,6 +30,4 @@ class Booking:
 
     def update_booking_status():
         pass
-
-    def get_ticket():
-        pass
+    
