@@ -34,8 +34,14 @@ class Airport:
         if isinstance(flight_instance,FlightInstance):
             self._flight_list.append(flight_instance)
 
-    def get_flight_list(self):
-        return self._flight_list
+    def get_arrive_airport_list(self):
+        _arrive_airport_list = []
+        for flight in self._flight_list:
+            if flight._arrive_airport not in _arrive_airport_list:
+                print(flight._arrive_airport)
+                _arrive_airport_list.append(flight._arrive_airport)
+        return _arrive_airport_list
+
     def get_flight_instance_list(self):
         return self._flight_instance_list
     
