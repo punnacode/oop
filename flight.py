@@ -1,14 +1,17 @@
 class Flight:
-    def __init__(self,name,flight_duration,international):
+    def __init__(self,name,flight_duration,international,depart_airport,arrive_airport):
         self._name = name
         self._flight_duration = flight_duration
         self._international = international
+        self._depart_airport = depart_airport
+        self._arrive_airport = arrive_airport
     
     def get_flight():
         pass
 
-class FlightInstance:
-    def __init__(self,date_depart,time_arrive,time_depart):
+class FlightInstance(Flight):
+    def __init__(self,name,flight_duration,international,depart_airport,arrive_airport,date_depart,time_arrive,time_depart):
+        super().__init__(name,flight_duration,international,depart_airport,arrive_airport)
         self._date_depart = date_depart
         self._time_arrive = time_arrive
         self._time_depart = time_depart
