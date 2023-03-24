@@ -3,7 +3,14 @@ from enum import Enum
 class Aircraft:
     def __init__(self,name):
         self._name = name
+        self._seat_list = []
     
+    def create_seat(self,row,column,seat_type):
+        if isinstance(row,int) and isinstance(column,str) and isinstance(seat_type,SeatType):
+            self._seat_list.append(AircraftSeat(row,column,seat_type))
+        else:
+            raise TypeError("Parameter type not correct")
+
     def get_seat():
         pass
 
@@ -25,7 +32,7 @@ class SeatBook(AircraftSeat):
         self._seat_booked = seat_booked
 
 class SeatType(Enum):
-    Normal  : int = 1
-    Premium : int = 2
-    Frontrow: int = 3
+    Normal  : int = 100
+    Premium : int = 200
+    Frontrow: int = 300
          
