@@ -1,3 +1,4 @@
+from aircraft import Aircraft
 class Flight:
     def __init__(self,name,flight_duration,international,depart_airport,arrive_airport):
         self._name = name
@@ -23,19 +24,26 @@ class Flight:
         return self._arrive_airport
 
 class FlightInstance(Flight):
-    def __init__(self,name,flight_duration,international,depart_airport,arrive_airport,date_depart,time_arrive,time_depart):
+    def __init__(self,name,flight_duration,international,depart_airport,arrive_airport,date_depart,time_arrive,time_depart,aircraft):
         super().__init__(name,flight_duration,international,depart_airport,arrive_airport)
         self._date_depart = date_depart
         self._time_arrive = time_arrive
         self._time_depart = time_depart
-    
-
-    def get_seat__book_detail():
-        pass
+        self._aircraft = aircraft
+        self._booking = []
     
     @property
     def date_depart(self):
         return self._date_depart
+    @property
+    def time_arrive(self):
+        return self._time_arrive
+    @property
+    def time_depart(self):
+        return self._time_depart
+    
+    def get_seat__book_detail():
+        pass
 
     def get_filght_info():
         pass
