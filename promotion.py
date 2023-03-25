@@ -3,6 +3,11 @@ class Promotion:
         self._promotion_code = promotion_code
         self._discount = discount
 
+    @property
+    def promotion_code(self):
+        return self.promotion_code
+
 class PromotionCatalog:
-    def __init__(self,promotionlist):
-        self._promotion_list = promotionlist
+    def __init__(self):
+        self._promotion_list =[] 
+    
