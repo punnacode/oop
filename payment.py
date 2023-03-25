@@ -14,7 +14,7 @@ class Payment:
         if promotion_code in PromotionCatalog:
             return promotion_code
         else:
-            raise TypeError("The code is invalid")
+            raise TypeError("This code is invalid")
 
     def update_price():
         pass

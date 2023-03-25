@@ -15,4 +15,4 @@ class Admin:
         if isinstance(promotion_code,str) and isinstance(discount,int) :
                 PromotionCatalog._promotion_list.append((promotion_code,discount))
         else:
-            raise TypeError("Parameter type not correct")
+            raise TypeError("Parameter type is not correct")

@@ -6,6 +6,10 @@ class Promotion:
     @property
     def promotion_code(self):
         return self.promotion_code
+    
+    @property
+    def discount(self):
+        return self.discount
 
 class PromotionCatalog:
     def __init__(self):
