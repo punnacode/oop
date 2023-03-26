@@ -40,8 +40,12 @@ class FlightInstance(Flight):
         return self._time_arrive
     @property
     def time_depart(self):
-        return self._time_depart
-    
+        return self._time_depart    
+
+    @property
+    def aircarft(self):
+        return self._aircraft
+
     def get_seat__book_detail():
         pass
 
