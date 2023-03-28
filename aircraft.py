@@ -30,9 +30,13 @@ class SeatBook(AircraftSeat):
     def __init__(self,seat_booked,seat_row,seat_column,seat_type):
         AircraftSeat.__init__(self,seat_row,seat_column,seat_type)
         self._seat_booked = seat_booked
+        
+    @property
+    def seat_booked(self):
+        return self._seat_booked
 
 class SeatType(Enum):
-    Normal  : int = 100
-    Premium : int = 200
-    Frontrow: int = 300
+    NORMAL  : int = 100
+    PREMIUM : int = 200
+    FRONTROW: int = 300
          

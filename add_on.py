@@ -1,16 +1,25 @@
 class PackageCatalog:
     def __init__(self):
         self.packagelist = []
+        
+    def add_package(self,package):
+        if isinstance(package,Package):
+            self.packagelist.append(package)
+        else:
+            raise TypeError("invalite paramiter")
 
 class Package:
     def __init__(self,type,price):
         self._type = type
         self._price = price
     
-    def get_package():
+    def get_package(self):
         pass
     
-   
+    @property
+    def package_type(self):
+        return self._type
+    
 class Extraservice:
     def __init__(self,fasttrack,insurance,lounge):
         self._fasttrack = fasttrack

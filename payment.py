@@ -9,12 +9,15 @@ class Payment:
         self._num_of_passenger = num_of_passenger
         self._promotion_code = promotion_code
 
-    def get_promotion():
+    def get_promotion(self):
         pass
 
-    def update_price():
+    def update_price(self):
         pass
-
+    
+    @property
+    def payment_status(self):
+        return self._payment_status
 class PaymentType(Enum):
     CREDITCARD: int = 1
     COUNTER: int = 2
