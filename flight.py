@@ -1,4 +1,5 @@
 from aircraft import Aircraft
+from booking import Booking
 class Flight:
     def __init__(self,name,flight_duration,international,depart_airport,arrive_airport):
         self._name = name
@@ -31,6 +32,7 @@ class FlightInstance(Flight):
         self._time_depart = time_depart
         self._aircraft = aircraft
         self._booking = []
+        
     
     @property
     def date_depart(self):
@@ -54,3 +56,9 @@ class FlightInstance(Flight):
 
     def change_seat(aircraft_seat):
         pass
+
+    def add_booking(self,booking):
+        if booking.payment_status == True:
+            self._booking.append(booking)
+        else:
+            raise TypeError("please check payment status")

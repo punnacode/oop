@@ -30,4 +30,6 @@ class Booking:
 
     def update_booking_status():
         pass
-    
+    @property
+    def payment_status(self):
+        return self._payment_status
