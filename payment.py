@@ -1,4 +1,5 @@
 from enum import Enum
+from promotion import PromotionCatalog
 
 class Payment:
     def __init__(self, payment_type, payment_total, id, num_of_passenger,promotion_code,payment_status):
@@ -9,8 +10,11 @@ class Payment:
         self._num_of_passenger = num_of_passenger
         self._promotion_code = promotion_code
 
-    def get_promotion(self):
-        pass
+    def get_promotion(promotion_code):
+        if promotion_code in PromotionCatalog:
+            return promotion_code
+        else:
+            raise TypeError("This code is invalid")
 
     def update_price(self):
         pass
