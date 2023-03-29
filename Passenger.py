@@ -35,7 +35,7 @@ class Passenger:
          return f"Type:{self._type}\nTiele:{self._title}\nName:{self._name}\nLastname:{self._last_name}\nbirthdate:{self._date_of_birth}\nnationality:{self._nationality}\nCountry_resident:{self._country_residence}\nPassportNum:{self._passport_number}\nIssuedBy:{self._issued_by}\nPassportexp:{self._passport_exp_date}\n"   
      
     def create_booking(self,id,phone_number,email,num_of_passenger,seat_booked,payment_status,package_type):
-        if isinstance(seat_booked,bool) and isinstance(payment_status,str) and isinstance(package_type,str) :      
+        if isinstance(seat_booked,bool) and  isinstance(package_type,str) :      
             print(f"{id}....{phone_number}....{email}....{num_of_passenger}....{seat_booked}....{payment_status}....{package_type}")
-            Booking(id,phone_number,email,num_of_passenger,seat_booked,payment_status,package_type)
+            return Booking(id,phone_number,email,num_of_passenger,seat_booked,payment_status,package_type)
 

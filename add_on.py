@@ -57,9 +57,7 @@ class Package:
         self._extra_service.get_detail()
         return
     
-    @property
-    def package_type(self):
-        return self._type
+    
     
 class Extraservice:
     extraservice_dict = {1:"FastTrack",2:"Insurance",3:"Lounge"} 

@@ -1,5 +1,9 @@
 from aircraft import Aircraft
+
+from booking import Booking
+
 from datetime import date
+
 class Flight:
     def __init__(self,name,flight_duration,international,depart_airport,arrive_airport):
         self._name = name
@@ -35,7 +39,11 @@ class FlightInstance(Flight):
         self._aircraft = aircraft
         self._price = price
         self._booking = []
+
+        
+
         self.day_in_month
+
     
     @property
     def date_depart(self):
@@ -71,6 +79,14 @@ class FlightInstance(Flight):
 
     def change_seat(aircraft_seat):
         pass
+
+
+    def add_booking(self,booking):
+        if booking.payment_status == True:
+            self._booking.append(booking)
+        else:
+            raise TypeError("please check payment status")
+
     
     ## Date difference system
     def is_leap(self,year):
@@ -106,5 +122,6 @@ class FlightInstance(Flight):
 
    
    
+
 
 
