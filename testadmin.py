@@ -54,8 +54,16 @@ for i in flight_instance_list:
     print(i.name , i.time_depart , i.time_arrive)
 flight = flight_instance_list[int(input())-1]
 
-flight.date_depart = str(input("new: "))
-print(flight.date_depart)
 print(flight)
 
 x = int(input())
+if x==1:
+    print("new: ")
+    flight.date_depart = str(input())
+if x==2:
+    print("new: ")
+    flight.time_depart = str(input())
+if x==3:
+    print("new: ")
+    flight.time_arrive = str(input())
+print(flight)
