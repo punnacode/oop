@@ -10,12 +10,17 @@ class Aircraft:
             self._seat_list.append(AircraftSeat(row,column,seat_type))
         else:
             raise TypeError("Parameter type not correct")
-
-    def get_seat():
+    @property
+    def name(self):
+        return self._name
+    
+    def get_seat(self):
+        return self._seat_list
+        
+    def set_seat():
         pass
-
-    def update_seat():
-        pass
+    
+    # seat = property(get_seat,set_seat)
 
 class AircraftSeat:
     def __init__(self,seat_row,seat_column,seat_type):
@@ -25,7 +30,17 @@ class AircraftSeat:
     
     def get_seat_detail():
         pass
-
+    
+    @property
+    def seat_row(self):
+        return self._seat_row
+    @property
+    def seat_column(self):
+        return self._seat_column
+    @property
+    def seat_type(self):
+        return self._seat_type
+    
 class SeatBook(AircraftSeat):
     def __init__(self,seat_booked,seat_row,seat_column,seat_type):
         AircraftSeat.__init__(self,seat_row,seat_column,seat_type)
