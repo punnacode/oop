@@ -10,11 +10,13 @@ class Aircraft:
             self._seat_list.append(AircraftSeat(row,column,seat_type))
         else:
             raise TypeError("Parameter type not correct")
-
+    @property
+    def name(self):
+        return self._name
+    
     def get_seat(self):
         return self._seat_list
         
-
     def set_seat():
         pass
     
