@@ -26,7 +26,7 @@ class Passenger:
         Passenger.num_passenger += 1
 
     def add_parent(self,passenger):
-        if isinstance(passenger,Passenger) and passenger._type == "INFANT":
+        if isinstance(passenger,Passenger) and passenger._type == "INFANT" and self._type != "INFANT" :
             self.parent.append(passenger)
         else:
             raise TypeError("Parameter type not correct")
@@ -34,8 +34,8 @@ class Passenger:
     def __str__(self):
          return f"Type:{self._type}\nTiele:{self._title}\nName:{self._name}\nLastname:{self._last_name}\nbirthdate:{self._date_of_birth}\nnationality:{self._nationality}\nCountry_resident:{self._country_residence}\nPassportNum:{self._passport_number}\nIssuedBy:{self._issued_by}\nPassportexp:{self._passport_exp_date}\n"   
      
-    def create_booking(self,id,phone_number,email,num_of_passenger,seat_booked,payment_status,package_type,ticket_list):
-        if isinstance(seat_booked,bool) and isinstance(payment_status,str) and isinstance(package_type,str) and isinstance(ticket_list,list):      
-            print(f"{id}....{phone_number}....{email}....{num_of_passenger}....{seat_booked}....{payment_status}....{package_type}....{ticket_list}")
-            Booking(id,phone_number,email,num_of_passenger,seat_booked,payment_status,package_type,ticket_list)
+    def create_booking(self,id,phone_number,email,num_of_passenger,seat_booked,payment_status,package_type):
+        if isinstance(seat_booked,bool) and isinstance(payment_status,str) and isinstance(package_type,str) :      
+            print(f"{id}....{phone_number}....{email}....{num_of_passenger}....{seat_booked}....{payment_status}....{package_type}")
+            Booking(id,phone_number,email,num_of_passenger,seat_booked,payment_status,package_type)
 
