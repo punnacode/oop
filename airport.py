@@ -26,13 +26,13 @@ class Airport:
         else:
             raise TypeError("Parameter type not correct")
 
-    def create_flight_instance(self,flight_name,date_depart,time_arrive,time_depart,aircraft):
-        if isinstance(flight_name,str) and isinstance(date_depart,str) and isinstance(time_arrive,str) and isinstance(time_depart,str) and isinstance(aircraft,Aircraft):
+    def create_flight_instance(self,flight_name,date_depart,time_arrive,time_depart,aircraft,price):
+        if isinstance(flight_name,str) and isinstance(date_depart,str) and isinstance(time_arrive,str) and isinstance(time_depart,str) and isinstance(aircraft,Aircraft) and isinstance(price,float):
             for f in self._flight_list:
                 if f.name == flight_name:
                     flight = f
                     break
-            self._flight_instance_list.append(FlightInstance(flight.name,flight.flight_duration,flight.international,flight.depart_airport,flight.arrive_airport,date_depart,time_arrive,time_depart,aircraft))
+            self._flight_instance_list.append(FlightInstance(flight.name,flight.flight_duration,flight.international,flight.depart_airport,flight.arrive_airport,date_depart,time_arrive,time_depart,aircraft,price))
         else:
             raise TypeError("Parameter type not correct")
         
