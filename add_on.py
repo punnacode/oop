@@ -2,6 +2,7 @@ from enum import Enum
 from flight import FlightInstance
 class PackageCatalog:
     def __init__(self):
+
         self._packagelist = []
 
     def create_package(self,name,price,fasttrack,insurance,lounge,extra_bag,meal_amout):
@@ -29,7 +30,6 @@ class PackageCatalog:
         return self._packagelist
 
 
-
 class Package:
     def __init__(self,name,price,extra_service,special_assistance,baggage,meal,special_baggage):
         self._name = name
@@ -43,6 +43,7 @@ class Package:
     def name(self):
         return self._name
     
+
     def sum_price(self,flight):
         if isinstance(flight,FlightInstance):
             return round(self._price + flight.get_price(),2)
@@ -56,7 +57,10 @@ class Package:
         self._extra_service.get_detail()
         return
     
-   
+    @property
+    def package_type(self):
+        return self._type
+    
 class Extraservice:
     extraservice_dict = {1:"FastTrack",2:"Insurance",3:"Lounge"} 
 

@@ -16,9 +16,12 @@ class Payment:
         else:
             raise TypeError("This code is invalid")
 
-    def update_price():
+    def update_price(self):
         pass
-
+    
+    @property
+    def payment_status(self):
+        return self._payment_status
 class PaymentType(Enum):
     CREDITCARD: int = 1
     COUNTER: int = 2
