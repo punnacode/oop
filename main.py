@@ -42,42 +42,40 @@ airport_list = airportcatalog.get_list_airport()
 for i in airport_list:
     print(i.name)
 depart_airport = airport_list[int(input())-1]
-
+##  End point
 ##  input arrive airport
 arrive_airport_list = depart_airport.get_arrive_airport_list()
 for i in arrive_airport_list:
     print(i.name)
 arrive_airport = arrive_airport_list[int(input())-1]
-
+##  End point
 ##  input date
 date_list = depart_airport.get_date_list(arrive_airport)
 for i in date_list:
     print(i)
 date_depart = date_list[int(input())-1]
+adult_amount = int(input("Amount of adult:"))
+kid_amount = int(input("Amount of kid:"))
+infant_amount = int(input("Amount of infant:"))
+##  End point
 
 ##Select FlightInstance(Ton)
-##  show FlightInstance
+##  show FlightInstance,Package
 flight_instance_list = depart_airport.get_flight_instance_list(arrive_airport,date_depart)
-for i in flight_instance_list:
-    print(i.name , i.time_depart , i.time_arrive)
+for i in range(len(flight_instance_list)):
+    print(flight_instance_list[i].name , flight_instance_list[i].time_depart , flight_instance_list[i].time_arrive)
+    package_list = packagecatalog.get_list_package()
+    for j in package_list:
+        print(j.name, j.sum_price(flight_instance_list[i]))
 flight_instance  = flight_instance_list[int(input())-1]
-
-
-## show seat
-aircraft_seat = flight_instance.aircraft.get_seat()
-
+package = package_list[int(input())-1]
+##  End point
 ##  show FlightInstance detail
 print(flight_instance)
-print("")
-
-## show Package
-package_list = packagecatalog.get_list_package()
-for i in package_list:
-    print(i.name, i.sum_price(flight_instance))
-package = package_list[int(input())-1]
-
+## End point
 ## show Package datail
 package.get_package_detail()
+## End point
 
 ##Show seat
 aircraft_seat = flight_instance.aircraft.get_seat()
