@@ -45,6 +45,8 @@ class SeatBook(AircraftSeat):
     def __init__(self,seat_booked,seat_row,seat_column,seat_type):
         AircraftSeat.__init__(self,seat_row,seat_column,seat_type)
         self._seat_booked = seat_booked
+        self._seat_column = seat_column
+        self._seat_row = seat_row
         
     @property
     def seat_booked(self):
