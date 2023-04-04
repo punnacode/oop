@@ -29,7 +29,7 @@ AdminA.create_flight_instance("DD405","2023-05-18","18.30","20.00",dm254,1000.00
 AdminA.create_flight_instance("DD405","2023-05-19","18.30","20.00",dm254,1000.00)
 AdminA.create_flight_instance("DD406","2023-05-18","20.30","22.00",dm254,1000.00)
 
-##Search Flight(Ton)
+##Search Flight
 ##  input depart airport
 airport_list = airportcatalog.get_list_airport()
 for i in airport_list:
@@ -47,7 +47,7 @@ for i in date_list:
     print(i)
 date_depart = date_list[int(input())-1]
 
-##Select FlightInstance(Ton)
+##Select FlightInstance
 ##  show FlightInstance
 flight_instance_list = depart_airport.get_flight_instance_list(arrive_airport,date_depart)
 for i in flight_instance_list:
@@ -56,14 +56,22 @@ flight = flight_instance_list[int(input())-1]
 
 print(flight)
 
+#Edit FlightInstance
 x = int(input())
 if x==1:
     print("new: ")
-    flight.date_depart = str(input())
+    edit_date_depart = str(input())
+    Admin.edit_flight_instance(flight, edit_date_depart, flight.time_arrive, flight.time_depart)
 if x==2:
     print("new: ")
-    flight.time_depart = str(input())
+    edit_time_depart = str(input())
+    Admin.edit_flight_instance(flight, flight.date_depart, flight.time_arrive, edit_time_depart)
 if x==3:
     print("new: ")
-    flight.time_arrive = str(input())
+    edit_time_arrive = str(input())
+    Admin.edit_flight_instance(flight, flight.date_depart, edit_time_arrive, flight.time_depart)
+if x==4:
+    edit_time_arrive = str(input())
+    Admin.cancel_flight_instance(flight)
+
 print(flight)

@@ -33,16 +33,13 @@ class Admin:
                 flight_instance_list.append(flight_instance)
         return flight_instance_list
 
-    def edit_flight_instance(self,flight_instance,edit_name,edit_date_depart,edit_time_arrive,edit_time_depart,edit_aircraft,edit_price):
-        flight_instance.flight_name = edit_name
+    def edit_flight_instance(flight_instance,edit_date_depart,edit_time_arrive,edit_time_depart):
         flight_instance.date_depart = edit_date_depart
         flight_instance.time_arrive = edit_time_arrive
         flight_instance.time_depart = edit_time_depart
-        flight_instance.aircraft = edit_aircraft
-        flight_instance.price = edit_price
 
-    def cancel_flight_instance(self,flight_instance):
-        del self._admin_airport._flight_instance_list[flight_instance]
+    def cancel_flight_instance(flight_instance):
+        del flight_instance
 
     def add_promotion(self,promotion_code,discount):
         if isinstance(promotion_code,str) and isinstance(discount,int) :
