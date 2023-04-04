@@ -57,17 +57,18 @@ flight = flight_instance_list[int(input())-1]
 print(flight)
 
 #Edit FlightInstance
+print("TYPE 1 for edit date depart / 2 for edit time depart / 3 for edit ")
 x = int(input())
 if x==1:
-    print("new: ")
+    print("New date depart: ")
     edit_date_depart = str(input())
     Admin.edit_flight_instance(flight, edit_date_depart, flight.time_arrive, flight.time_depart)
 if x==2:
-    print("new: ")
+    print("New time depart: ")
     edit_time_depart = str(input())
     Admin.edit_flight_instance(flight, flight.date_depart, flight.time_arrive, edit_time_depart)
 if x==3:
-    print("new: ")
+    print("New time arrive: ")
     edit_time_arrive = str(input())
     Admin.edit_flight_instance(flight, flight.date_depart, edit_time_arrive, flight.time_depart)
 if x==4:
