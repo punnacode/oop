@@ -48,18 +48,39 @@ class FlightInstance(Flight):
     @property
     def date_depart(self):
         return self._date_depart
+    
+    @date_depart.setter
+    def date_depart(self, new_date_depart):
+        if isinstance(new_date_depart, str):
+            self._date_depart = new_date_depart
     @property
     def time_arrive(self):
         return self._time_arrive
+    @time_arrive.setter
+    def time_arrive(self, new_time_arrive):
+        if isinstance(new_time_arrive, str):
+            self._time_arrive = new_time_arrive
     @property
     def time_depart(self):
         return self._time_depart
+    @time_depart.setter
+    def time_depart(self, new_time_depart):
+        if isinstance(new_time_depart, str):
+            self._time_depart = new_time_depart
     @property
     def price(self):
         return self._price
+    @price.setter
+    def price(self, new_price):
+        if isinstance(new_price, float):
+            self._price = new_price
     @property
     def aircraft(self):
         return self._aircraft
+    @aircraft.setter
+    def aircraft(self, new_aircraft):
+        if isinstance(new_aircraft, str):
+            self._aircraft = new_aircraft
 
     def __str__(self):
         return f'Flight Detail\nName: {self.name}\nAircraft: {self.aircraft.name}\nOrigin Airport: {self.depart_airport.name}\nDestination Airport: {self.arrive_airport.name}\nFlight Duration: {self.flight_duration} minute\nTime Depart: {self.time_depart}\nTime Arrive: {self.time_arrive}\nDate Depart: {self.date_depart}'    
