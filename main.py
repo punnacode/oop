@@ -5,9 +5,9 @@ from enum import Enum
 from booking import Booking
 from Passenger import Passenger,PassengerType,TitleType
 from payment import Payment,PaymentStatus,PaymentType
+import random
 
-## Airport instance 
-
+# Airport instance 
 airportcatalog = AirportCatalog()
 AirportA = Airport("AirportA")
 airportcatalog.add_airport(AirportA)
@@ -18,7 +18,6 @@ dm254 = Aircraft("DM254")
 ## Flight instance
 AirportA.create_flight("DD405",90,False,AirportA,AirportB)
 AirportA.create_flight("DD406",90,False,AirportA,AirportB)
-
 
 
 ## FlightInstance instance
@@ -32,12 +31,19 @@ packagecatalog.create_package("Normal",0.00,False,False,False,7,0)
 packagecatalog.create_package("X-tra",500.00,False,False,False,15,1)
 packagecatalog.create_package("Max",1000.00,True,True,True,30,1)
 ## AircraftSeat instance
-dm254.create_seat(1,"A",SeatType.NORMAL)
-dm254.create_seat(10,"B",SeatType.PREMIUM)
+# dm254.create_seat(1,"A",SeatType.NORMAL)
+# dm254.create_seat(10,"B",SeatType.PREMIUM)
+for i in range(1,6):
+    for j in range(97,100):
+        if i<3 :
+            dm254.create_seat(i,chr(j),SeatType.NORMAL)
+        elif i>=3 and i<5 :
+            dm254.create_seat(i,chr(j),SeatType.FRONTROW)
+        else:
+            dm254.create_seat(i,chr(j),SeatType.PREMIUM)
 
-
-##Search Flight(Ton)
-##  input depart airport
+#Search Flight(Ton)
+#  input depart airport
 airport_list = airportcatalog.get_list_airport()
 for i in airport_list:
     print(i.name)
@@ -53,14 +59,15 @@ arrive_airport = arrive_airport_list[int(input())-1]
 date_list = depart_airport.get_date_list(arrive_airport)
 for i in date_list:
     print(i)
+
 date_depart = date_list[int(input())-1]
 adult_amount = int(input("Amount of adult:"))
 kid_amount = int(input("Amount of kid:"))
 infant_amount = int(input("Amount of infant:"))
 ##  End point
 
-##Select FlightInstance(Ton)
-##  show FlightInstance,Package
+#Select FlightInstance(Ton)
+#  show FlightInstance,Package
 flight_instance_list = depart_airport.get_flight_instance_list(arrive_airport,date_depart)
 for i in range(len(flight_instance_list)):
     print(flight_instance_list[i].name , flight_instance_list[i].time_depart , flight_instance_list[i].time_arrive)
@@ -77,39 +84,83 @@ print(flight_instance)
 package.get_package_detail()
 ## End point
 
-##Show seat
+#input passenger and Show seat/Select seat
 aircraft_seat = flight_instance.aircraft.get_seat()
+print("------------------Passenger-------------------")
+adult_list = []
+kid_list = []
+infant_list = []
+seat_book = []
 
-for i in aircraft_seat:
-    print(i.seat_row,i.seat_column,i.seat_type)
-seat = aircraft_seat[int(input())-1]
-
-#setup passenger
-PassengerA = Passenger(PassengerType.ADULT.name,TitleType.MR.name,"BOB","OK","25/09/46","Thai","Thailand","65010971","B","25/01/69")
-PassengerB = Passenger(PassengerType.INFANT.name,TitleType.MISS.name,"M","OK","25/12/48","Thai","Thailand","65010999","B","25/02/69")
-PassengerC = Passenger(PassengerType.INFANT.name,TitleType.MSTR.name,"BB","OK","25/12/60","Thai","Thailand","65010009","B","25/02/69")
-
-#test add_parent
-PassengerA.add_parent(PassengerB)
-PassengerA.add_parent(PassengerC)
-
-#show member
-Member_of_parent = PassengerA.parent
-for i,member in enumerate(Member_of_parent):
-    print(f"Member{i+1}:")
-    print(member)
+for i in range(adult_amount):
+    print(f'Adult{i+1}:')
     
-#setup booking
-id_of_booking = 69
-num_of_passenger = Passenger.num_passenger
-seatbookA = SeatBook(False,2,'A',SeatType.FRONTROW.name)
-seat_booked = seatbookA.seat_booked
+    #show seat    
+    for j in aircraft_seat:
+        print(f'{j.seat_row}{j.seat_column}->{j.seat_type}   ',end=' ')
+        if j.seat_column == aircraft_seat[-1].seat_column:
+            print('\n',end='')
+    #select seat
+    seat = aircraft_seat[int(input("select seat:"))-1]
+    seat_book.append(SeatBook(False,seat.seat_row,seat.seat_column,seat.seat_type))
+    
+    print(list(TitleType(k).name for k in range(0,7)))
+    adult_list.append(Passenger(PassengerType.ADULT.name,TitleType(int(input("select adult title:"))-1).name,input("first name:"),input("last name:"),input("birth date:"),input("national:"),input("country resident:"),input("passport number:"),input("issued by:"),input("passport exp date:"),seat))
+    if i == 0:
+        phone_number = str(input("phone number:"))
+        email = str(input("email:"))
+
+for i in range(kid_amount):
+    print(f'Kid{i+1}:')
+    
+    for j in aircraft_seat:
+        print(f'{j.seat_row}{j.seat_column}->{j.seat_type}   ',end=' ')
+        if j.seat_column == aircraft_seat[-1].seat_column:
+            print('\n',end='')
+    seat = aircraft_seat[int(input("select seat:"))-1]
+    seat_book.append(SeatBook(False,seat.seat_row,seat.seat_column,seat.seat_type))
+    
+    print(list(TitleType(k).name for k in range(0,7)))
+    kid_list.append(Passenger(PassengerType.CHILD.name,TitleType(int(input("select child Title:"))-1).name,input("first name:"),input("last name:"),input("birth date:"),input("national:"),input("country resident:"),input("passport number:"),input("issued by:"),input("passport exp date:"),seat))
+
+for i in range(infant_amount):
+    print(f'Infant{i+1}:')
+    
+    for adult in adult_list:
+        print(f'{adult_list.index(adult)+1}. {adult.name}')
+    select_parent = int(input("Select parent:"))-1
+        
+    print(list(TitleType(k).name for k in range(0,7)))
+    infant_list.append(Passenger(PassengerType.INFANT.name,TitleType(int(input("select infant title:"))-1).name,input("first name:"),input("last name:"),input("birth date:"),input("national:"),input("country resident:"),input("passport number:"),input("issued by:"),input("passport exp date:"),adult_list[select_parent].seat))
+
+    adult_list[select_parent].add_parent(infant_list[i])
+
+#combine passsenger
+passenger_list = adult_list+kid_list+infant_list
+
+# #setup passenger
+# PassengerA = Passenger(PassengerType.ADULT.name,TitleType.MR.name,"BOB","OK","25/09/46","Thai","Thailand","65010971","B","25/01/69")
+# PassengerB = Passenger(PassengerType.INFANT.name,TitleType.MISS.name,"M","OK","25/12/48","Thai","Thailand","65010999","B","25/02/69")
+# PassengerC = Passenger(PassengerType.INFANT.name,TitleType.MSTR.name,"BB","OK","25/12/60","Thai","Thailand","65010009","B","25/02/69")
+
+# #test add_parent
+# PassengerA.add_parent(PassengerB)
+# PassengerA.add_parent(PassengerC)
+
+# #show member
+# Member_of_parent = PassengerA.parent
+# for i,member in enumerate(Member_of_parent):
+#     print(f"Member{i+1}:")
+#     print(member)
+
+# setup booking
+id_of_booking = random.randrange(0,10000)
+num_of_passenger = kid_amount+infant_amount+adult_amount
 paymentA = Payment(PaymentType.QRCODE.name,1,id_of_booking,num_of_passenger,None,False)
 payment_status = paymentA.payment_status
-
 package_type = package.name
 
-BookingA = PassengerA.create_booking(id_of_booking,num_of_passenger,"0922513540","A@gmail.com",seat_booked,payment_status,package_type)
+BookingA = adult_list[0].create_booking(id_of_booking,num_of_passenger,phone_number,email,seat_book,payment_status,package_type,passenger_list)
 flight_instance.add_booking(BookingA)
 
 

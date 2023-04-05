@@ -5,13 +5,8 @@ class PassengerType(Enum):
 
 class TitleType(Enum):
     MR,MONK,MRS,MISS,MSTR,BOY,GIRL = range(0,7)
-
-class MealType(Enum):
-    MENUONE,MENUTWO,MENUTHREE,MENUFOUR,MENUFIVE = range(0,5)
-
 class Passenger:
-    num_passenger = 0
-    def __init__(self,type,title,name,last_name,date_of_birth,nationality,country_residence,passport_number,issued_by,passport_exp_date):
+    def __init__(self,type,title,name,last_name,date_of_birth,nationality,country_residence,passport_number,issued_by,passport_exp_date,seat):
         self._type = type
         self._title = title
         self._name = name
@@ -22,9 +17,17 @@ class Passenger:
         self._passport_number = passport_number
         self._issued_by = issued_by
         self._passport_exp_date = passport_exp_date
+        self._seat = seat
         self.parent = []
-        Passenger.num_passenger += 1
-
+        
+    @property
+    def name(self):
+        return self._name
+    
+    @property
+    def seat(self):
+        return self._seat
+    
     def add_parent(self,passenger):
         if isinstance(passenger,Passenger) and passenger._type == "INFANT" and self._type != "INFANT" :
             self.parent.append(passenger)
@@ -34,8 +37,7 @@ class Passenger:
     def __str__(self):
          return f"Type:{self._type}\nTiele:{self._title}\nName:{self._name}\nLastname:{self._last_name}\nbirthdate:{self._date_of_birth}\nnationality:{self._nationality}\nCountry_resident:{self._country_residence}\nPassportNum:{self._passport_number}\nIssuedBy:{self._issued_by}\nPassportexp:{self._passport_exp_date}\n"   
      
-    def create_booking(self,id,phone_number,email,num_of_passenger,seat_booked,payment_status,package_type):
-        if isinstance(seat_booked,bool) and  isinstance(package_type,str) :      
-            print(f"{id}....{phone_number}....{email}....{num_of_passenger}....{seat_booked}....{payment_status}....{package_type}")
-            return Booking(id,phone_number,email,num_of_passenger,seat_booked,payment_status,package_type)
+    def create_booking(self,id_of_booking,num_of_passenger,phone_number,email,seat_book,payment_status,package_type,passenger_list):   
+        #print(f"{id_of_booking}....{num_of_passenger}....{phone_number}....{email}....{seat_book}....{payment_status}....{package_type}....{passenger_list}")
+        return Booking(id_of_booking,phone_number,email,num_of_passenger,seat_book,payment_status,package_type,passenger_list)
 
