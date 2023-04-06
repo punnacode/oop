@@ -20,6 +20,14 @@ class Airport:
     def name(self):
         return self._name
     
+    @property
+    def flight_list(self):
+        return self._flight_list
+    
+    @property
+    def flight_instance_list(self):
+        return self._flight_instance_list
+    
     def create_flight(self,name,flight_duration,international,depart_airport,arrive_airport):
         if isinstance(name,str) and isinstance(flight_duration,int) and isinstance(international,bool) and isinstance(depart_airport,Airport) and isinstance(arrive_airport,Airport):
             self._flight_list.append(Flight(name,flight_duration,international,depart_airport,arrive_airport))

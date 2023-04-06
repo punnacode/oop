@@ -11,6 +11,7 @@ class Flight:
         self._international = international
         self._depart_airport = depart_airport
         self._arrive_airport = arrive_airport
+        
     
     @property
     def name(self):
@@ -27,6 +28,7 @@ class Flight:
     @property
     def arrive_airport(self):
         return self._arrive_airport
+    
 
 class FlightInstance(Flight):
     day_in_month = [0,31,28,31,30,31,30,31,31,30,31,30,31]
@@ -92,6 +94,14 @@ class FlightInstance(Flight):
         else:
             return round(float(self.price*(1.02**(31-days))), 2)
 
+    def get_seatbook_list(self):
+        seat_book_list = []
+        for booking in self._booking:
+            for seatbook in booking.seat_book:
+                if seatbook not in seat_book_list:
+                    seat_book_list.append(seatbook)
+        return seat_book_list
+    
     def get_seat__book_detail():
         pass
 

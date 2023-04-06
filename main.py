@@ -85,7 +85,7 @@ package.get_package_detail()
 ## End point
 
 #input passenger and Show seat/Select seat
-aircraft_seat = flight_instance.aircraft.get_seat()
+aircraft_seat = flight_instance.aircraft.get_seat(flight_instance)
 print("------------------Passenger-------------------")
 adult_list = []
 kid_list = []
@@ -102,6 +102,7 @@ for i in range(adult_amount):
             print('\n',end='')
     #select seat
     seat = aircraft_seat[int(input("select seat:"))-1]
+    print(seat.seat_row,seat.seat_column,seat.seat_type)
     seat_book.append(SeatBook(False,seat.seat_row,seat.seat_column,seat.seat_type))
     
     print(list(TitleType(k).name for k in range(0,7)))
