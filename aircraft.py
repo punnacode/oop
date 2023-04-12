@@ -14,8 +14,21 @@ class Aircraft:
     def name(self):
         return self._name
     
-    def get_seat(self):
-        return self._seat_list
+    def get_seat(self,flight):
+        available_seat = []
+        seat_book_list = flight.get_seatbook_list()
+        seat_check = False
+        if not seat_book_list:
+            return self._seat_list
+        else:
+            for seat in self._seat_list:
+                for bookseat in seat_book_list:
+                    if seat not in available_seat and (seat.row == bookseat.row or seat.column == bookseat.column):
+                        seat_check = True
+                if seat_check == False:
+                    available_seat.append(seat)
+                seat_check = False
+            return available_seat
         
     def set_seat():
         pass
