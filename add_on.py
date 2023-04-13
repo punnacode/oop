@@ -28,6 +28,11 @@ class PackageCatalog:
     
     def get_list_package(self):
         return self._packagelist
+    
+    def get_package(self,package_name):
+        for package in self._packagelist:
+            if package.name == package_name:
+                return package
 
 
 class Package:
@@ -51,11 +56,7 @@ class Package:
             raise TypeError("Parameter type not correct")
     
     def get_package_detail(self):
-        print("Package detail:")
-        self._baggage.get_detail()
-        self._meal.get_detail()
-        self._extra_service.get_detail()
-        return
+        return {"Bagage": self._baggage.get_detail(),"Meal": self._meal.get_detail(),"Extra service": self._extra_service.get_detail()}
     
     
     
@@ -70,11 +71,12 @@ class Extraservice:
 
     def get_detail(self):
         i = 1
+        extraservice_list = []
         for value in self.__dict__.values():
             if value == True:
-                print("-",self.extraservice_dict[i])
+                extraservice_list.append(self.extraservice_dict[i])
             i += 1
-        return
+        return extraservice_list
 
 
     def get_extraservice():
@@ -94,11 +96,12 @@ class SpecialAssistance:
      
     def get_detail(self):
         i = 1
+        specialassitance_list = [] 
         for value in self.__dict__.values():
             if value == True:
-                print("-Require help for",self.extraservice_dict[i])
+                specialassitance_list.append(self.special_assistance_dict[i])
             i += 1
-        return
+        return specialassitance_list
 
     def get_specialassistance():
         pass
@@ -109,7 +112,7 @@ class Baggage:
     
     def get_detail(self):
         if self._extra_bag != 0:
-            print("-Load bagage ",self._extra_bag," Kg")
+            return self._extra_bag
         return
     
     def get_baggage():
@@ -123,10 +126,9 @@ class Meal:
     
     def get_detail(self):
         if self._meal_amount > 0 and self._meal_type.value == 0:
-            print("Meal amount: ",self._meal_amount)
+            return self._meal_amount
         elif self._meal_amount > 0:
-            print("Meal amount: ",self._meal_amount)
-            print("Selected mael: ",self._meal_type.name)
+            return [self._meal_amount,self._meal_type.name]
         return
     
     def get_meal():
@@ -145,8 +147,7 @@ class SpecialBaggage:
         self._special_bag = special_bag
     
     def get_detail(self):
-        print("Special bagage: ",self._special_bag)
-        return
+        return self._special_bag
 
     def get_specialbaggage():
         pass
