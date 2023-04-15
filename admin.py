@@ -1,6 +1,6 @@
 from promotion import PromotionCatalog
 from airport import Airport, AirportCatalog
-from aircraft import Aircraft, SeatType
+from aircraft import Aircraft, SeatBook
 from flight import Flight, FlightInstance
 
 class Admin:
@@ -34,17 +34,16 @@ class Admin:
     def cancel_flight_instance(flight_instance):
         del flight_instance
 
-    def change_seat(flight_instance,seat_row,seat_column):
-        pass
+    def change_seat(seat,edit_seat):
+        SeatBook(True,seat.seat_row,seat.seat_column,seat.seat_type)
+        SeatBook(False,edit_seat.seat_row,edit_seat.seat_column,edit_seat.seat_type)
         
-
     def add_promotion(self,promotion_code,discount):
         if isinstance(promotion_code,str) and isinstance(discount,int) :
                 PromotionCatalog._promotion_list.append((promotion_code,discount))
         else:
             raise TypeError("Parameter type is not correct")
 
-        
 class Adminlist:
     def __init__(self):
         self._admin_list = []
