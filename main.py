@@ -1,10 +1,11 @@
 from airport import Airport,AirportCatalog,Aircraft
-from add_on import PackageCatalog,Package
+from add_on import PackageCatalog,Package,MealType,Meal,Extraservice,SpecialAssistance,Baggage,SpecialBaggage
 from aircraft import SeatType,SeatBook
 from enum import Enum
 from booking import Booking
 from Passenger import Passenger,PassengerType,TitleType
 from payment import Payment,PaymentStatus,PaymentType
+from ticket import Ticket
 import random
 
 # Airport instance 
@@ -139,6 +140,7 @@ for i in range(infant_amount):
 #combine passsenger
 passenger_list = adult_list+kid_list+infant_list
 
+
 # #setup passenger
 # PassengerA = Passenger(PassengerType.ADULT.name,TitleType.MR.name,"BOB","OK","25/09/46","Thai","Thailand","65010971","B","25/01/69")
 # PassengerB = Passenger(PassengerType.INFANT.name,TitleType.MISS.name,"M","OK","25/12/48","Thai","Thailand","65010999","B","25/02/69")
@@ -157,11 +159,44 @@ passenger_list = adult_list+kid_list+infant_list
 # setup booking
 id_of_booking = random.randrange(0,10000)
 num_of_passenger = kid_amount+infant_amount+adult_amount
+package_type = package.name
+BookingA = adult_list[0].create_booking(id_of_booking,num_of_passenger,phone_number,email,seat_book,False,package_type,passenger_list)
+
+#select add on 
+for i in range(adult_amount):
+    print(f'Adult:{i+1}')
+    for meal in MealType:
+        print (meal.name)
+    meal = Meal(MealType(int(input("select meal :"))),int(input("meal amout :")))
+    for extraservice in Extraservice.extraservice_dict.values():
+        print (extraservice)
+    extraservice = Extraservice(bool(input("FastTrack :")),bool(input("Insurance :")),bool(input("Lounge :"))) 
+    for specialAssistance in SpecialAssistance.special_assistance_dict.values():
+        print(specialAssistance)   
+    specialAssistance = SpecialAssistance(bool(input("deaf :")),bool(input("blind :")),bool(input("monk :")),bool(input("nun :")),bool(input("wheelchair :")),bool(input("alonekid :")))
+    baggage = Baggage(bool(input("extra bag :")))
+    specialbaggage = SpecialBaggage(input("specail baggae :"))
+    BookingA.create_ticket(flight_instance.name, adult_list[i].seat, adult_list[i].name, seat_book, extraservice, baggage, meal, specialbaggage ,specialAssistance)
+
+for i in range(kid_amount):
+    print(f'Adult:{i+1}')
+    for meal in MealType:
+        print (meal.name)
+    meal = Meal(MealType(int(input("select meal :"))),int(input("meal amout :")))
+    for extraservice in Extraservice.extraservice_dict.values():
+        print (extraservice)
+    extraservice = Extraservice(bool(input("FastTrack :")),bool(input("Insurance :")),bool(input("Lounge :"))) 
+    for specialAssistance in SpecialAssistance.special_assistance_dict.values():
+        print(specialAssistance)   
+    specialAssistance = SpecialAssistance(bool(input("deaf :")),bool(input("blind :")),bool(input("monk :")),bool(input("nun :")),bool(input("wheelchair :")),bool(input("alonekid :")))
+    baggage = Baggage(bool(input("extra bag :")))
+    specialbaggage = SpecialBaggage(input("specail baggae :"))
+    BookingA.create_ticket(flight_instance.name, kid_list[i].seat, kid_list[i].name, seat_book, extraservice, baggage, meal, specialbaggage ,specialAssistance)
+
+
+# payment
 paymentA = Payment(PaymentType.QRCODE.name,1,id_of_booking,num_of_passenger,None,False)
 payment_status = paymentA.payment_status
-package_type = package.name
-
-BookingA = adult_list[0].create_booking(id_of_booking,num_of_passenger,phone_number,email,seat_book,payment_status,package_type,passenger_list)
 flight_instance.add_booking(BookingA)
 
 
