@@ -45,7 +45,7 @@ for i in range(1,6):
 
 #Search Flight(Ton)
 #  input depart airport
-airport_list = airportcatalog.get_list_airport()
+airport_list = airportcatalog.airport_list()
 for i in airport_list:
     print(i.name)
 depart_airport = airport_list[int(input())-1]
