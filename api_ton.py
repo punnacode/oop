@@ -72,15 +72,18 @@ async def select_date(data: dict):
 
 @app.post("/select_flight") #Check
 async def select_flight_instance(data: dict):
+    pl = []
     fl = []
     flight_instance_list = airportcatalog.search_flight_instance_list(data["Origin airport"],data["Destination airport"],data["Date depart"])
+    package_list = packagecatalog.get_list_package()
     for i in range(len(flight_instance_list)):
         pkl = {}
-        package_list = packagecatalog.get_list_package()
         for j in package_list:
             pkl[j.name]=j.sum_price(flight_instance_list[i])
         fl.append([flight_instance_list[i].name , flight_instance_list[i].time_depart , flight_instance_list[i].time_arrive,pkl])
-    return {"Flight data":fl}
+    for i in package_list:
+        pl.append(i.name)
+    return {"Flight data":fl,"Package data":pl}
 
 @app.post("/flight_detail/{flight_name}") #Check
 async def flight_detail(flight_name: str,data: dict):
