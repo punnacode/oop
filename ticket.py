@@ -12,5 +12,10 @@ class Ticket:
 
     def get_ticket():
         pass
+
+    def get_seat_book(self):
+        return self.seatbook
     
+    def get_meal(self):
+        return self.meal
 
