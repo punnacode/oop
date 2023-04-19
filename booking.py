@@ -1,18 +1,26 @@
 from ticket import Ticket
 from payment import PaymentStatus,Payment,PaymentType
 class Booking:
-    def __init__(self,id,flight_instance):
-        self._id = id
+    ID = 1
+    def __init__(self,flight_instance,package,adult,child,infant):
+        self._id = Booking.ID
         self._flight = flight_instance
-        self._adult_num = None
-        self._kid_num = None
-        self._infant_num = None
+        self._package = package
+        self._adult_num = adult
+        self._kid_num = child
+        self._infant_num = infant
         self._phone_number = None 
         self._email = None
         self._passenger_list = []
         self._seat_book = []
         self._ticket = []
-        
+
+        Booking.ID +=1
+
+    @property
+    def id(self):
+        return self._id
+      
     @property
     def flight_international_status(self):
         return self._flight.international

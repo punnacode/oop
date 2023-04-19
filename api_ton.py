@@ -39,6 +39,9 @@ packagecatalog.create_package("Max",1000.00,True,True,True,30,1)
     "Date depart":"2023-05-18",
     "Flight name":"DD405",
     "Package name":"Max"
+    "Adult":1,
+    "Chlid":1,
+    "Infant":1
 }
 """
 
@@ -79,7 +82,7 @@ async def select_flight_instance(data: dict):
     for i in range(len(flight_instance_list)):
         pkl = {}
         for j in package_list:
-            pkl[j.name]=j.sum_price(flight_instance_list[i])
+            pkl[j.name]=flight_instance_list[i].sum_price(j)
         fl.append([flight_instance_list[i].name , flight_instance_list[i].time_depart , flight_instance_list[i].time_arrive,pkl])
     for i in package_list:
         pl.append(i.name)
@@ -103,4 +106,12 @@ async def flight_detail(flight_name: str,data: dict):
 async def package_detail(package_name: str):
     package = packagecatalog.get_package(package_name)
     return {package_name: package.get_package_detail()}
+
+@app.post("/create_booking")
+async def create_booking(data:dict):
+    flight_instance = airportcatalog.search_flight_instance(data["Origin airport"],data["Date depart"],data["Flight name"])
+    package = packagecatalog.get_package(data["Package name"])
+    booking_id = flight_instance.create_booking(flight_instance,package,data["Adult"],data["Chlid"],data["Infant"])
+    return {"Booking ID": booking_id}
+    
 

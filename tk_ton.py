@@ -8,6 +8,7 @@ API_ENDPOINT3 = "http://127.0.0.1:8000/select_date"
 API_ENDPOINT4 = "http://127.0.0.1:8000/select_flight"
 API_ENDPOINT5 = "http://127.0.0.1:8000/flight_detail/"
 API_ENDPOINT6 = "http://127.0.0.1:8000/package_detail/"
+API_ENDPOINT7 = "http://127.0.0.1:8000/create_booking"
 
 data = {
         "Origin airport":"",
@@ -17,7 +18,8 @@ data = {
         "Package name":"",
         "Adult":0,
         "Chlid":0,
-        "Infant":0
+        "Infant":0,
+        "Booking ID":0
         }
 
 class Application(tk.Tk):
@@ -31,7 +33,7 @@ class Application(tk.Tk):
         self.framelist.append(SelectOriginAirport(window,self))
         self.framelist.append(SelectDestinationAirport(window,self))
         self.framelist.append(SelectDate(window,self))
-        self.framelist.append(SelectFlight(window,self))
+        self.framelist.append(SelectFlight(window))
         self.framelist[3].forget()
 
     def oap_submit(self,airport):
@@ -85,21 +87,21 @@ class Application(tk.Tk):
                 if response_data["Flight data"] == []:
                     messagebox.showinfo("Error","Flight not found")
                 else:
-                    flight_list = []
-                    package_list = []
+                    self.framelist[3].flight_list.clear()
+                    self.framelist[3].package_list.clear()
 
                     for flight in response_data["Flight data"]:
-                        flight_list.append(flight[0])
+                        self.framelist[3].flight_list.append(flight[0])
                     for package in response_data["Package data"]:
-                        package_list.append(package)
+                        self.framelist[3].package_list.append(package)
                     
                     self.framelist[3].select_flight.set("Select flight")
                     self.framelist[3].select_package.set("Select package")
-                    tk.OptionMenu(self.framelist[3],self.framelist[3].select_flight,*flight_list).grid(row=0,column=1)
-                    tk.OptionMenu(self.framelist[3],self.framelist[3].select_package,*package_list).grid(row=0,column=3)
+                    tk.OptionMenu(self.framelist[3],self.framelist[3].select_flight,*self.framelist[3].flight_list).grid(row=0,column=1)
+                    tk.OptionMenu(self.framelist[3],self.framelist[3].select_package,*self.framelist[3].package_list).grid(row=0,column=3)
                     tk.Label(self.framelist[3],text = "Select flight").grid(row=0,column=0)
                     tk.Label(self.framelist[3],text = "Select package").grid(row=0,column=2)
-                    tk.Button(self.framelist[3],text="Submit").grid(row=0,column=4)
+                    tk.Button(self.framelist[3],text="Submit",command= lambda: self.flight_submit(str(self.framelist[3].select_flight.get()),str(self.framelist[3].select_package.get()))).grid(row=0,column=4)
                     tk.Button(self.framelist[3],text="Back",command= lambda: self.back_to_search()).grid(row=0,column=5)
 
                     for flight_data in response_data["Flight data"]:
@@ -158,6 +160,15 @@ class Application(tk.Tk):
         self.framelist[2].tkraise()
         self.framelist[2].pack(padx = 100, pady = 50)
 
+    def flight_submit(self,flight_name,package_name):
+        data["Flight name"] = flight_name
+        data["Package name"] = package_name
+        print(data["Flight name"],data["Package name"])
+        endpoint7_response = requests.post(API_ENDPOINT7,json=data)
+        if endpoint7_response.ok:
+            data["Booking ID"] = endpoint7_response.json()["Booking ID"]
+            messagebox.showinfo("Booking create!!!",data["Booking ID"])
+
 class SelectOriginAirport(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -212,10 +223,14 @@ class SelectDate(tk.Frame):
         tk.Button(self,text="Search",command= lambda: controller.date_submit(self.selectdate.get(),self.adult.get(),self.child.get(),self.infant.get())).grid(row=2,column=2,columnspan=2)
         self.pack(padx = 100, pady = 10)
 class SelectFlight(tk.Frame):
-    def __init__(self, parent, controller):
+    def __init__(self, parent):
         tk.Frame.__init__(self, parent)
+        self.flight_list = ["-"]
+        self.package_list = ["-"]
         self.select_flight = tk.StringVar(self)
         self.select_package = tk.StringVar(self)
+        tk.OptionMenu(self,self.select_flight,*self.flight_list).grid(row=0,column=1)
+        tk.OptionMenu(self,self.select_package,*self.package_list).grid(row=0,column=3)
         self.pack(padx = 100, pady = 10)
 
 app = Application()
