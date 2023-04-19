@@ -67,4 +67,13 @@ class SeatType(Enum):
     NORMAL  : int = 100
     PREMIUM : int = 200
     FRONTROW: int = 300
+
+class AircraftCatalog:
+    def __init__(self):
+        self._aircraft_list = []
+    def add_aircraft(self,aircraft):
+        if isinstance(aircraft,Aircraft):
+            self._aircraft_list.append(aircraft)
+    def get_list_aircraft(self):
+        return self._aircraft_list
          
