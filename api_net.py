@@ -2,7 +2,7 @@ from airport import Airport,AirportCatalog,Aircraft
 from add_on import PackageCatalog,Package,MealType,Meal,Extraservice,SpecialAssistance,Baggage,SpecialBaggage
 from aircraft import SeatType,SeatBook
 from enum import Enum
-from bookingbob import Bookingbob
+from booking import Booking
 from Passenger import Passenger,PassengerType,TitleType
 from payment import Payment,PaymentStatus,PaymentType
 from ticket import Ticket
@@ -39,7 +39,7 @@ packagecatalog.create_package("Normal",0.00,False,False,False,7,0)
 packagecatalog.create_package("X-tra",500.00,False,False,False,15,1)
 packagecatalog.create_package("Max",1000.00,True,True,True,30,1)
 ##booking
-booking = Bookingbob()
+booking = Booking()
 
 """
 {
