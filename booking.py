@@ -1,51 +1,30 @@
 from ticket import Ticket
 
 class Booking:
-    def __init__(self):
-        self._id = None
-        self._adult_num = None
-        self._kid_num = None
-        self._infant_num = None
+
+    ID = 1
+    def __init__(self,flight_instance,package,adult,child,infant):
+        self._id = Booking.ID
+        self._flight = flight_instance
+        self._package = package
+        self._adult_num = adult
+        self._kid_num = child
+        self._infant_num = infant
         self._phone_number = None 
         self._email = None
         self._passenger_list = []
         self._ticket = []
         self._seat_book = []
-
-    def set_num_passenger(self,adult_num,kid_num,infant_num):
-        self._adult_num = adult_num
-        self._kid_num = kid_num
-        self._infant_num = infant_num
-        return [self._adult_num,self._kid_num,self._infant_num]
         
-    def add_passenger(self,passenger):
-        self._passenger_list.append(passenger)
-        return self._passenger_list
-        
-    def main_passenger_info(self,phone_number,email):
-        self._phone_number = phone_number
-        self._email = email
-    
-    def create_ticket(self, flight, aircraftseat, passenger, seatbook, extraservice, baggage, meal, specialbaggage,specialAssistance):
-        self._ticket.append(Ticket(flight, aircraftseat, passenger, seatbook, extraservice, baggage, meal, specialbaggage,specialAssistance))
+        Booking.ID +=1
 
-    def add_book_seat(self,book_seat):
-        return self.seat_book.append(book_seat)
-
-    def add_seat_ticket():
-        pass
-
-    def create_seatbook():
-        pass
-
-    def add_addon():
-        pass
-
-    def sum_price():
-        pass
-
-    def update_booking_status():
-        pass
+    @property
+    def id(self):
+        return self._id
+      
+    @property
+    def flight_international_status(self):
+        return self._flight.international
     
     @property
     def total_passenger_num(self):
@@ -104,3 +83,38 @@ class Booking:
     @property
     def ticket(self):
         return self._ticket
+        
+    def set_num_passenger(self,adult_num,kid_num,infant_num):
+        self._adult_num = adult_num
+        self._kid_num = kid_num
+        self._infant_num = infant_num
+        return [self._adult_num,self._kid_num,self._infant_num]
+        
+    def add_passenger(self,passenger):
+        self._passenger_list.append(passenger)
+        return self._passenger_list
+        
+    def main_passenger_info(self,phone_number,email):
+        self._phone_number = phone_number
+        self._email = email
+    
+    def create_ticket(self, flight, aircraftseat, passenger, seatbook, extraservice, baggage, meal, specialbaggage,specialAssistance):
+        self._ticket.append(Ticket(flight, aircraftseat, passenger, seatbook, extraservice, baggage, meal, specialbaggage,specialAssistance))
+
+    def add_book_seat(self,book_seat):
+        return self.seat_book.append(book_seat)
+
+    def add_seat_ticket():
+        pass
+
+    def create_seatbook():
+        pass
+
+    def add_addon():
+        pass
+
+    def sum_price():
+        pass
+
+    def update_booking_status():
+        pass

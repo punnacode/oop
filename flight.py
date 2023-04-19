@@ -1,4 +1,5 @@
 from aircraft import Aircraft
+from add_on import Package
 from booking import Booking
 from datetime import date
 
@@ -93,6 +94,12 @@ class FlightInstance(Flight):
             return self.price
         else:
             return round(float(self.price*(1.02**(31-days))), 2)
+        
+    def sum_price(self,package):
+        if isinstance(package,Package):
+            return round(package.price + self.get_price(),2)
+        else:
+            raise TypeError("Parameter type not correct")
 
     def get_seatbook_list(self):
         seat_book_list = []
@@ -111,12 +118,24 @@ class FlightInstance(Flight):
     def change_seat(aircraft_seat):
         pass
 
+    def create_booking(self,flight_instance,package,adult,child,infant):
+        if isinstance(flight_instance,FlightInstance) and isinstance(package,Package) and isinstance(adult,int) and isinstance(child,int) and isinstance(infant,int):
+            booking = Booking(flight_instance,package,adult,child,infant)
+            self._booking.append(booking)
+        else:
+            raise TypeError("please check payment status")
+        return booking.id
 
     def add_booking(self,booking):
         if booking.payment_status == True:
             self._booking.append(booking)
         else:
             raise TypeError("please check payment status")
+        
+    def get_booking(self,booking_id):
+        for booking in self._booking:
+            if booking.id == booking_id:
+                return booking
 
     
     ## Date difference system
