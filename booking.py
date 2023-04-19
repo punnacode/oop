@@ -44,9 +44,6 @@ class Booking:
     def sum_price():
         pass
 
-    def create_payment():
-        pass
-
     def update_booking_status():
         pass
     
