@@ -19,3 +19,4 @@ class Ticket:
     def get_meal(self):
         return self.meal
 
+
