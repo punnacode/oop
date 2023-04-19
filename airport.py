@@ -104,4 +104,3 @@ class Airport:
         for flight_instance in self._flight_instance_list:
             if flight_instance.date_depart == date_depart and flight_instance.name == flight_name:
                 return flight_instance
-    
