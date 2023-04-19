@@ -17,6 +17,7 @@ class Passenger:
         self._passport_number = None
         self._issued_by = None
         self._passport_exp_date = None
+        self._seat = None
         self.parent = []
         
     @property
@@ -34,6 +35,9 @@ class Passenger:
     @property
     def seat(self):
         return self._seat
+    
+    def add_seat(self,seat):
+        self._seat = seat
     
     def add_international_info(self,national,country_residence,passport_number,issued_by,passport_exp_date):
         self._nationality = national

@@ -1,7 +1,5 @@
 from aircraft import Aircraft
-
 from booking import Booking
-
 from datetime import date
 
 class Flight:
