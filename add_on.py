@@ -1,5 +1,4 @@
 from enum import Enum
-from flight import FlightInstance
 class PackageCatalog:
     def __init__(self):
         self._packagelist = []
@@ -46,6 +45,9 @@ class Package:
     @property
     def name(self):
         return self._name
+    @property
+    def price(self):
+        return self._price
         
     def get_extra_service(self):
         return self._extra_service
@@ -61,12 +63,6 @@ class Package:
     
     def get_special_baggage(self):
         return self._special_baggage
-
-    def sum_price(self,flight):
-        if isinstance(flight,FlightInstance):
-            return round(self._price + flight.get_price(),2)
-        else:
-            raise TypeError("Parameter type not correct")
     
     def get_package_detail(self):
         return {"Bagage": self._baggage.get_detail(),"Meal": self._meal.get_detail(),"Extra service": self._extra_service.get_detail()}
