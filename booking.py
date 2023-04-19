@@ -10,7 +10,8 @@ class Booking:
         self._phone_number = None 
         self._email = None
         self._passenger_list = []
-        self._ticket_list = []
+        self._seat_book = []
+        self._ticket = []
         
     @property
     def flight_international_status(self):
@@ -68,12 +69,10 @@ class Booking:
 
     @property
     def infant_num(self):
-        return self._infant_num        
+        return self._infant_num
 
-    def create_and_add_ticket(self):
-        for passenger in self.passenger_list:
-            ticket = Ticket(self._flight,passenger,)
-            self._ticket_list.append()
+    def create_ticket(self, flight, aircraftseat, passenger, seatbook, extraservice, baggage, meal, specialbaggage,specialAssistance):
+        self._ticket.append(Ticket(flight, aircraftseat, passenger, seatbook, extraservice, baggage, meal, specialbaggage,specialAssistance))
 
     def set_num_passenger(self,adult_num,kid_num,infant_num):
         self._adult_num = adult_num

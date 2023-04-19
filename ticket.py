@@ -1,6 +1,8 @@
 class Ticket:
-    def __init__(self, flight, passenger, extraservice, baggage, meal, specialbaggage,specialAssistance) :
+    def __init__(self, flight, aircraftseat, passenger, seatbook, extraservice, baggage, meal, specialbaggage,specialAssistance) :
         self._flight = flight
+        self.seatbook = seatbook
+        self._aircraft_seat = aircraftseat
         self._passenger = passenger
         self.extraservice = extraservice
         self.baggage = baggage
@@ -8,7 +10,5 @@ class Ticket:
         self.specialbaggage = specialbaggage
         self.specialAssistance = specialAssistance
 
-    def __str__(self):
+    def get_ticket():
         pass
-    
-

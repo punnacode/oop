@@ -3,7 +3,7 @@ from add_on import PackageCatalog,Package,MealType,Meal,Extraservice,SpecialAssi
 from aircraft import SeatType,SeatBook
 from enum import Enum
 from booking import Booking
-from passenger import Passenger,PassengerType,TitleType
+from Passenger import Passenger,PassengerType,TitleType
 from payment import Payment,PaymentStatus,PaymentType
 from ticket import Ticket
 import random

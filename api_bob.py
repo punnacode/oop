@@ -6,7 +6,7 @@ from payment import Payment,PaymentStatus,PaymentType
 from add_on import PackageCatalog
 from aircraft import SeatBook
 from admin import Adminlist,Admin
-from passenger import Passenger,TitleType,PassengerType
+from Passenger import Passenger,TitleType,PassengerType
 from booking import Booking
 
 app = FastAPI()
@@ -205,7 +205,3 @@ async def select_promotion_code(promotion_name:int):
             payment.add_promotion_code(promotion)
             return f"select {promotion.promotion_code}-->{promotion.discount}"
     return "<message>:Invalid promotioncode"
-
-@app.get("/sum_payment/{flight_price}/{extraservice_price}/{specialassistance_price}/{baggage_price}/{meal_price}/{special_price}")
-async def sum_payment_price(flight_price:flight_instance,extraservice_price:int,specialassistance_price:int,meal_price:int,special_price:int):
-    pass
