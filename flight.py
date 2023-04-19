@@ -29,6 +29,8 @@ class Flight:
     def arrive_airport(self):
         return self._arrive_airport
     
+    def add_flight():
+        pass
 
 class FlightInstance(Flight):
     day_in_month = [0,31,28,31,30,31,30,31,31,30,31,30,31]
