@@ -31,23 +31,22 @@ class Application(tk.Tk):
         
         self.framelist = []
         self.framelist.append(SelectOriginAirport(window,self))
-        self.framelist.append(SelectDestinationAirport(window,self))
-        self.framelist.append(SelectDate(window,self))
+        self.framelist[0].pack(padx = 100, pady = 50)
         self.framelist.append(SelectFlight(window))
-        self.framelist[3].forget()
+        self.framelist[1].forget()
 
     def oap_submit(self,airport):
         data["Origin airport"] = airport
         endpoint2_response = requests.post(API_ENDPOINT2,json=data)
         if endpoint2_response.ok:
             airport_data = endpoint2_response.json()
-            self.framelist[1].airport_list.clear()
+            self.framelist[0].airport_list.clear()
             if airport_data["Destination airport list"] == []:
-                self.framelist[1].airport_list.append("-")
+                self.framelist[0].airport_list.append("-")
             else:
                 for airport in airport_data["Destination airport list"]:
-                    self.framelist[1].airport_list.append(airport)
-            tk.OptionMenu(self.framelist[1],self.framelist[1].selectDAP,*self.framelist[1].airport_list).grid(row=0,column=2,columnspan=2)
+                    self.framelist[0].airport_list.append(airport)
+            tk.OptionMenu(self.framelist[0],self.framelist[0].selectDAP,*self.framelist[0].airport_list).grid(row=1,column=2,columnspan=2)
         return
     
     def dap_submit(self,airport):
@@ -55,13 +54,13 @@ class Application(tk.Tk):
         endpoint3_reponse = requests.post(API_ENDPOINT3,json=data)
         if endpoint3_reponse.ok:
             date_data = endpoint3_reponse.json()
-            self.framelist[2].date_list.clear()
+            self.framelist[0].date_list.clear()
             if date_data["Date list"] == []:
-                self.framelist[2].date_list.append("-")
+                self.framelist[0].date_list.append("-")
             else:
                 for date in date_data["Date list"]:
-                    self.framelist[2].date_list.append(date)
-            tk.OptionMenu(self.framelist[2],self.framelist[2].selectdate,*self.framelist[2].date_list).grid(row=0,column=3,columnspan=2)
+                    self.framelist[0].date_list.append(date)
+            tk.OptionMenu(self.framelist[0],self.framelist[0].selectdate,*self.framelist[0].date_list).grid(row=2,column=3,columnspan=2)
         return
     
     def date_submit(self,date,adult,child,infant):
@@ -87,36 +86,34 @@ class Application(tk.Tk):
                 if response_data["Flight data"] == []:
                     messagebox.showinfo("Error","Flight not found")
                 else:
-                    self.framelist[3].flight_list.clear()
-                    self.framelist[3].package_list.clear()
+                    self.framelist[1].flight_list.clear()
+                    self.framelist[1].package_list.clear()
 
                     for flight in response_data["Flight data"]:
-                        self.framelist[3].flight_list.append(flight[0])
+                        self.framelist[1].flight_list.append(flight[0])
                     for package in response_data["Package data"]:
-                        self.framelist[3].package_list.append(package)
+                        self.framelist[1].package_list.append(package)
                     
-                    self.framelist[3].select_flight.set("Select flight")
-                    self.framelist[3].select_package.set("Select package")
-                    tk.OptionMenu(self.framelist[3],self.framelist[3].select_flight,*self.framelist[3].flight_list).grid(row=0,column=1)
-                    tk.OptionMenu(self.framelist[3],self.framelist[3].select_package,*self.framelist[3].package_list).grid(row=0,column=3)
-                    tk.Label(self.framelist[3],text = "Select flight").grid(row=0,column=0)
-                    tk.Label(self.framelist[3],text = "Select package").grid(row=0,column=2)
-                    tk.Button(self.framelist[3],text="Submit",command= lambda: self.flight_submit(str(self.framelist[3].select_flight.get()),str(self.framelist[3].select_package.get()))).grid(row=0,column=4)
-                    tk.Button(self.framelist[3],text="Back",command= lambda: self.back_to_search()).grid(row=0,column=5)
+                    self.framelist[1].select_flight.set("Select flight")
+                    self.framelist[1].select_package.set("Select package")
+                    tk.OptionMenu(self.framelist[1],self.framelist[1].select_flight,*self.framelist[1].flight_list).grid(row=0,column=1)
+                    tk.OptionMenu(self.framelist[1],self.framelist[1].select_package,*self.framelist[1].package_list).grid(row=0,column=3)
+                    tk.Label(self.framelist[1],text = "Select flight").grid(row=0,column=0)
+                    tk.Label(self.framelist[1],text = "Select package").grid(row=0,column=2)
+                    tk.Button(self.framelist[1],text="Submit",command= lambda: self.flight_submit(str(self.framelist[1].select_flight.get()),str(self.framelist[1].select_package.get()))).grid(row=0,column=4)
+                    tk.Button(self.framelist[1],text="Back",command= lambda: self.back_to_search()).grid(row=0,column=5)
 
                     for flight_data in response_data["Flight data"]:
-                        tk.Button(self.framelist[3],text=str(flight_data[0]+" "+flight_data[1]+" "+flight_data[2]),command= lambda name = flight_data[0]: self.flight_detail(name)).grid(row=row,column=0)
+                        tk.Button(self.framelist[1],text=str(flight_data[0]+" Departure"+flight_data[1]+" Arrival"+flight_data[2]),command= lambda name = flight_data[0]: self.flight_detail(name)).grid(row=row,column=0)
                         for key, value in flight_data[3].items():
-                            tk.Button(self.framelist[3],text=str(key+" "+str(value)),command= lambda name = key: self.package_detail(name)).grid(row=row,column=column)
+                            tk.Button(self.framelist[1],text=str(key+" "+str(value)),command= lambda name = key: self.package_detail(name)).grid(row=row,column=column)
                             column += 1
                         column = 1
                         row += 1
 
                     self.framelist[0].forget()
-                    self.framelist[1].forget()
-                    self.framelist[2].forget()
-                    self.framelist[3].tkraise()
-                    self.framelist[3].pack(padx = 100, pady = 50)
+                    self.framelist[1].tkraise()
+                    self.framelist[1].pack(padx = 100, pady = 50)
     
     def flight_detail(self,flight_name):
         response = requests.post(str(API_ENDPOINT5+flight_name),json=data)
@@ -150,15 +147,30 @@ class Application(tk.Tk):
         return
 
     def back_to_search(self):
-        for widjet in self.framelist[3].winfo_children():
+        for widjet in self.framelist[1].winfo_children():
             widjet.destroy()
-        self.framelist[3].forget()
+
+        data["Origin airport"] = ""
+        data["Destination airport"] = ""
+        data["Date depart"] = ""
+        data["Adult"] = 0
+        data["Chlid"] = 0
+        data["Infant"] = 0
+        self.framelist[0].airport_list.clear()
+        self.framelist[0].airport_list.append("-")
+        self.framelist[0].date_list.clear()
+        self.framelist[0].date_list.append("-")
+        self.framelist[0].selectOAP.set("Select airport")
+        self.framelist[0].selectDAP.set("Select airport")
+        self.framelist[0].selectdate.set("Select Date")
+        self.framelist[0].adult.set(0)
+        self.framelist[0].child.set(0)
+        self.framelist[0].infant.set(0)
+        tk.OptionMenu(self.framelist[0],self.framelist[0].selectDAP,*self.framelist[0].airport_list).grid(row=1,column=2,columnspan=2)
+        tk.OptionMenu(self.framelist[0],self.framelist[0].selectdate,*self.framelist[0].date_list).grid(row=2,column=3,columnspan=2)
+        self.framelist[1].forget()
         self.framelist[0].tkraise()
         self.framelist[0].pack(padx = 100, pady = 50)
-        self.framelist[1].tkraise()
-        self.framelist[1].pack(padx = 100, pady = 50)
-        self.framelist[2].tkraise()
-        self.framelist[2].pack(padx = 100, pady = 50)
 
     def flight_submit(self,flight_name,package_name):
         data["Flight name"] = flight_name
@@ -178,50 +190,40 @@ class SelectOriginAirport(tk.Frame):
 
         self.selectOAP = tk.StringVar(self)
         self.selectOAP.set("Select airport")
-        self.airport_list = []
+        self.OAPairport_list = []
         for airport in airport_data["Origin airport list"]:
-            self.airport_list.append(airport)
+            self.OAPairport_list.append(airport)
         
         tk.Label(self, text = "Select origin airport").grid(row=0,column=0,columnspan=2)
-        tk.OptionMenu(self,self.selectOAP,*self.airport_list).grid(row=0,column=2,columnspan=2)
+        tk.OptionMenu(self,self.selectOAP,*self.OAPairport_list).grid(row=0,column=2,columnspan=2)
         tk.Button(self,text="Submit",command= lambda: controller.oap_submit(self.selectOAP.get())).grid(row=0,column=4,columnspan=2)
-        self.pack(padx = 100, pady = 10)
-
-
-class SelectDestinationAirport(tk.Frame):
-    def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent)
 
         self.airport_list = ["-"]
         self.selectDAP = tk.StringVar(self)
         self.selectDAP.set("Select airport")
 
-        tk.Label(self, text = "Select Destination airport").grid(row=0,column=0,columnspan=2)
-        tk.OptionMenu(self,self.selectDAP,*self.airport_list).grid(row=0,column=2,columnspan=2)
-        tk.Button(self,text="Submit",command= lambda: controller.dap_submit(self.selectDAP.get())).grid(row=0,column=4,columnspan=2)
-        self.pack(padx = 100, pady = 10)
-
-class SelectDate(tk.Frame):
-    def __init__(self, parent, controller):
-        tk.Frame.__init__(self, parent)
+        tk.Label(self, text = "Select Destination airport").grid(row=1,column=0,columnspan=2)
+        tk.OptionMenu(self,self.selectDAP,*self.airport_list).grid(row=1,column=2,columnspan=2)
+        tk.Button(self,text="Submit",command= lambda: controller.dap_submit(self.selectDAP.get())).grid(row=1,column=4,columnspan=2)
 
         self.date_list = ["-"]
         self.selectdate = tk.StringVar(self)
+        self.selectdate.set("Select Date")
         self.adult = tk.IntVar(self)
         self.child = tk.IntVar(self)
         self.infant = tk.IntVar(self)
-        self.selectdate.set("Select Date")
 
-        tk.Label(self, text = "Select Date").grid(row=0,column=0,columnspan=3)
-        tk.OptionMenu(self,self.selectdate,*self.date_list).grid(row=0,column=3,columnspan=2)
-        tk.Label(self, text = "Adult").grid(row=1,column=0)
-        tk.Entry(self,textvariable=self.adult,width=3,justify="left").grid(row=1,column=1)
-        tk.Label(self, text = "Child").grid(row=1,column=2)
-        tk.Entry(self,textvariable=self.child,width=3,justify="left").grid(row=1,column=3)
-        tk.Label(self, text = "Infant").grid(row=1,column=4)
-        tk.Entry(self,textvariable=self.infant,width=3,justify="left").grid(row=1,column=5)
-        tk.Button(self,text="Search",command= lambda: controller.date_submit(self.selectdate.get(),self.adult.get(),self.child.get(),self.infant.get())).grid(row=2,column=2,columnspan=2)
+        tk.Label(self, text = "Select Date").grid(row=2,column=0,columnspan=3)
+        tk.OptionMenu(self,self.selectdate,*self.date_list).grid(row=2,column=3,columnspan=2)
+        tk.Label(self, text = "Adult").grid(row=3,column=0)
+        tk.Entry(self,textvariable=self.adult,width=3,justify="left").grid(row=3,column=1)
+        tk.Label(self, text = "Child").grid(row=3,column=2)
+        tk.Entry(self,textvariable=self.child,width=3,justify="left").grid(row=3,column=3)
+        tk.Label(self, text = "Infant").grid(row=3,column=4)
+        tk.Entry(self,textvariable=self.infant,width=3,justify="left").grid(row=3,column=5)
+        tk.Button(self,text="Search",command= lambda: controller.date_submit(self.selectdate.get(),self.adult.get(),self.child.get(),self.infant.get())).grid(row=4,column=2,columnspan=2)
         self.pack(padx = 100, pady = 10)
+
 class SelectFlight(tk.Frame):
     def __init__(self, parent):
         tk.Frame.__init__(self, parent)
