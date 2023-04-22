@@ -136,12 +136,14 @@ Deaf = StringVar()
 Nun = StringVar()
 Wheelchair = StringVar()
 Alone_kid = StringVar()
-baggage = StringVar()
+baggage = IntVar()
 meal = StringVar()
 meal_amount = IntVar()
 Special_baggage = StringVar()
 
 number = [1,2,3,4,5,6,7,8,9]
+baggage_size = [7,15,20,25,30]
+special_baggage_list = ['No selection','Bicycle',20 ,25 ,30 ]
 showIndicator = True
 global count
 count = 1
@@ -198,8 +200,9 @@ Radiobutton(root, text="on",value=True,variable=Alone_kid,indicatoron=showIndica
 Radiobutton(root, text="off",value=False,variable=Alone_kid,indicatoron=showIndicator).grid(row=7, column=8, padx=10, ipady=5)
 
 Label(root, text="Baggage").grid(row=8, column=0, padx=10, ipady=5, sticky='E')
-Radiobutton(root, text="Extra",value=True,variable=baggage,indicatoron=showIndicator).grid(row=8, column=1, padx=10, ipady=5)
-Radiobutton(root, text="Normal",value=False,variable=baggage,indicatoron=showIndicator).grid(row=8, column=2, padx=10, ipady=5)
+om = OptionMenu(root,baggage,*baggage_size)
+om.config(width=15)
+om.grid(row=8,column=1)
 
 Label(root, text="Meal").grid(row=9, column=0, padx=10, ipady=5, sticky='E')
 om = OptionMenu(root,meal,*add_on.json()['meal'])
@@ -212,7 +215,9 @@ om.config(width=15)
 om.grid(row=9,column=3)
 
 Label(root, text="Special baggage").grid(row=10, column=0, padx=10, ipady=5, sticky='E')
-Entry(root,textvariable=Special_baggage,width=25,justify="left").grid(row=10, column=1, padx=10, ipady=5)
+om = OptionMenu(root,Special_baggage,*special_baggage_list)
+om.config(width=15)
+om.grid(row=10,column=1)
 
 button = Button(root, text=" Next ", command= lambda: on_click(data))
 button.grid(row=11, column=2, columnspan=2)
