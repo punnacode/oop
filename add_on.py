@@ -115,6 +115,10 @@ class Baggage:
     def __init__(self,extra_bag):
         self._extra_bag = extra_bag
     
+    @property
+    def extra_bag(self):
+        return self._extra_bag
+    
     def get_detail(self):
         if self._extra_bag != 0:
             return self._extra_bag
@@ -128,6 +132,10 @@ class Meal:
     def __init__(self,meal_type,meal_amout):
         self._meal_amount = meal_amout
         self._meal_type = meal_type
+
+    @property
+    def meal_amount(self):
+        return self._meal_amount
     
     def get_detail(self):
         if self._meal_amount > 0 and self._meal_type.value == 0:
@@ -151,7 +159,8 @@ class SpecialBaggage:
     def __init__(self,special_bag):
         self._special_bag = special_bag
     
-    def get_detail(self):
+    @property
+    def special_bag(self):
         return self._special_bag
 
     def get_specialbaggage():
