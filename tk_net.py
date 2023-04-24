@@ -19,22 +19,6 @@ data=   {
             "Booking ID":0
         }
 
-'''
-data = {
-        "Origin airport":"",
-        "Destination airport":"",
-        "Date depart":"",
-        "Flight name":"",
-        "Package name":"",
-        "Adult":0,
-        "Chlid":0,
-        "Infant":0,
-        "Booking ID":0
-        }
-
-'''
-
-
 
 def on_click(data):
     print("on click")
@@ -65,20 +49,26 @@ def on_click(data):
         global kidcount
         global name
         global button
+        global seat
         print(response.json())
         select_seat.set("") 
-        FastTrack.set("")
-        Insurance.set("") 
-        Lounge.set("") 
-        Monk.set("") 
-        Blind.set("") 
-        Deaf.set("") 
-        Nun.set("") 
-        Wheelchair.set("") 
-        Alone_kid.set("") 
-        baggage.set("") 
+        FastTrack.set(add_on.json()['package'][0][0]['_fasttrack']) 
+        Insurance.set(add_on.json()['package'][0][0]['_insurance'])
+        Lounge.set(add_on.json()['package'][0][0]['_lounge'])
+
+        Deaf.set(add_on.json()['package'][0][1]['_deaf'])
+        Blind.set(add_on.json()['package'][0][1]['_blind'])
+        Monk.set(add_on.json()['package'][0][1]['_monk']) 
+        Nun.set(add_on.json()['package'][0][1]['_nun']) 
+        Wheelchair.set(add_on.json()['package'][0][1]['_wheelchair']) 
+        Alone_kid.set(add_on.json()['package'][0][1]['_alonekid'])
+
+        baggage.set(add_on.json()['package'][0][2]['_extra_bag']) 
+
+        meal_amount.set(add_on.json()['package'][0][3]['_meal_amount'])
         meal.set("") 
         Special_baggage.set("") 
+        seat = requests.post(str(API_1+data["Flight name"]),json=data)
         if count+1 < int(data["Adult"]):
             count+=1
             name.config(text= "Adult :" + str(count))
@@ -160,8 +150,6 @@ meal_amount = IntVar()
 Special_baggage = StringVar()
 
 #เซ็ตตัวแปล 
-test = add_on.json()['package'][0]
-print(test)
 FastTrack.set(add_on.json()['package'][0][0]['_fasttrack']) 
 Insurance.set(add_on.json()['package'][0][0]['_insurance'])
 Lounge.set(add_on.json()['package'][0][0]['_lounge'])
@@ -180,6 +168,8 @@ meal_amount.set(add_on.json()['package'][0][3]['_meal_amount'])
 
 
 number = [1,2,3,4,5,6,7,8,9]
+baggage_size = [7,15,20,25,30]
+special_baggage_list = ['No selection','Bicycle',20 ,25 ,30 ]
 showIndicator = True
 global count
 count = 1
@@ -236,8 +226,9 @@ Radiobutton(root, text="on",value=True,variable=Alone_kid,indicatoron=showIndica
 Radiobutton(root, text="off",value=False,variable=Alone_kid,indicatoron=showIndicator).grid(row=7, column=8, padx=10, ipady=5)
 
 Label(root, text="Baggage").grid(row=8, column=0, padx=10, ipady=5, sticky='E')
-Radiobutton(root, text="Extra",value=True,variable=baggage,indicatoron=showIndicator).grid(row=8, column=1, padx=10, ipady=5)
-Radiobutton(root, text="Normal",value=False,variable=baggage,indicatoron=showIndicator).grid(row=8, column=2, padx=10, ipady=5)
+om = OptionMenu(root,baggage,*baggage_size)
+om.config(width=15)
+om.grid(row=8,column=1)
 
 Label(root, text="Meal").grid(row=9, column=0, padx=10, ipady=5, sticky='E')
 om = OptionMenu(root,meal,*add_on.json()['meal'])
@@ -250,12 +241,16 @@ om.config(width=15)
 om.grid(row=9,column=3)
 
 Label(root, text="Special baggage").grid(row=10, column=0, padx=10, ipady=5, sticky='E')
-Entry(root,textvariable=Special_baggage,width=25,justify="left").grid(row=10, column=1, padx=10, ipady=5)
+om = OptionMenu(root,Special_baggage,*special_baggage_list)
+om.config(width=15)
+om.grid(row=10,column=1)
 
 button = Button(root, text=" Next ", command= lambda: on_click(data))
 button.grid(row=11, column=2, columnspan=2)
 if data['Adult'] == 1 and  data['Chlid'] == 0:
     button.config(text = "confirm" , command = lambda : finish(data) )
+
+
 
 
 

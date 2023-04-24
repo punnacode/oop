@@ -118,5 +118,7 @@ async def creat_ticket(flight_name: str,data:dict):
     specialbaggage = SpecialBaggage(data['Special_baggage'])
     specialAssistance = SpecialAssistance(bool(data['Deaf']),bool(data['Blind']),bool(data['Nun']),bool(data['Monk']),bool(data['Wheelchair']),bool(data['Alone_kid']))
     booking = flight_instance.get_booking(data['Booking ID'])
-    booking.create_ticket(flight_instance,passenger,seatbook, extraservice, baggage, meal, specialbaggage,specialAssistance)
+    print(data['Booking ID'])
+    # booking.create_ticket(flight_instance,passenger,seatbook, extraservice, baggage, meal, specialbaggage,specialAssistance)
+    # booking.add_book_seat(seatbook)
     return{'message':'complete'}
