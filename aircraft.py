@@ -13,6 +13,9 @@ class Aircraft:
     @property
     def name(self):
         return self._name
+    @property
+    def seat_list(self):
+        return self._seat_list
     
     def get_seat(self,flight):
         available_seat = []
