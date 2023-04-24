@@ -38,8 +38,14 @@ packagecatalog = PackageCatalog()
 packagecatalog.create_package("Normal",0.00,False,False,False,7,0)
 packagecatalog.create_package("X-tra",500.00,False,False,False,15,1)
 packagecatalog.create_package("Max",1000.00,True,True,True,30,1)
-##booking
-booking = Booking()
+#booking 
+flight_instance = airportcatalog.search_flight_instance("AirportA","2023-05-18","DD405")
+normal_package = packagecatalog.get_package("Normal")
+xtra_package = packagecatalog.get_package("X-tra")
+max_package = packagecatalog.get_package("Max")
+booking_id1 = flight_instance.create_booking(flight_instance,normal_package,1,0,0)
+booking_id2 = flight_instance.create_booking(flight_instance,xtra_package,1,1,0)
+booking_id3 = flight_instance.create_booking(flight_instance,max_package,1,0,1)
 
 """
 {
@@ -111,5 +117,6 @@ async def creat_ticket(flight_name: str,data:dict):
     meal = Meal(data['meal'],data['meal_amount'])
     specialbaggage = SpecialBaggage(data['Special_baggage'])
     specialAssistance = SpecialAssistance(bool(data['Deaf']),bool(data['Blind']),bool(data['Nun']),bool(data['Monk']),bool(data['Wheelchair']),bool(data['Alone_kid']))
-    booking.create_ticket(flight_instance, seatbook,passenger, seatbook, extraservice, baggage, meal, specialbaggage,specialAssistance)
+    booking = flight_instance.get_booking(data['Booking ID'])
+    booking.create_ticket(flight_instance,passenger,seatbook, extraservice, baggage, meal, specialbaggage,specialAssistance)
     return{'message':'complete'}

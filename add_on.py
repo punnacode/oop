@@ -86,8 +86,7 @@ class Extraservice:
                 extraservice_list.append(self.extraservice_dict[i])
             i += 1
         return extraservice_list
-
-
+    
 class SpecialAssistance:
     special_assistance_dict = {1:"Deaf",2:"Blind",3:"Monk",4:"Nun",5:"Wheelchair",6:"Alone kid"}
 

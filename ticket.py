@@ -1,8 +1,7 @@
 class Ticket:
-    def __init__(self, flight, aircraftseat, passenger, seatbook, extraservice, baggage, meal, specialbaggage,specialAssistance) :
+    def __init__(self, flight, passenger, seatbook, extraservice, baggage, meal, specialbaggage,specialAssistance) :
         self._flight = flight
         self.seatbook = seatbook
-        self._aircraft_seat = aircraftseat
         self._passenger = passenger
         self.extraservice = extraservice
         self.baggage = baggage

@@ -13,15 +13,33 @@ data=   {
             "Date depart":"2023-05-18",
             "Flight name":"DD405",
             "Package name":"Max",
-            "num_adult": 2,
-            "num_kid": 1
+            "Adult": 2,
+            "Chlid": 1,
+            "Infant":0,
+            "Booking ID":0
         }
+
+'''
+data = {
+        "Origin airport":"",
+        "Destination airport":"",
+        "Date depart":"",
+        "Flight name":"",
+        "Package name":"",
+        "Adult":0,
+        "Chlid":0,
+        "Infant":0,
+        "Booking ID":0
+        }
+
+'''
 
 
 
 def on_click(data):
     print("on click")
     payload = {
+        "Booking ID": data['Booking ID'],
         "Origin airport":data['Origin airport'],
         "Destination airport":data['Destination airport'],
         "Date depart":data['Date depart'],
@@ -61,22 +79,22 @@ def on_click(data):
         baggage.set("") 
         meal.set("") 
         Special_baggage.set("") 
-        if count+1 < int(data["num_adult"]):
+        if count+1 < int(data["Adult"]):
             count+=1
             name.config(text= "Adult :" + str(count))
 
-        elif count+1 == data['num_adult']:
+        elif count+1 == data['Adult']:
                 count+=1
                 name.config(text= "Adult :" + str(count))
-                if data['num_kid'] == 0:
+                if data['Chlid'] == 0:
                      button.config(text=" Confirm ", command= lambda: finish(data))
                 #     Button(root, text=" Confirm ", command= finish(data)).grid(row=11, column=2, columnspan=2)
 
-        elif count == data['num_adult'] and kidcount+1 < data['num_kid']:
+        elif count == data['Adult'] and kidcount+1 < data['Chlid']:
                 kidcount += 1
                 name.config(text= "Kid :" + str(kidcount))
         
-        elif count == data['num_adult'] and kidcount+1 == data['num_kid']:
+        elif count == data['Adult'] and kidcount+1 == data['Chlid']:
                 kidcount += 1
                 name.config(text= "Kid :" + str(kidcount))
                 button.config(text=" Confirm ", command= lambda:finish(data))
@@ -125,7 +143,7 @@ for i in seat.json()['Seat']:
 
 
 
-
+#ประกาศตัวแปล
 select_seat = StringVar()
 FastTrack = StringVar()
 Insurance = StringVar()
@@ -140,6 +158,26 @@ baggage = StringVar()
 meal = StringVar()
 meal_amount = IntVar()
 Special_baggage = StringVar()
+
+#เซ็ตตัวแปล 
+test = add_on.json()['package'][0]
+print(test)
+FastTrack.set(add_on.json()['package'][0][0]['_fasttrack']) 
+Insurance.set(add_on.json()['package'][0][0]['_insurance'])
+Lounge.set(add_on.json()['package'][0][0]['_lounge'])
+
+Deaf.set(add_on.json()['package'][0][1]['_deaf'])
+Blind.set(add_on.json()['package'][0][1]['_blind'])
+Monk.set(add_on.json()['package'][0][1]['_monk']) 
+Nun.set(add_on.json()['package'][0][1]['_nun']) 
+Wheelchair.set(add_on.json()['package'][0][1]['_wheelchair']) 
+Alone_kid.set(add_on.json()['package'][0][1]['_alonekid'])
+
+baggage.set(add_on.json()['package'][0][2]['_extra_bag']) 
+
+meal_amount.set(add_on.json()['package'][0][3]['_meal_amount']) 
+
+
 
 number = [1,2,3,4,5,6,7,8,9]
 showIndicator = True
@@ -216,7 +254,7 @@ Entry(root,textvariable=Special_baggage,width=25,justify="left").grid(row=10, co
 
 button = Button(root, text=" Next ", command= lambda: on_click(data))
 button.grid(row=11, column=2, columnspan=2)
-if data['num_adult'] == 1 and  data['num_kid'] == 0:
+if data['Adult'] == 1 and  data['Chlid'] == 0:
     button.config(text = "confirm" , command = lambda : finish(data) )
 
 
