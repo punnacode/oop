@@ -17,41 +17,55 @@ class Adminlist:
         for i in self._admin_list:
             if username == i._username and password == i._password:
                 return i
+            
+    def check(self,username,password):
+        for i in self._admin_list:
+            if username == i._username and password == i._password:
+                return True
+            else:
+                return False
 
 class Admin:
-    def __init__(self, username, password, admin_airport):
+    def __init__(self, username, password):
         self._username = username
         self._password = password
-        self._admin_airport = admin_airport
 
     def create_flight(self,name,flight_duration,international,depart_airport,arrive_airport):
         if isinstance(name,str) and isinstance(flight_duration,int) and isinstance(international,bool) and isinstance(depart_airport,Airport) and isinstance(arrive_airport,Airport):
-            self._admin_airport._flight_list.append(Flight(name,flight_duration,international,depart_airport,arrive_airport))
+            depart_airport._flight_list.append(Flight(name,flight_duration,international,depart_airport,arrive_airport))
         else:
             raise TypeError("Parameter type not correct")
 
-    def create_flight_instance(self,flight_name,date_depart,time_depart,time_arrive,aircraft,price):
-        if isinstance(flight_name,str) and isinstance(date_depart,str) and isinstance(time_arrive,str) and isinstance(time_depart,str) and isinstance(aircraft,Aircraft) and isinstance(price,float):
-            for f in self._admin_airport._flight_list:
+    def create_flight_instance(self,depart_airport,flight_name,date_depart,time_depart,time_arrive,aircraft,price):
+        if isinstance(flight_name,str) and isinstance(date_depart,str) and isinstance(time_arrive,str) and isinstance(time_depart,str) and isinstance(aircraft,Aircraft) and isinstance(price,float) and isinstance(depart_airport,Airport):
+            for f in depart_airport._flight_list:
                 if f.name == flight_name:
                     flight = f
                     break
-            self._admin_airport._flight_instance_list.append(FlightInstance(flight.name,flight.flight_duration,flight.international,flight.depart_airport,flight.arrive_airport,date_depart,time_arrive,time_depart,aircraft,price))
+            flight.depart_airport._flight_instance_list.append(FlightInstance(flight.name,flight.flight_duration,flight.international,flight.depart_airport,flight.arrive_airport,date_depart,time_arrive,time_depart,aircraft,price))
         else:
             raise TypeError("Parameter type not correct")
 
-    def edit_flight_instance(flight_instance,edit_date_depart,edit_time_arrive,edit_time_depart,edit_price):
+    def edit_flight_instance(self,flight_instance,edit_date_depart,edit_time_arrive,edit_time_depart,edit_price):
         flight_instance.date_depart = edit_date_depart
         flight_instance.time_arrive = edit_time_arrive
         flight_instance.time_depart = edit_time_depart
         flight_instance.price = edit_price
 
-    def cancel_flight_instance(flight_instance):
+    def cancel_flight_instance(self,flight_instance):
         del flight_instance
 
-    def change_seat(seat,edit_seat):
-        SeatBook(True,seat.seat_row,seat.seat_column,seat.seat_type)
-        SeatBook(False,edit_seat.seat_row,edit_seat.seat_column,edit_seat.seat_type)
+    def change_seat(self,booking,ticket,seat,edit_seat):
+        bookseat = booking.seat_book
+        for i in bookseat:
+            if i == seat:
+                bookseat.remove(i)
+                bookseat.append(edit_seat)
+            else:
+                print("Seat not Found")
+        ticket.aircraft_seat = edit_seat
+        
+        
         
     def add_promotion(self,promotion_code,discount):
         if isinstance(promotion_code,str) and isinstance(discount,int) :

@@ -13,4 +13,14 @@ class Ticket:
     def get_ticket():
         pass
     
+    @property    
+    def flight(self):
+        return self._flight
 
+    @property
+    def aircraft_seat(self):
+        return self._aircraft_seat
+    @aircraft_seat.setter
+    def aircraft_seat(self,new_seat):
+        if isinstance(new_seat, str):
+            self._price = new_seat

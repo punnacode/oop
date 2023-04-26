@@ -39,6 +39,18 @@ class AirportCatalog:
         for i in self.airport_list:
             if i.name == origin_airport:
                 return i. get_flight_instance(date_depart,flight_name)
+            
+    def search_airport(self,depart_airport):
+        for i in self.airport_list:
+            if i.name == depart_airport:
+                return i
+            
+    def search_booking(self,origin_airport,date_depart,flight_name,booking_id):
+        for i in self.airport_list:
+            if i.name == origin_airport:
+                flight_instance = i.get_flight_instance(date_depart,flight_name)
+                break
+        return flight_instance.get_booking(booking_id)
 
 class Airport:
     def __init__(self,name):
