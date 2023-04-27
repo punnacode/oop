@@ -3,8 +3,8 @@ from fastapi import FastAPI
 from promotion import PromotionCatalog
 from airport import Airport,AirportCatalog,Aircraft
 from payment import Payment,PaymentStatus,PaymentType
-from add_on import PackageCatalog
-from aircraft import SeatBook
+from add_on import *
+from aircraft import SeatBook,SeatType
 from admin import Adminlist,Admin
 from Passenger import Passenger,TitleType,PassengerType
 from booking import Booking
@@ -42,7 +42,15 @@ promotioncatalog.create_promotion(1,100)
 promotioncatalog.create_promotion(2,500)
 promotioncatalog.create_promotion(3,1000)
 
-
+for i in range(1,6):
+    for j in range(97,100):
+        if i<3 :
+            dm254.create_seat(i,chr(j),SeatType.NORMAL)
+        elif i>=3 and i<5 :
+            dm254.create_seat(i,chr(j),SeatType.FRONTROW)
+        else:
+            dm254.create_seat(i,chr(j),SeatType.PREMIUM)
+            
 #dummy flight instance---- 
 airport_list = airportcatalog.airport_list
 depart_airport = airport_list[0]
@@ -57,16 +65,19 @@ package = package_list[0]
 package.get_package_detail()
 #--------
 
-id_booking = 177013
-#my part
-booking = Booking(id_booking,flight_instance)
-A = Passenger("ADULT","MR","HELP","ME","25-09-69")
-Aseat = SeatBook(1,"A","NORMAL",True)
-A.add_seat(Aseat)
-
+#dummy for payment 
+booking = Booking(flight_instance,package,1,1,1)
+booking.add_passenger(Passenger("ADULT","MR","A","D","A"))
+booking.add_passenger(Passenger("CHILD","MR","B","E","B"))
+booking.add_passenger(Passenger("INFANT","MR","C",'F',"C"))
+booking.create_seatbook(1,"a")
+booking.create_seatbook(3,"b")
+booking.create_seatbook(5,"a")
+print(booking.seat_book)
 payment = booking.create_payment()
-
-
+for passenger in booking.passenger_list:
+    booking.create_ticket(flight_instance,passenger,SeatBook(False,1,'A','NORMAL'),Extraservice(True,True,True),Baggage(1),Meal("MENUONE",2), SpecialBaggage("Bicycle"),SpecialAssistance(True,False,False,False,False,False))
+#-------------------------    
 """
 {
 "num_adult":3,
@@ -185,23 +196,32 @@ async def get_payment_type():
     return [PaymentType(i).name for i in range(1,7)]
 
 @app.get("/get_promotion_code",tags=["payment"])
-async def get_promotion_code():
-    promotion_dict = {}
-    for promotion in promotioncatalog.get_promotion_list:
-        promotion_dict[promotion.promotion_code] = promotion.discount
-    return promotion_dict
+async def get_promotion_code(): 
+    return [promotion.promotion_code for promotion in promotioncatalog.get_promotion_list]
 
 @app.post("/select_payment_type",tags=["payment"])
-async def select_payment_type(payment_type:str):
-    if payment.add_payment_type(payment_type):
-        return "select payment type"
+async def select_payment_type(data:dict):
+    if payment.add_payment_type(data["payment_type"]):
+        return f"select payment {payment._payment_type}"
     else:
         return "<message>:Invalid payment type"
 
-@app.post("/select_promotion_code",tags=["payment"])
-async def select_promotion_code(promotion_name:int):
-    for promotion in promotioncatalog.get_promotion_list:
-        if promotion.promotion_code == promotion_name:
-            payment.add_promotion_code(promotion)
-            return f"select {promotion.promotion_code}-->{promotion.discount}"
-    return "<message>:Invalid promotioncode"
+@app.get("/show_promotion_detail/{promotion_name}",tags=["payment"])
+async def show_promotion_detail(promotion_name:int):
+    return promotioncatalog.detail(promotion_name)
+
+@app.get("/sum_price/{promotion_name}",tags=["payment"])
+async def sum_price(promotion_name:int):
+    select_promotion = promotioncatalog.search_promotion(promotion_name)
+    payment.add_promotion_code(select_promotion)
+    total = booking.payment.sum_price()
+    return total
+   
+@app.get("/get_payment",tags=["payment"])
+async def get_payment():
+    return f'{payment.to_dict()}'
+
+
+@app.get("/get_booking",tags=["payment"])
+async def get_booking():
+    return f'{booking.to_dict()}'

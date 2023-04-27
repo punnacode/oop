@@ -1,5 +1,6 @@
 from ticket import Ticket
 from aircraft import SeatBook
+from payment import Payment,PaymentStatus
 
 class Booking:
 
@@ -16,7 +17,7 @@ class Booking:
         self._passenger_list = []
         self._ticket = []
         self._seat_book = []
-        
+        self._payment = None
         Booking.ID +=1
 
     @property
@@ -149,6 +150,28 @@ class Booking:
                 ticket_price.append(addon_price.get("Extra service"))
             ticket_list.append(round(float(sum(ticket_price)),2))
         return ticket_list
-
+    
+    def create_payment(self):
+        payment = Payment(self._id,PaymentStatus.WAITING.name)
+        payment.add_booking(self)
+        self._payment = payment
+        return self._payment
+        
     def update_booking_status():
         pass
+    
+    def to_dict(self):
+        return {
+            "id": self._id,
+            "flight": self._flight.to_dict(),  # assumes Flight class has a to_dict method
+            "package": self._package.get_package_detail(),
+            "adults": self._adult_num,
+            "children": self._kid_num,
+            "infants": self._infant_num,
+            "phone": self._phone_number,
+            "email": self._email,
+            "passengers": self._passenger_list,
+            "tickets": self._ticket,
+            "seat_bookings": self._seat_book,
+            "payment":self._payment
+        }
