@@ -13,6 +13,9 @@ class Aircraft:
     @property
     def name(self):
         return self._name
+    @property
+    def seat_list(self):
+        return self._seat_list
     
     def get_seat(self,flight):
         available_seat = []
@@ -62,6 +65,17 @@ class SeatBook(AircraftSeat):
     @property
     def seat_booked(self):
         return self._seat_booked
+    
+    @property
+    def row(self):
+        return self._seat_row
+    
+    @property
+    def column(self):
+        return self._seat_column
+    @property
+    def type(self):
+        return self._seat_type
 
 class SeatType(Enum):
     NORMAL  : int = 100

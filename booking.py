@@ -1,4 +1,5 @@
 from ticket import Ticket
+from aircraft import SeatBook
 
 class Booking:
 
@@ -98,8 +99,8 @@ class Booking:
         self._phone_number = phone_number
         self._email = email
     
-    def create_ticket(self, flight, aircraftseat, passenger, seatbook, extraservice, baggage, meal, specialbaggage,specialAssistance):
-        self._ticket.append(Ticket(flight, aircraftseat, passenger, seatbook, extraservice, baggage, meal, specialbaggage,specialAssistance))
+    def create_ticket(self, flight, passenger, seatbook, extraservice, baggage, meal, specialbaggage,specialAssistance):
+        self._ticket.append(Ticket(flight, passenger, seatbook, extraservice, baggage, meal, specialbaggage,specialAssistance))
 
     def add_book_seat(self,book_seat):
         return self.seat_book.append(book_seat)
@@ -107,8 +108,13 @@ class Booking:
     def add_seat_ticket():
         pass
 
-    def create_seatbook():
-        pass
+    def create_seatbook(self,row,column):
+        seat_list = self._flight.aircraft.seat_list
+        for seat in seat_list:
+            if row == seat.seat_row and column == seat.seat_column:
+                book_seat = SeatBook(False,row,column,seat.seat_type)
+                self._seat_book.append(book_seat)
+                return book_seat 
 
     def add_addon():
         pass
@@ -116,10 +122,38 @@ class Booking:
     def sum_price():
         pass
 
-    def update_booking_status():
-        pass
-
     def search_ticket(self,flight,aircraftseat):
         for i in self.ticket:
             if i.flight == flight and i.aircraft_seat == aircraftseat:
                 return i
+
+    def flight_sum_price(self):
+        adult_price = round(float(self._flight.sum_price(self._package) * self._adult_num),2)
+        child_price = round(float(self._flight.sum_price(self._package) * self._kid_num),2)
+        infant_price = round(float((self._flight.sum_price(self._package) * self._infant_num)/2),2)
+        return [adult_price,child_price,infant_price]
+    
+    def seat_sum_price(self):
+        seat_price_list = []
+        for seat in self._seat_book:
+            seat_price_list.append(round(float(seat._seat_type.value),2))
+        return seat_price_list
+    
+    def add_on_sum_price(self):
+        ticket_list = []
+        for ticket in self._ticket:
+            addon_price = ticket.sum_price(self._package)
+            ticket_price = [0.0]
+            if addon_price.get("Bagage") != None:
+                ticket_price.append(addon_price.get("Bagage"))
+            if addon_price.get("Meal") != None:
+                ticket_price.append(addon_price.get("Meal"))
+            if addon_price.get("Special Bagage") != None:
+                ticket_price.append(addon_price.get("Special Bagage"))
+            if addon_price.get("Extra service") != None:
+                ticket_price.append(addon_price.get("Extra service"))
+            ticket_list.append(round(float(sum(ticket_price)),2))
+        return ticket_list
+
+    def update_booking_status():
+        pass

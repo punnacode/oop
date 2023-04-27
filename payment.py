@@ -1,24 +1,26 @@
 from enum import Enum
 from promotion import PromotionCatalog
-
 class Payment:
-    def __init__(self, payment_type, payment_total, id, num_of_passenger,promotion_code,payment_status):
-        self._payment_type = payment_type
-        self._payment_status = payment_status
-        self._payment_total = payment_total
+    def __init__(self,id,num_of_passenger,payment_status):
         self._id = id
         self._num_of_passenger = num_of_passenger
-        self._promotion_code = promotion_code
+        self._payment_status = payment_status
+        self._promotion_code = None
+        self._payment_type = None
+        self._payment_total = None
 
-    def get_promotion(promotion_code):
-        if promotion_code in PromotionCatalog:
-            return promotion_code
-        else:
-            raise TypeError("This code is invalid")
+    def add_payment_type(self,payment_type):
+        if payment_type != '':
+            self._payment_type = payment_type
+            return True
+        return False
+        
+    def add_promotion_code(self,promotion):
+        self._promotion_code = promotion
 
-    def update_price(self):
-        pass
-    
+    def sum_price(self,flight,extraservice_price,specialassistance_price,baggage_price,meal_price,special_price):
+        self._payment_total = flight+extraservice_price+specialassistance_price+baggage_price+meal_price+special_price-self._promotion_code.discount
+        
     @property
     def payment_status(self):
         return self._payment_status

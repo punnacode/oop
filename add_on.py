@@ -1,8 +1,6 @@
 from enum import Enum
-from flight import FlightInstance
 class PackageCatalog:
     def __init__(self):
-
         self._packagelist = []
 
     def create_package(self,name,price,fasttrack,insurance,lounge,extra_bag,meal_amout):
@@ -47,6 +45,9 @@ class Package:
     @property
     def name(self):
         return self._name
+    @property
+    def price(self):
+        return self._price
         
     def get_extra_service(self):
         return self._extra_service
@@ -62,13 +63,6 @@ class Package:
     
     def get_special_baggage(self):
         return self._special_baggage
-    
-
-    def sum_price(self,flight):
-        if isinstance(flight,FlightInstance):
-            return round(self._price + flight.get_price(),2)
-        else:
-            raise TypeError("Parameter type not correct")
     
     def get_package_detail(self):
         return {"Bagage": self._baggage.get_detail(),"Meal": self._meal.get_detail(),"Extra service": self._extra_service.get_detail()}
@@ -92,8 +86,7 @@ class Extraservice:
                 extraservice_list.append(self.extraservice_dict[i])
             i += 1
         return extraservice_list
-
-
+    
 class SpecialAssistance:
     special_assistance_dict = {1:"Deaf",2:"Blind",3:"Monk",4:"Nun",5:"Wheelchair",6:"Alone kid"}
 
@@ -122,6 +115,10 @@ class Baggage:
     def __init__(self,extra_bag):
         self._extra_bag = extra_bag
     
+    @property
+    def extra_bag(self):
+        return self._extra_bag
+    
     def get_detail(self):
         if self._extra_bag != 0:
             return self._extra_bag
@@ -135,6 +132,10 @@ class Meal:
     def __init__(self,meal_type,meal_amout):
         self._meal_amount = meal_amout
         self._meal_type = meal_type
+
+    @property
+    def meal_amount(self):
+        return self._meal_amount
     
     def get_detail(self):
         if self._meal_amount > 0 and self._meal_type.value == 0:
@@ -158,7 +159,8 @@ class SpecialBaggage:
     def __init__(self,special_bag):
         self._special_bag = special_bag
     
-    def get_detail(self):
+    @property
+    def special_bag(self):
         return self._special_bag
 
     def get_specialbaggage():

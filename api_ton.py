@@ -39,6 +39,9 @@ packagecatalog.create_package("Max",1000.00,True,True,True,30,1)
     "Date depart":"2023-05-18",
     "Flight name":"DD405",
     "Package name":"Max"
+    "Adult":1,
+    "Chlid":1,
+    "Infant":1
 }
 """
 
@@ -46,7 +49,7 @@ packagecatalog.create_package("Max",1000.00,True,True,True,30,1)
 def read_root():
     return {"Welcome": "to the Hell"}
 
-@app.get("/select_origin") #Check
+@app.get("/select_origin",tags=["search flight"]) #Check
 async def select_origin():
     airport_list = airportcatalog.airport_list
     oal = []
@@ -54,7 +57,7 @@ async def select_origin():
         oal.append(i.name)
     return {"Origin airport list": oal}
 
-@app.post("/select_destination") #Check
+@app.post("/select_destination",tags=["search flight"]) #Check
 async def select_destination(data: dict):
     arrive_airport_list = airportcatalog.search_arrive_airport_list(data["Origin airport"])
     dal = []
@@ -62,7 +65,7 @@ async def select_destination(data: dict):
         dal.append(i.name)
     return {"Destination airport list":dal}
 
-@app.post("/select_date") #Check
+@app.post("/select_date",tags=["search flight"]) #Check
 async def select_date(data: dict):
     date_list = airportcatalog.search_date_list(data["Origin airport"],data["Destination airport"])
     dl = []
@@ -70,7 +73,7 @@ async def select_date(data: dict):
         dl.append(i)
     return {"Date list":dl}
 
-@app.post("/select_flight") #Check
+@app.post("/select_flight",tags=["select flight"]) #Check
 async def select_flight_instance(data: dict):
     pl = []
     fl = []
@@ -79,13 +82,13 @@ async def select_flight_instance(data: dict):
     for i in range(len(flight_instance_list)):
         pkl = {}
         for j in package_list:
-            pkl[j.name]=j.sum_price(flight_instance_list[i])
+            pkl[j.name]=flight_instance_list[i].sum_price(j)
         fl.append([flight_instance_list[i].name , flight_instance_list[i].time_depart , flight_instance_list[i].time_arrive,pkl])
     for i in package_list:
         pl.append(i.name)
     return {"Flight data":fl,"Package data":pl}
 
-@app.post("/flight_detail/{flight_name}") #Check
+@app.post("/flight_detail/{flight_name}",tags=["flight detail"]) #Check
 async def flight_detail(flight_name: str,data: dict):
     flight_instance = airportcatalog.search_flight_instance(data["Origin airport"],data["Date depart"],flight_name)
     return {
@@ -99,8 +102,16 @@ async def flight_detail(flight_name: str,data: dict):
             "Date Depart":flight_instance.date_depart
             }
 
-@app.get("/package_detail/{package_name}") #Check
+@app.get("/package_detail/{package_name}",tags=["package detail"]) #Check
 async def package_detail(package_name: str):
     package = packagecatalog.get_package(package_name)
     return {package_name: package.get_package_detail()}
+
+@app.post("/create_booking",tags=["select flight"])
+async def create_booking(data:dict):
+    flight_instance = airportcatalog.search_flight_instance(data["Origin airport"],data["Date depart"],data["Flight name"])
+    package = packagecatalog.get_package(data["Package name"])
+    booking_id = flight_instance.create_booking(flight_instance,package,data["Adult"],data["Chlid"],data["Infant"])
+    return {"Booking ID": booking_id}
+    
 
