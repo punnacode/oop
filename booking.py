@@ -4,8 +4,9 @@ from aircraft import SeatBook
 class Booking:
 
     ID = 1
-    def __init__(self,flight_instance,package,adult,child,infant):
+    def __init__(self,payment,flight_instance,package,adult,child,infant):
         self._id = Booking.ID
+        self._payment = payment
         self._flight = flight_instance
         self._package = package
         self._adult_num = adult
@@ -99,8 +100,8 @@ class Booking:
         self._phone_number = phone_number
         self._email = email
     
-    def create_ticket(self, flight, passenger, seatbook, extraservice, baggage, meal, specialbaggage,specialAssistance):
-        self._ticket.append(Ticket(flight, passenger, seatbook, extraservice, baggage, meal, specialbaggage,specialAssistance))
+    def create_ticket(self, passenger, seatbook, extraservice, baggage, meal, specialbaggage,specialAssistance):
+        self._ticket.append(Ticket(self._flight, passenger, seatbook, extraservice, baggage, meal, specialbaggage,specialAssistance))
 
     def add_book_seat(self,book_seat):
         return self.seat_book.append(book_seat)

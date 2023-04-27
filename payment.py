@@ -1,13 +1,15 @@
 from enum import Enum
 from promotion import PromotionCatalog
 class Payment:
-    def __init__(self,id,num_of_passenger,payment_status):
-        self._id = id
-        self._num_of_passenger = num_of_passenger
+    ID = 1
+    def __init__(self,payment_status):
+        self._id = Payment.ID
         self._payment_status = payment_status
         self._promotion_code = None
         self._payment_type = None
         self._payment_total = None
+
+        Payment.ID += 1
 
     def add_payment_type(self,payment_type):
         if payment_type != '':

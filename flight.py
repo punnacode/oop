@@ -2,6 +2,7 @@ from aircraft import Aircraft
 from add_on import Package
 from booking import Booking
 from datetime import date
+from payment import Payment
 
 class Flight:
     def __init__(self,name,flight_duration,international,depart_airport,arrive_airport):
@@ -104,9 +105,10 @@ class FlightInstance(Flight):
     def get_seatbook_list(self):
         seat_book_list = []
         for booking in self._booking:
-            for seatbook in booking.seat_book:
-                if seatbook not in seat_book_list:
-                    seat_book_list.append(seatbook)
+            if booking.payment.payment_status.value == 3:
+                for seatbook in booking.seat_book:
+                    if seatbook not in seat_book_list:
+                        seat_book_list.append(seatbook)
         return seat_book_list
     
     def get_seat__book_detail():
@@ -118,9 +120,9 @@ class FlightInstance(Flight):
     def change_seat(aircraft_seat):
         pass
 
-    def create_booking(self,flight_instance,package,adult,child,infant):
-        if isinstance(flight_instance,FlightInstance) and isinstance(package,Package) and isinstance(adult,int) and isinstance(child,int) and isinstance(infant,int):
-            booking = Booking(flight_instance,package,adult,child,infant)
+    def create_booking(self,payment,flight_instance,package,adult,child,infant):
+        if isinstance(payment,Payment) and isinstance(flight_instance,FlightInstance) and isinstance(package,Package) and isinstance(adult,int) and isinstance(child,int) and isinstance(infant,int):
+            booking = Booking(payment,flight_instance,package,adult,child,infant)
             self._booking.append(booking)
         else:
             raise TypeError("please check payment status")
