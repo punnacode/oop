@@ -47,7 +47,6 @@ class FlightInstance(Flight):
 
         self.day_in_month
 
-    
     @property
     def date_depart(self):
         return self._date_depart
@@ -137,6 +136,10 @@ class FlightInstance(Flight):
             if booking.id == booking_id:
                 return booking
 
+    def get_booking(self,booking_id):
+        for booking in self._booking:
+            if booking.id == booking_id:
+                return booking
     
     ## Date difference system
     def is_leap(self,year):
