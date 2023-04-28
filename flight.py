@@ -84,6 +84,20 @@ class FlightInstance(Flight):
     def aircraft(self, new_aircraft):
         if isinstance(new_aircraft, str):
             self._aircraft = new_aircraft
+            
+    def to_dict(self):
+        return {
+            "name": self._name,
+            "flight_duration": self._flight_duration,
+            "international": self._international,
+            "depart_airport": self._depart_airport.name,
+            "arrive_airport": self._arrive_airport.name,
+            "date_depart": self._date_depart,
+            "time_arrive": self._time_arrive,
+            "time_depart": self._time_depart,
+            "aircraft": self._aircraft.name,
+            "price": self._price
+        }
 
     def __str__(self):
         return f'Flight Detail\nName: {self.name}\nAircraft: {self.aircraft.name}\nOrigin Airport: {self.depart_airport.name}\nDestination Airport: {self.arrive_airport.name}\nFlight Duration: {self.flight_duration} minute\nTime Depart: {self.time_depart}\nTime Arrive: {self.time_arrive}\nDate Depart: {self.date_depart}'    
