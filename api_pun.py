@@ -35,7 +35,7 @@ AdminA.create_flight("DD405",90,False,AirportA,AirportB,)
 AdminA.create_flight("DD406",90,False,AirportA,AirportB)
 
 ## FlightInstance instance
-AdminA.create_flight_instance(AirportA,"DD405","2023-04-01","18.30","20.00",dm254,1000.00)
+AdminA.create_flight_instance(AirportA,"DD405","2023-05-01","18.30","20.00",dm254,1000.00)
 AdminA.create_flight_instance(AirportA,"DD405","2023-05-18","18.30","20.00",dm254,1000.00)
 AdminA.create_flight_instance(AirportA,"DD405","2023-05-19","18.30","20.00",dm254,1000.00)
 AdminA.create_flight_instance(AirportA,"DD406","2023-05-18","20.30","22.00",dm254,1000.00)
@@ -107,7 +107,7 @@ def read_root():
     return {"Hello": "Teacher"}
 
 
-@app.post("/login")
+@app.post("/login",tags=["admin"])
 async def login(admin:dict):
     username = admin["Username"]
     password = admin["Password"]
@@ -117,7 +117,7 @@ async def login(admin:dict):
     else:
         return{"LOGIN UNSUCCESSFULLY"}
             
-@app.post("/flight",tags=['Flights'])
+@app.post("/flight",tags=["admin"])
 async def create_flight(flight:dict):
     username = flight["Username"]
     password = flight["Password"] 
@@ -144,7 +144,7 @@ async def create_flight(flight:dict):
     else:
         return{"Cannot Add FlightInstance"}
 
-@app.post("/flight_instance",tags=['Flight_Instances'])
+@app.post("/flight_instance",tags=["admin"])
 async def create_flight_instance(flight_instance : dict):
     username = flight_instance["Username"]
     password = flight_instance["Password"]
@@ -172,7 +172,7 @@ async def create_flight_instance(flight_instance : dict):
         return{"Cannot Add FlightInstance"}
 
 
-@app.put("/edit_flight_instance",tags=['Flight_Instances'])
+@app.put("/edit_flight_instance",tags=["admin"])
 async def edit_flight_instance(flight_instance:dict):
     username = flight_instance["Username"]
     password = flight_instance["Password"]
@@ -196,7 +196,7 @@ async def edit_flight_instance(flight_instance:dict):
         return{"Edit Successfully"}
 
 
-@app.delete("/cancel_flight_instance",tags=['Flight_Instances'])
+@app.delete("/cancel_flight_instance",tags=["admin"])
 async def delete_flight_instance(flight_instance:dict):
     username = flight_instance["Username"]
     password = flight_instance["Password"]
@@ -209,9 +209,9 @@ async def delete_flight_instance(flight_instance:dict):
     admin = adminlist.login(username,password)
     if status:
         admin.cancel_flight_instance(flightins)
-        return{"Promotion is Added!"}
+        return{"Cancel Successfully"}
     
-@app.put("/change_seat",tags=["Seat"])
+@app.put("/change_seat",tags=["admin"])
 async def change_seat(data:dict):
     username = data["Username"]
     password = data["Password"]
@@ -230,7 +230,7 @@ async def change_seat(data:dict):
         admin.change_seat(booking,ticket,seat,edit_seat)
         return{"Change Successfully"}
     
-@app.post("add_promotion",tags=["Promotion"])
+@app.post("add_promotion",tags=["admin"])
 async def add_promotion(data:dict):
     username = data["Username"]
     password = data["Password"]
@@ -241,4 +241,4 @@ async def add_promotion(data:dict):
     admin = adminlist.login(username,password)
     if status:
         admin.change_seat(promotion_code,discount)
-        return{"Change Successfully"}
+        return{"Promotion is Added!"}
