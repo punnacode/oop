@@ -26,7 +26,7 @@ class Aircraft:
         else:
             for seat in self._seat_list:
                 for bookseat in seat_book_list:
-                    if seat not in available_seat and (seat.row == bookseat.row or seat.column == bookseat.column):
+                    if seat not in available_seat and (seat.seat_row == bookseat.row and seat.seat_column == bookseat.column):
                         seat_check = True
                 if seat_check == False:
                     available_seat.append(seat)

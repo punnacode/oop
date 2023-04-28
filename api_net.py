@@ -54,6 +54,10 @@ booking_id3 = flight_instance.create_booking(flight_instance,max_package,1,0,1)
     "Date depart":"2023-05-18",
     "Flight name":"DD405",
     "Package name":"Max"
+    "Adult":1,
+    "Chlid":1,
+    "Infant":1,
+    "Booking ID":1
 }
 """
 for i in range(1,6):
@@ -69,7 +73,7 @@ for i in range(1,6):
 def read_root():
     return {"Welcome": "to the Hell"}
 
-@app.post("/select_seat/{flight_name}")
+@app.post("/select_seat/{flight_name}",tags=["select add on"])
 async def select_seat(flight_name: str,data: dict):
     st = []
     flight_instance = airportcatalog.search_flight_instance(data["Origin airport"],data["Date depart"],flight_name)
@@ -80,7 +84,7 @@ async def select_seat(flight_name: str,data: dict):
                 "Seat":st
             }
 
-@app.post("/select_add_on")
+@app.post("/select_add_on",tags=["select add on"])
 async def select_add_on(data:dict):
     extraservice =[]
     specialAssistance = []
@@ -105,20 +109,18 @@ async def select_add_on(data:dict):
                 "special baggage" : package.get_special_baggage()
             }
 
-@app.post("/creat_ticket/{flight_name}")
+@app.post("/creat_ticket/{flight_name}",tags=["select add on"])
 async def creat_ticket(flight_name: str,data:dict):
-    flight_instance = airportcatalog.search_flight_instance(data["Origin airport"],data["Date depart"],flight_name)
     passenger = 1
-    seat = data['select_seat'].split(" ")
-    print(seat)
-    seatbook = SeatBook(False,seat[0],seat[1],seat[2])
     extraservice = Extraservice(bool(data['FastTrack']),bool(data['Insurance']),bool(data['Lounge']))
     baggage = Baggage(bool(data['baggage']))
     meal = Meal(data['meal'],data['meal_amount'])
     specialbaggage = SpecialBaggage(data['Special_baggage'])
     specialAssistance = SpecialAssistance(bool(data['Deaf']),bool(data['Blind']),bool(data['Nun']),bool(data['Monk']),bool(data['Wheelchair']),bool(data['Alone_kid']))
-    booking = flight_instance.get_booking(data['Booking ID'])
+    booking = airportcatalog.search_booking(data["Origin airport"],data["Date depart"],flight_name,data['Booking ID'])
     print(data['Booking ID'])
-    # booking.create_ticket(flight_instance,passenger,seatbook, extraservice, baggage, meal, specialbaggage,specialAssistance)
-    # booking.add_book_seat(seatbook)
+    seat = data['select_seat'].split(" ")
+    print(seat)
+    seatbook = booking.create_seatbook(seat[0],seat[1],)
+    booking.create_ticket(passenger,seatbook, extraservice, baggage, meal, specialbaggage,specialAssistance)
     return{'message':'complete'}

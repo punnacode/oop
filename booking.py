@@ -5,8 +5,9 @@ from payment import Payment,PaymentStatus
 class Booking:
 
     ID = 1
-    def __init__(self,flight_instance,package,adult,child,infant):
+    def __init__(self,payment,flight_instance,package,adult,child,infant):
         self._id = Booking.ID
+        self._payment = payment
         self._flight = flight_instance
         self._package = package
         self._adult_num = adult
@@ -17,7 +18,7 @@ class Booking:
         self._passenger_list = []
         self._ticket = []
         self._seat_book = []
-        self._payment = None
+        
         Booking.ID +=1
 
     @property
@@ -100,8 +101,8 @@ class Booking:
         self._phone_number = phone_number
         self._email = email
     
-    def create_ticket(self, flight, passenger, seatbook, extraservice, baggage, meal, specialbaggage,specialAssistance):
-        self._ticket.append(Ticket(flight, passenger, seatbook, extraservice, baggage, meal, specialbaggage,specialAssistance))
+    def create_ticket(self, passenger, seatbook, extraservice, baggage, meal, specialbaggage,specialAssistance):
+        self._ticket.append(Ticket(self._flight, passenger, seatbook, extraservice, baggage, meal, specialbaggage,specialAssistance))
 
     def add_book_seat(self,book_seat):
         return self.seat_book.append(book_seat)
@@ -122,6 +123,11 @@ class Booking:
 
     def sum_price():
         pass
+
+    def search_ticket(self,flight,aircraftseat):
+        for i in self.ticket:
+            if i.flight == flight and i.aircraft_seat == aircraftseat:
+                return i
 
     def flight_sum_price(self):
         adult_price = round(float(self._flight.sum_price(self._package) * self._adult_num),2)
