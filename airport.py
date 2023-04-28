@@ -70,27 +70,6 @@ class Airport:
     def flight_instance_list(self):
         return self._flight_instance_list
     
-    def create_flight(self,name,flight_duration,international,depart_airport,arrive_airport):
-        if isinstance(name,str) and isinstance(flight_duration,int) and isinstance(international,bool) and isinstance(depart_airport,Airport) and isinstance(arrive_airport,Airport):
-            self._flight_list.append(Flight(name,flight_duration,international,depart_airport,arrive_airport))
-        else:
-            raise TypeError("Parameter type not correct")
-
-    def create_flight_instance(self,flight_name,date_depart,time_arrive,time_depart,aircraft,price):
-        if isinstance(flight_name,str) and isinstance(date_depart,str) and isinstance(time_arrive,str) and isinstance(time_depart,str) and isinstance(aircraft,Aircraft) and isinstance(price,float):
-            for f in self._flight_list:
-                if f.name == flight_name:
-                    flight = f
-                    break
-            self._flight_instance_list.append(FlightInstance(flight.name,flight.flight_duration,flight.international,flight.depart_airport,flight.arrive_airport,date_depart,time_arrive,time_depart,aircraft,price))
-        else:
-            raise TypeError("Parameter type not correct")
-        
-    def edit_flight_instance():
-        pass
-    def cancel_flight_instance():
-        pass
-    
     def get_arrive_airport_list(self):
         arrive_airport_list = []
         for flight in self._flight_list:

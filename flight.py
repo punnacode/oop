@@ -28,9 +28,6 @@ class Flight:
     @property
     def arrive_airport(self):
         return self._arrive_airport
-    
-    def add_flight():
-        pass
 
 class FlightInstance(Flight):
     day_in_month = [0,31,28,31,30,31,30,31,31,30,31,30,31]
@@ -43,9 +40,6 @@ class FlightInstance(Flight):
         self._aircraft = aircraft
         self._price = price
         self._booking = []
-
-        
-
         self.day_in_month
 
     @property
@@ -99,9 +93,6 @@ class FlightInstance(Flight):
             "price": self._price
         }
 
-    def __str__(self):
-        return f'Flight Detail\nName: {self.name}\nAircraft: {self.aircraft.name}\nOrigin Airport: {self.depart_airport.name}\nDestination Airport: {self.arrive_airport.name}\nFlight Duration: {self.flight_duration} minute\nTime Depart: {self.time_depart}\nTime Arrive: {self.time_arrive}\nDate Depart: {self.date_depart}'    
-
     def get_price(self):
         days = self.date_diff(str(date.today()),self.date_depart)
         if days > 30:
@@ -123,15 +114,6 @@ class FlightInstance(Flight):
                     if seatbook not in seat_book_list:
                         seat_book_list.append(seatbook)
         return seat_book_list
-    
-    def get_seat__book_detail():
-        pass
-
-    def get_filght_info():
-        pass
-
-    def change_seat(aircraft_seat):
-        pass
 
     def create_booking(self,payment,flight_instance,package,adult,child,infant):
         if isinstance(payment,Payment) and isinstance(flight_instance,FlightInstance) and isinstance(package,Package) and isinstance(adult,int) and isinstance(child,int) and isinstance(infant,int):
@@ -147,11 +129,6 @@ class FlightInstance(Flight):
         else:
             raise TypeError("please check payment status")
         
-    def get_booking(self,booking_id):
-        for booking in self._booking:
-            if booking.id == booking_id:
-                return booking
-
     def get_booking(self,booking_id):
         for booking in self._booking:
             if booking.id == booking_id:

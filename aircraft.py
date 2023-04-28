@@ -32,11 +32,6 @@ class Aircraft:
                     available_seat.append(seat)
                 seat_check = False
             return available_seat
-        
-    def set_seat():
-        pass
-    
-    # seat = property(get_seat,set_seat)
 
 class AircraftSeat:
     def __init__(self,seat_row,seat_column,seat_type):
@@ -85,9 +80,11 @@ class SeatType(Enum):
 class AircraftCatalog:
     def __init__(self):
         self._aircraft_list = []
+
     def add_aircraft(self,aircraft):
         if isinstance(aircraft,Aircraft):
             self._aircraft_list.append(aircraft)
+            
     def get_list_aircraft(self):
         return self._aircraft_list
          
