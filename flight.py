@@ -115,9 +115,11 @@ class FlightInstance(Flight):
                         seat_book_list.append(seatbook)
         return seat_book_list
 
-    def create_booking(self,payment,flight_instance,package,adult,child,infant):
-        if isinstance(payment,Payment) and isinstance(flight_instance,FlightInstance) and isinstance(package,Package) and isinstance(adult,int) and isinstance(child,int) and isinstance(infant,int):
-            booking = Booking(payment,flight_instance,package,adult,child,infant)
+    def create_booking(self,flight_instance,package,adult,child,infant):
+        if isinstance(flight_instance,FlightInstance) and isinstance(package,Package) and isinstance(adult,int) and isinstance(child,int) and isinstance(infant,int):
+            booking = Booking(flight_instance,package,adult,child,infant)
+            payment = booking.create_payment()
+            payment.add_booking(booking)
             self._booking.append(booking)
         else:
             raise TypeError("please check payment status")

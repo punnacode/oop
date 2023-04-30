@@ -1,7 +1,6 @@
 class Ticket:
     def __init__(self, flight, passenger, seatbook, extraservice, baggage, meal, specialbaggage,specialAssistance) :
         self._flight = flight
-
         self._seatbook = seatbook
         self._passenger = passenger
         self._extraservice = extraservice
@@ -49,6 +48,9 @@ class Ticket:
                 add_on_price["Extra service"] = extraservice_price
         return add_on_price
 
+    @property    
+    def passenger(self):
+        return self._passenger
     @property    
     def flight(self):
         return self._flight

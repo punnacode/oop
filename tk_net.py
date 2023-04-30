@@ -12,11 +12,11 @@ data=   {
             "Destination airport":"AirportB",
             "Date depart":"2023-05-18",
             "Flight name":"DD405",
-            "Package name":"Max",
+            "Package name":"Normal",
             "Adult": 2,
             "Chlid": 1,
             "Infant":0,
-            "Booking ID":0
+            "Booking ID":1
         }
 
 
@@ -167,7 +167,7 @@ meal_amount.set(add_on.json()['package'][0][3]['_meal_amount'])
 
 
 
-number = [1,2,3,4,5,6,7,8,9]
+number = [1,2,3]
 baggage_size = [7,15,20,25,30]
 special_baggage_list = ['No selection','Bicycle',20 ,25 ,30 ]
 showIndicator = True

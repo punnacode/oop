@@ -113,9 +113,9 @@ async def login(admin:dict):
     password = admin["Password"]
     status = adminlist.check(username,password)
     if status:
-        return {"LOGIN SUCCESSFULLY"}
+        return {"result":"LOGIN SUCCESSFULLY"}
     else:
-        return{"LOGIN UNSUCCESSFULLY"}
+        return{"result":"LOGIN UNSUCCESSFULLY"}
             
 @app.post("/flight",tags=["admin"])
 async def create_flight(flight:dict):
