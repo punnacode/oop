@@ -506,7 +506,7 @@ async def add_promotion_code(data:dict):
     else:
         return "Not Found"
     
-@app.post("/credit_card_payment",tags=["payment"])
+@app.post("/credit_card_payment",tags=["payment"]) #Check
 async def credit_card_payment(data:dict):
     booking = airportcatalog.search_booking(data["Origin airport"],data["Date depart"],data["Flight name"],data['Booking ID'])
     credit_payment = CreditCardPayment(booking.id,PaymentStatus.COMPLETE,data["Card number"],data["Expired date"],data["Card holder"],data["CCV"])
@@ -516,7 +516,7 @@ async def credit_card_payment(data:dict):
     credit_payment.promotion_code = booking.payment.promotion_code
     booking.payment = credit_payment
 
-@app.post("/qr_code_payment",tags=["payment"])
+@app.post("/qr_code_payment",tags=["payment"]) #Check
 async def qr_code_payment(data:dict):
     booking = airportcatalog.search_booking(data["Origin airport"],data["Date depart"],data["Flight name"],data['Booking ID'])
     sms_payment = SMSVerifyPayment(booking.id,PaymentStatus.COMPLETE,data["Phone number"])
@@ -526,7 +526,7 @@ async def qr_code_payment(data:dict):
     sms_payment.promotion_code = booking.payment.promotion_code
     booking.payment = sms_payment
 
-@app.post("/counter_payment",tags=["payment"])
+@app.post("/counter_payment",tags=["payment"]) #Check
 async def counter_payment(data:dict):
     booking = airportcatalog.search_booking(data["Origin airport"],data["Date depart"],data["Flight name"],data['Booking ID'])
     sms_payment = SMSVerifyPayment(booking.id,PaymentStatus.COMPLETE,data["Phone number"])
@@ -535,3 +535,15 @@ async def counter_payment(data:dict):
     sms_payment.payment_total = booking.payment.payment_total
     sms_payment.promotion_code = booking.payment.promotion_code
     booking.payment = sms_payment
+
+@app.post("/del_booking",tags=["booking"]) #Check
+async def del_booking(data:dict):
+    booking = airportcatalog.search_booking(data["Origin airport"],data["Date depart"],data["Flight name"],data['Booking ID'])
+    flight_instance = airportcatalog.search_flight_instance(data["Origin airport"],data["Date depart"],data["Flight name"])
+    for b in flight_instance.booking:
+        if booking.id == b.id:
+            flight_instance.booking.remove(b)
+
+    for b in flight_instance.booking:
+        print(b.id)
+
