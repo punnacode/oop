@@ -78,6 +78,9 @@ class FlightInstance(Flight):
     def aircraft(self, new_aircraft):
         if isinstance(new_aircraft, str):
             self._aircraft = new_aircraft
+    @property
+    def booking(self):
+        return self._booking
             
     def to_dict(self):
         return {
