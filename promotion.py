@@ -3,7 +3,7 @@ class PromotionCatalog:
         self._promotion_list =[] 
     
     def create_promotion(self,promotion_code,discount):
-        if isinstance(promotion_code,int) and isinstance(discount,int):
+        if isinstance(promotion_code,str) and isinstance(discount,int):
             self._promotion_list.append(Promotion(promotion_code,discount))
         else:
             raise TypeError("Parameter type not correct")
@@ -16,6 +16,7 @@ class PromotionCatalog:
         for promotion in self._promotion_list:
             if promotion.promotion_code == promotion_name:
                 return promotion
+        return None
             
     def detail(self,promotion_name):
         for promotion in self._promotion_list:

@@ -1,13 +1,13 @@
 from ticket import Ticket
 from aircraft import SeatBook
+from Passenger import Passenger
 from payment import Payment,PaymentStatus
 
 class Booking:
-
     ID = 1
-    def __init__(self,payment,flight_instance,package,adult,child,infant):
+
+    def __init__(self,flight_instance,package,adult,child,infant):
         self._id = Booking.ID
-        self._payment = payment
         self._flight = flight_instance
         self._package = package
         self._adult_num = adult
@@ -15,6 +15,7 @@ class Booking:
         self._infant_num = infant
         self._phone_number = None 
         self._email = None
+        self._payment = None
         self._passenger_list = []
         self._ticket = []
         self._seat_book = []
@@ -42,15 +43,15 @@ class Booking:
         adult_list = []
         for passenger in self._passenger_list:
             if passenger.type == "ADULT":
-                adult_list.append(passenger.name)
+                adult_list.append(str(passenger.name+" "+passenger.last_name))
         return adult_list
     
     @property
     def get_kid_list(self):
         kid_list = []
         for passenger in self._passenger_list:
-            if passenger.type == "ADULT":
-                kid_list.append(passenger.name)
+            if passenger.type == "CHILD":
+                kid_list.append(str(passenger.name+" "+passenger.last_name))
         return kid_list
     
     @property
@@ -58,12 +59,15 @@ class Booking:
         INFANT_list = []
         for passenger in self._passenger_list:
             if passenger.type == "INFANT":
-                INFANT_list.append(passenger.name)
+                INFANT_list.append(str(passenger.name+" "+passenger.last_name))
         return INFANT_list
     
     @property
     def payment(self):
         return self._payment
+    @payment.setter
+    def payment(self,new_payment):
+        self._payment = new_payment
     
     @property
     def adult_num(self):
@@ -102,7 +106,7 @@ class Booking:
         self._email = email
     
     def create_ticket(self, passenger, seatbook, extraservice, baggage, meal, specialbaggage,specialAssistance):
-        self._ticket.append(Ticket(self._flight, passenger, seatbook, extraservice, baggage, meal, specialbaggage,specialAssistance))
+            self._ticket.append(Ticket(self._flight, passenger, seatbook, extraservice, baggage, meal, specialbaggage,specialAssistance))
 
     def add_book_seat(self,book_seat):
         return self.seat_book.append(book_seat)
@@ -114,6 +118,7 @@ class Booking:
         seat_list = self._flight.aircraft.seat_list
         for seat in seat_list:
             if row == seat.seat_row and column == seat.seat_column:
+                seat.seat_type.value
                 book_seat = SeatBook(False,row,column,seat.seat_type)
                 self._seat_book.append(book_seat)
                 return book_seat 
@@ -154,11 +159,10 @@ class Booking:
                 ticket_price.append(addon_price.get("Special Bagage"))
             if addon_price.get("Extra service") != None:
                 ticket_price.append(addon_price.get("Extra service"))
-            ticket_list.append(round(float(sum(ticket_price)),2))
         return ticket_list
     
     def create_payment(self):
-        payment = Payment(self._id,PaymentStatus.WAITING.name)
+        payment = Payment(self._id,PaymentStatus.WAITING)
         payment.add_booking(self)
         self._payment = payment
         return self._payment

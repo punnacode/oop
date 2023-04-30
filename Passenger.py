@@ -1,4 +1,3 @@
-from booking import Booking
 from enum import Enum
 class PassengerType(Enum):
     ADULT,CHILD,INFANT = range(0,3)
@@ -25,12 +24,20 @@ class Passenger:
         return self._name
     
     @property
+    def last_name(self):
+        return self._last_name
+
+    @property
     def title(self):
         return self._title
         
     @property
     def type(self):
         return self._type
+    
+    @property
+    def date_of_birth(self):
+        return self._date_of_birth
     
     @property
     def seat(self):

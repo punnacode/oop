@@ -169,7 +169,7 @@ async def enter_passenger(type_passenger:str,title_passenger:str,data:dict):
     
     return f'Passenger:{len(booking.passenger_list)} {passenger}'
 
-@app.get("/inter_status")
+@app.get("/inter_status" ,tags=["passenger"])
 async def get_inter_status():
     return booking.flight_international_status
 
@@ -193,7 +193,7 @@ async def get_passenger_title(type:str):
 #payment
 @app.get("/get_payment_type",tags=["payment"])
 async def get_payment_type():
-    return [PaymentType(i).name for i in range(1,7)]
+    return [PaymentType(i).name for i in range(1,3)]
 
 @app.get("/get_promotion_code",tags=["payment"])
 async def get_promotion_code(): 
