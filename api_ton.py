@@ -452,7 +452,7 @@ async def select_add_on(data:dict):
 async def creat_ticket(flight_name: str,data:dict):
     booking = airportcatalog.search_booking(data["Origin airport"],data["Date depart"],flight_name,data["Booking ID"])
     extraservice = Extraservice(bool(data['FastTrack']),bool(data['Insurance']),bool(data['Lounge']))
-    baggage = Baggage(bool(data['baggage']))
+    baggage = Baggage(data['baggage'])
     for meal_type in MealType:
         if meal_type.name == data['meal']:
             meal_type_select = meal_type
