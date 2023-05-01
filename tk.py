@@ -1042,17 +1042,17 @@ class AdminPage(tk.Frame):
         self.edit_seat = tk.StringVar()
 
         tk.Label(self, text = "Booking ID").grid(row=12,column=3, padx=10, ipady=5, sticky='E')
-        tk.Entry(self, textvariable=self.depfedit, width=12, justify="left").grid(row=12, column=4, padx=10)
+        tk.Entry(self, textvariable=self.booking_id, width=12, justify="left").grid(row=12, column=4, padx=10)
         tk.Label(self, text = "Depart Airport").grid(row=13,column=3, padx=10, ipady=5, sticky='E')
-        tk.Entry(self, textvariable=self.datefedit, width=12, justify="left").grid(row=13, column=4, padx=10)
+        tk.Entry(self, textvariable=self.depart_airportfseat, width=12, justify="left").grid(row=13, column=4, padx=10)
         tk.Label(self, text = "Date").grid(row=14,column=3, padx=18, ipady=5, sticky='E')
-        tk.Entry(self, textvariable=self.flightfedit, width=12, justify="left").grid(row=14, column=4, padx=10)
+        tk.Entry(self, textvariable=self.date_departfseat, width=12, justify="left").grid(row=14, column=4, padx=10)
         tk.Label(self, text = "Flight").grid(row=15,column=3, padx=10, ipady=5, sticky='E')
-        tk.Entry(self, textvariable=self.edit_date, width=12, justify="left").grid(row=15, column=4, padx=10)
+        tk.Entry(self, textvariable=self.flightfseat, width=12, justify="left").grid(row=15, column=4, padx=10)
         tk.Label(self, text = "Seat").grid(row=16,column=3, padx=10, ipady=5, sticky='E')
-        tk.Entry(self, textvariable=self.edit_time_depart, width=12, justify="left").grid(row=16, column=4, padx=10)
+        tk.Entry(self, textvariable=self.seat, width=12, justify="left").grid(row=16, column=4, padx=10)
         tk.Label(self, text = "Edit Seat").grid(row=17,column=3, padx=10, ipady=5, sticky='E')
-        tk.Entry(self, textvariable=self.edit_time_arrive, width=12, justify="left").grid(row=17, column=4, padx=10)
+        tk.Entry(self, textvariable=self.edit_seat, width=12, justify="left").grid(row=17, column=4, padx=10)
         tk.Button(self, text=" Submit ", bg="green", command=lambda: controller.change_seat()).grid(row=18, column=3, columnspan=2)
 
         #add promotion
@@ -1060,9 +1060,9 @@ class AdminPage(tk.Frame):
         self.discount = tk.IntVar()
 
         tk.Label(self, text = "Promotion Code").grid(row=14,column=0, padx=10, ipady=5, sticky='E')
-        tk.Entry(self, textvariable=self.depfedit, width=12, justify="left").grid(row=14, column=1, padx=10)
+        tk.Entry(self, textvariable=self.promotion_code, width=12, justify="left").grid(row=14, column=1, padx=10)
         tk.Label(self, text = "Discount").grid(row=15,column=0, padx=10, ipady=5, sticky='E')
-        tk.Entry(self, textvariable=self.datefedit, width=12, justify="left").grid(row=15, column=1, padx=10)
+        tk.Entry(self, textvariable=self.discount, width=12, justify="left").grid(row=15, column=1, padx=10)
         tk.Button(self, text=" Submit ", bg="green", command=lambda: controller.add_promotion(self)).grid(row=16, column=0, columnspan=2)
 
         self.pack(padx = 100, pady = 10)
