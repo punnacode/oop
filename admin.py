@@ -55,16 +55,16 @@ class Admin:
     def cancel_flight_instance(self,flight_instance):
         del flight_instance
 
-    def change_seat(self,booking,ticket,seat,edit_seat):
-        bookseat = booking.seat_book
-        for i in bookseat:
-            if i == seat:
-                bookseat.remove(i)
-                bookseat.append(edit_seat)
-            else:
-                print("Seat not Found")
-        ticket.aircraft_seat = edit_seat
-        
+    def change_seat(self,booking,seat_row,seat_column,edit_seat_row,edit_seat_column):
+        for seatbook in booking.seat_book:
+            if seat_row == seatbook.seat_row and seat_column == seatbook.seat_column:
+                return seatbook
+        for i in booking.seat_book:
+            if seat_row == i.seat_row and seat_column == i.seat_column:
+                return i
+        seatbook = i
+        booking.seat_book.remove(seatbook)
+        booking.seat_book.append(seatbook)
         
         
     def add_promotion(self,promotion_code,discount):

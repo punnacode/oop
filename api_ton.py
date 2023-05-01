@@ -234,15 +234,16 @@ async def change_seat(data:dict):
     depart_airport = data["Depart Airport"]
     date_depart = data["Date"]
     flight = data["Flight"]
-    seat = data["Seat"]
-    edit_seat = data["Edit Seat"]
+    seat_row = data["Seat Row"]
+    seat_column = data["Seat Column"]
+    edit_seat_row = data["Edit Seat Row"]
+    edit_seat_column = data["Edit Seat Column"]
     booking = airportcatalog.search_booking(depart_airport,date_depart,flight,booking_id)
-    ticket = booking.search_ticket(flight,seat)
 
     status = adminlist.check(username,password)
     if status:
         admin = adminlist.login(username,password)
-        admin.change_seat(booking,ticket,seat,edit_seat)
+        admin.change_seat(booking,seat_row,seat_column,edit_seat_row,edit_seat_column)
         return{"Change Successfully"}
     
 @app.post("add_promotion",tags=["admin"]) #Check
