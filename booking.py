@@ -25,6 +25,9 @@ class Booking:
     @property
     def id(self):
         return self._id
+    @property
+    def flight(self):
+        return self._flight
       
     @property
     def flight_international_status(self):

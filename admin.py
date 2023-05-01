@@ -58,13 +58,18 @@ class Admin:
     def change_seat(self,booking,seat_row,seat_column,edit_seat_row,edit_seat_column):
         for seatbook in booking.seat_book:
             if seat_row == seatbook.seat_row and seat_column == seatbook.seat_column:
-                return seatbook
-        for i in booking.seat_book:
-            if seat_row == i.seat_row and seat_column == i.seat_column:
-                return i
-        seatbook = i
+                break
+        seat_list = booking._flight.aircraft.seat_list
+        for i in seat_list:
+            if edit_seat_row == i.seat_row and edit_seat_column == i.seat_column:
+                break
         booking.seat_book.remove(seatbook)
-        booking.seat_book.append(seatbook)
+        booking.seat_book.append(i)
+
+        for ticket in booking.ticket:
+            if seatbook == ticket.seatbook:
+                break
+        ticket.seatbook = i
         
         
     def add_promotion(self,promotion_code,discount):
