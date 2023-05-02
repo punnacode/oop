@@ -52,19 +52,24 @@ class Admin:
         flight_instance.time_depart = edit_time_depart
         flight_instance.price = edit_price
 
-    def cancel_flight_instance(self,flight_instance):
-        del flight_instance
+    def cancel_flight_instance(self,airport,flight_instance):
+        airport.flight_instance_list.remove(flight_instance)
 
-    def change_seat(self,booking,ticket,seat,edit_seat):
-        bookseat = booking.seat_book
-        for i in bookseat:
-            if i == seat:
-                bookseat.remove(i)
-                bookseat.append(edit_seat)
-            else:
-                print("Seat not Found")
-        ticket.aircraft_seat = edit_seat
-        
+    def change_seat(self,booking,seat_row,seat_column,edit_seat_row,edit_seat_column):
+        for seatbook in booking.seat_book:
+            if seat_row == seatbook.seat_row and seat_column == seatbook.seat_column:
+                break
+        seat_list = booking._flight.aircraft.seat_list
+        for i in seat_list:
+            if edit_seat_row == i.seat_row and edit_seat_column == i.seat_column:
+                break
+        booking.seat_book.remove(seatbook)
+        booking.seat_book.append(i)
+
+        for ticket in booking.ticket:
+            if seatbook == ticket.seatbook:
+                break
+        ticket.seatbook = i
         
         
     def add_promotion(self,promotion_code,discount):

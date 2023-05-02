@@ -25,6 +25,9 @@ class Booking:
     @property
     def id(self):
         return self._id
+    @property
+    def flight(self):
+        return self._flight
       
     @property
     def flight_international_status(self):
@@ -128,11 +131,6 @@ class Booking:
 
     def sum_price():
         pass
-
-    def search_ticket(self,flight,aircraftseat):
-        for i in self.ticket:
-            if i.flight == flight and i.aircraft_seat == aircraftseat:
-                return i
 
     def flight_sum_price(self):
         adult_price = round(float(self._flight.sum_price(self._package) * self._adult_num),2)

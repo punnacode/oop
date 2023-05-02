@@ -61,3 +61,9 @@ class Ticket:
     def aircraft_seat(self,new_seat):
         if isinstance(new_seat, str):
             self._price = new_seat
+    @property
+    def seatbook(self):
+        return self._seatbook
+    @seatbook.setter
+    def seatbook(self,new_seatbook):
+        self._seatbook = new_seatbook
