@@ -210,6 +210,8 @@ async def edit_flight_instance(flight_instance:dict):
         admin = adminlist.login(username,password) 
         admin.edit_flight_instance(flightins,edit_date,edit_time_depart,edit_time_arrive,edit_price)
         return{"Edit Successfully"}
+    else:
+        return{"Cannot Edit FlightInstance"}
     
 @app.delete("/cancel_flight_instance",tags=["admin"]) #Check
 async def delete_flight_instance(flight_instance:dict):
@@ -226,6 +228,8 @@ async def delete_flight_instance(flight_instance:dict):
         admin = adminlist.login(username,password)
         admin.cancel_flight_instance(airport,flightins)
         return{"Cancel Successfully"}
+    else:
+        return{"Cannot Cancel FlightInstance"}
     
 @app.put("/change_seat",tags=["admin"]) #Check
 async def change_seat(data:dict):
@@ -246,6 +250,8 @@ async def change_seat(data:dict):
         admin = adminlist.login(username,password)
         admin.change_seat(booking,seat_row,seat_column,edit_seat_row,edit_seat_column)
         return{"Change Successfully"}
+    else:
+        return{"Cannot Change Seat"}
     
 @app.post("add_promotion",tags=["admin"]) #Check
 async def add_promotion(data:dict):
@@ -259,6 +265,8 @@ async def add_promotion(data:dict):
         admin = adminlist.login(username,password)
         admin.change_seat(promotion_code,discount)
         return{"Promotion is Added!"}
+    else:
+        return{"Cannot Add Promotion"}
 
 @app.get("/select_origin",tags=["search flight"]) #Check
 async def select_origin():
