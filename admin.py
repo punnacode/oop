@@ -2,6 +2,7 @@ from promotion import PromotionCatalog
 from airport import Airport, AirportCatalog
 from aircraft import Aircraft, SeatBook
 from flight import Flight, FlightInstance
+from booking import Booking
 
 class Adminlist:
     def __init__(self):
@@ -47,29 +48,36 @@ class Admin:
             raise TypeError("Parameter type not correct")
 
     def edit_flight_instance(self,flight_instance,edit_date_depart,edit_time_arrive,edit_time_depart,edit_price):
-        flight_instance.date_depart = edit_date_depart
-        flight_instance.time_arrive = edit_time_arrive
-        flight_instance.time_depart = edit_time_depart
-        flight_instance.price = edit_price
+        if isinstance(flight_instance,FlightInstance) and isinstance(edit_date_depart,str) and isinstance(edit_time_arrive,str) and isinstance(edit_time_depart,str) and isinstance(edit_price,float):
+            flight_instance.date_depart = edit_date_depart
+            flight_instance.time_arrive = edit_time_arrive
+            flight_instance.time_depart = edit_time_depart
+            flight_instance.price = edit_price
+        else:
+            raise TypeError("Parameter type not correct")
 
     def cancel_flight_instance(self,airport,flight_instance):
-        airport.flight_instance_list.remove(flight_instance)
+        if isinstance(airport,Airport) and isinstance(flight_instance,FlightInstance):
+            airport.flight_instance_list.remove(flight_instance)
 
     def change_seat(self,booking,seat_row,seat_column,edit_seat_row,edit_seat_column):
-        for seatbook in booking.seat_book:
-            if seat_row == seatbook.seat_row and seat_column == seatbook.seat_column:
-                break
-        seat_list = booking._flight.aircraft.seat_list
-        for i in seat_list:
-            if edit_seat_row == i.seat_row and edit_seat_column == i.seat_column:
-                break
-        booking.seat_book.remove(seatbook)
-        booking.seat_book.append(i)
+        if isinstance(booking,Booking) and isinstance(seat_row,int) and isinstance(seat_column,str) and isinstance(edit_seat_row,int) and isinstance(edit_seat_column,str):
+            for seatbook in booking.seat_book:
+                if seat_row == seatbook.seat_row and seat_column == seatbook.seat_column:
+                    break
+            seat_list = booking._flight.aircraft.seat_list
+            for i in seat_list:
+                if edit_seat_row == i.seat_row and edit_seat_column == i.seat_column:
+                    break
+            booking.seat_book.remove(seatbook)
+            booking.seat_book.append(i)
 
-        for ticket in booking.ticket:
-            if seatbook == ticket.seatbook:
-                break
-        ticket.seatbook = i
+            for ticket in booking.ticket:
+                if seatbook == ticket.seatbook:
+                    break
+                ticket.seatbook = i
+        else:
+            raise TypeError("Parameter type not correct")
         
         
     def add_promotion(self,promotion_code,discount):
