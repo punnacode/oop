@@ -481,6 +481,19 @@ class Application(tk.Tk):
         print(data["Flight name"],data["Package name"])
         response = requests.post(API_CREATE_BOOKING,json=data)
         if response.ok:
+
+            self.frames[PassengerInfo].select_passenger_title.set('')
+            self.frames[PassengerInfo].name.set('')
+            self.frames[PassengerInfo].last_name.set('')
+            self.frames[PassengerInfo].date_of_birth.set('')
+            self.frames[PassengerInfo].phon_number.set('')
+            self.frames[PassengerInfo].email.set('')
+            self.frames[PassengerInfo].national.set('')
+            self.frames[PassengerInfo].country_residence.set('')
+            self.frames[PassengerInfo].passport_number.set('')
+            self.frames[PassengerInfo].issued_by.set('')
+            self.frames[PassengerInfo].passport_exp_date.set('')
+
             data["Booking ID"] = response.json()["Booking ID"]
             self.frames[PassengerInfo].adult_num = adult
             self.frames[PassengerInfo].child_num = child
@@ -520,8 +533,8 @@ class Application(tk.Tk):
                 tk.Label(self.frames[PassengerInfo], text="Passport exp date :").grid(row=11, column=0,padx=10, ipady=5, sticky='E')
                 tk.Entry(self.frames[PassengerInfo], textvariable=self.frames[PassengerInfo].passport_exp_date, width=12, justify="left").grid(row=11, column=1, padx=10)
 
-            tk.Button(self.frames[PassengerInfo],text="Next", bg="green",command= lambda: self.next_passenger()).grid(row=12,column=0, ipadx=10, ipady=5)
-            tk.Button(self.frames[PassengerInfo],text="Back", bg="green",command= lambda: self.back_to_select_flight()).grid(row=12,column=1, ipadx=10, ipady=5)
+            tk.Button(self.frames[PassengerInfo],text="Next", bg="green",command= lambda: self.next_passenger()).grid(row=12,column=1, ipadx=10, ipady=5)
+            tk.Button(self.frames[PassengerInfo],text="Back", bg="green",command= lambda: self.back_to_select_flight()).grid(row=12,column=0, ipadx=10, ipady=5)
 
             self.frames[SelectFlight].forget()
             self.frames[PassengerInfo].tkraise()
@@ -596,8 +609,8 @@ class Application(tk.Tk):
                         tk.Entry(self.frames[PassengerInfo], textvariable=self.frames[PassengerInfo].issued_by, width=12, justify="left").grid(row=8, column=1, padx=10)
                         tk.Label(self.frames[PassengerInfo], text="Passport exp date :").grid(row=9, column=0,padx=10, ipady=5, sticky='E')
                         tk.Entry(self.frames[PassengerInfo], textvariable=self.frames[PassengerInfo].passport_exp_date, width=12, justify="left").grid(row=9, column=1, padx=10)
-                    tk.Button(self.frames[PassengerInfo],text="Next", bg="green",command= lambda: self.next_passenger()).grid(row=13,column=0, ipadx=10, ipady=5)
-                    tk.Button(self.frames[PassengerInfo],text="Back", bg="green",command= lambda: self.back_to_select_flight()).grid(row=13,column=1, ipadx=10, ipady=5)
+                    tk.Button(self.frames[PassengerInfo],text="Next", bg="green",command= lambda: self.next_passenger()).grid(row=13,column=1, ipadx=10, ipady=5)
+                    tk.Button(self.frames[PassengerInfo],text="Back", bg="green",command= lambda: self.back_to_select_flight()).grid(row=13,column=0, ipadx=10, ipady=5)
                 else:
                     self.finish_passenger(data["Adult"],data["Child"])
 
