@@ -39,9 +39,6 @@ class AircraftSeat:
         self._seat_column = seat_column
         self._seat_type = seat_type
     
-    def get_seat_detail():
-        pass
-    
     @property
     def seat_row(self):
         return self._seat_row

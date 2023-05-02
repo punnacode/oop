@@ -111,9 +111,6 @@ class Booking:
     def add_book_seat(self,book_seat):
         return self.seat_book.append(book_seat)
 
-    def add_seat_ticket():
-        pass
-
     def create_seatbook(self,row,column):
         seat_list = self._flight.aircraft.seat_list
         for seat in seat_list:
@@ -122,12 +119,6 @@ class Booking:
                 book_seat = SeatBook(False,row,column,seat.seat_type)
                 self._seat_book.append(book_seat)
                 return book_seat 
-
-    def add_addon():
-        pass
-
-    def sum_price():
-        pass
 
     def search_ticket(self,flight,aircraftseat):
         for i in self.ticket:
@@ -166,22 +157,4 @@ class Booking:
         payment.add_booking(self)
         self._payment = payment
         return self._payment
-        
-    def update_booking_status():
-        pass
-    
-    def to_dict(self):
-        return {
-            "id": self._id,
-            "flight": self._flight.to_dict(),  # assumes Flight class has a to_dict method
-            "package": self._package.get_package_detail(),
-            "adults": self._adult_num,
-            "children": self._kid_num,
-            "infants": self._infant_num,
-            "phone": self._phone_number,
-            "email": self._email,
-            "passengers": self._passenger_list,
-            "tickets": self._ticket,
-            "seat_bookings": self._seat_book,
-            "payment":self._payment
-        }
+

@@ -49,17 +49,6 @@ class Payment:
     def payment_total(self,new_payment_total):
         self._payment_total = new_payment_total
     
-    def to_dict(self):
-        payment_dict = {
-            "id": self._id,
-            "booking": self._booking.to_dict() if self._booking else None,
-            "payment_status": self._payment_status,
-            "promotion_code": self._promotion_code,
-            "payment_type": self._payment_type,
-            "payment_total": self._payment_total,
-        }
-        return payment_dict
-    
 class CreditCardPayment(Payment):
     def __init__(self,id,payment_status,card_number,expired_date,card_holder,cvv):
         Payment.__init__(self,id,payment_status)

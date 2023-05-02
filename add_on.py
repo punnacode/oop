@@ -124,9 +124,7 @@ class Baggage:
             return self._extra_bag
         return
     
-    def get_baggage():
-        pass
-
+    
         
 class Meal:
     def __init__(self,meal_type,meal_amout):
@@ -144,8 +142,7 @@ class Meal:
             return [self._meal_amount,self._meal_type.name]
         return
     
-    def get_meal():
-        pass
+    
 
 class MealType(Enum):
     NONE : int = 0
@@ -163,6 +160,5 @@ class SpecialBaggage:
     def special_bag(self):
         return self._special_bag
 
-    def get_specialbaggage():
-        pass
+  
     
