@@ -201,10 +201,6 @@ async def edit_flight_instance(flight_instance:dict):
     edit_price = flight_instance["Edit Price"]
     flightins = airportcatalog.search_flight_instance(depart_airport,date_depart,flight)
     
-    for depa in airport_list:
-        if depart_airport == depa._name:
-            break
-    
     status = adminlist.check(username,password)
     if status:
         admin = adminlist.login(username,password) 
