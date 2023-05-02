@@ -4,7 +4,7 @@ from aircraft import Aircraft,SeatType,AircraftCatalog
 from add_on import PackageCatalog,Meal,MealType,Baggage,SpecialBaggage,Extraservice,SpecialAssistance
 from admin import Adminlist,Admin
 from payment import PaymentType,CreditCardPayment,SMSVerifyPayment,PaymentStatus
-from Passenger import Passenger,TitleType
+from Passenger import Passenger,TitleType,InternationalPassenger
 from promotion import PromotionCatalog
 
 app = FastAPI()
@@ -363,31 +363,28 @@ async def enter_passenger(type_passenger:str,title_passenger:str,data:dict):
                 return {"message":"Invalid phone number and email"}
             if phone_number != '' and email != '':
                 booking.main_passenger_info(phone_number,email)
-        passenger = Passenger("ADULT",title_passenger,name,last_name,date_of_birth)
-        if booking.flight_international_status and passenger.check_international_info(national,country_residence,passport_number,issued_by,passport_exp_date):
-            passenger.add_international_info(national,country_residence,passport_number,issued_by,passport_exp_date)
-        if booking.flight_international_status and not passenger.check_international_info(national,country_residence,passport_number,issued_by,passport_exp_date):
-            return f'<message>:check your infomation-->international'
+        if booking.flight_international_status == False:
+            passenger = Passenger("ADULT",title_passenger,name,last_name,date_of_birth)
+        if booking.flight_international_status :
+            passenger = InternationalPassenger("ADULT", title_passenger, name, last_name, date_of_birth,national,country_residence,passport_number,issued_by,passport_exp_date)
         booking.add_passenger(passenger)
             
     elif passenger_type == "CHILD" and title_passenger in [TitleType(i).name for i in range(3,5)]:        
         if len(booking.get_kid_list) >= booking.kid_num:
             return {"message": "Maximum number of kid passenger reached."}
-        passenger = Passenger("CHILD",title_passenger,name,last_name,date_of_birth)
-        if booking.flight_international_status and passenger.check_international_info(national,country_residence,passport_number,issued_by,passport_exp_date):
-            passenger.add_international_info(national,country_residence,passport_number,issued_by,passport_exp_date)
-        if booking.flight_international_status and not passenger.check_international_info(national,country_residence,passport_number,issued_by,passport_exp_date):
-                return f'<message>:check your infomation-->international'
+        if booking.flight_international_status == False:
+            passenger = Passenger("CHILD",title_passenger,name,last_name,date_of_birth)
+        if booking.flight_international_status :
+            passenger = InternationalPassenger("CHILD", title_passenger, name, last_name, date_of_birth,national,country_residence,passport_number,issued_by,passport_exp_date)
         booking.add_passenger(passenger)
 
     elif passenger_type == "INFANT" and title_passenger in [TitleType(i).name for i in range(5,7)]:
         if len(booking.get_infant_list) >= booking.infant_num:
             return {"message": "Maximum number of infant passenger reached."}    
-        passenger = Passenger("INFANT",title_passenger,name,last_name,date_of_birth)
-        if booking.flight_international_status and passenger.check_international_info(national,country_residence,passport_number,issued_by,passport_exp_date):
-            passenger.add_international_info(national,country_residence,passport_number,issued_by,passport_exp_date)
-        if booking.flight_international_status and not passenger.check_international_info(national,country_residence,passport_number,issued_by,passport_exp_date):
-            return f'<message>:check your infomation-->international'
+        if booking.flight_international_status == False:
+            passenger = Passenger("INFANT",title_passenger,name,last_name,date_of_birth)
+        if booking.flight_international_status :
+            passenger = InternationalPassenger("INFANT", title_passenger, name, last_name, date_of_birth,national,country_residence,passport_number,issued_by,passport_exp_date)
         
         for adult in booking.passenger_list:
             if adult.name == parent[0] and  adult.last_name == parent[1] and parent != '':
