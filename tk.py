@@ -468,8 +468,8 @@ class Application(tk.Tk):
                 tk.Label(self.frames[PassengerInfo], text="Passport exp date :").grid(row=11, column=0,padx=10, ipady=5, sticky='E')
                 tk.Entry(self.frames[PassengerInfo], textvariable=self.frames[PassengerInfo].passport_exp_date, width=12, justify="left").grid(row=11, column=1, padx=10)
 
-            tk.Button(self.frames[PassengerInfo],text="Next", bg="green",command= lambda: self.next_passenger()).grid(row=12,column=0, ipadx=10, ipady=5)
-            tk.Button(self.frames[PassengerInfo],text="Back", bg="green",command= lambda: self.back_to_select_flight()).grid(row=12,column=1, ipadx=10, ipady=5)
+            tk.Button(self.frames[PassengerInfo],text="Next", bg="green",command= lambda: self.next_passenger()).grid(row=12,column=1, ipadx=10, ipady=5)
+            tk.Button(self.frames[PassengerInfo],text="Back", bg="green",command= lambda: self.back_to_select_flight()).grid(row=12,column=0, ipadx=10, ipady=5)
 
             self.frames[SelectAddOn].forget()
             self.frames[PassengerInfo].tkraise()
