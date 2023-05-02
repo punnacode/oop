@@ -504,7 +504,7 @@ class Application(tk.Tk):
             tk.Entry(self.frames[PassengerInfo], textvariable=self.frames[PassengerInfo].email, width=12, justify="left").grid(row=6, column=1, padx=10)            
 
             #inter = True
-            inter = requests.post(API_INTER_CHECK,json=data)
+            inter = requests.post(API_INTER_CHECK,json=data).json()
             if inter == True:
                 tk.Label(self.frames[PassengerInfo], text="Nationality :").grid(row=7, column=0,padx=10, ipady=5, sticky='E')
                 tk.Entry(self.frames[PassengerInfo], textvariable=self.frames[PassengerInfo].national, width=12, justify="left").grid(row=7, column=1, padx=10)
