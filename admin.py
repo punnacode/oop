@@ -1,4 +1,4 @@
-from promotion import PromotionCatalog
+from promotion import PromotionCatalog,Promotion
 from airport import Airport, AirportCatalog
 from aircraft import Aircraft, SeatBook
 from flight import Flight, FlightInstance
@@ -59,29 +59,34 @@ class Admin:
     def cancel_flight_instance(self,airport,flight_instance):
         if isinstance(airport,Airport) and isinstance(flight_instance,FlightInstance):
             airport.flight_instance_list.remove(flight_instance)
+        else:
+            raise TypeError("Parameter type not correct")
 
     def change_seat(self,booking,seat_row,seat_column,edit_seat_row,edit_seat_column):
         if isinstance(booking,Booking) and isinstance(seat_row,int) and isinstance(seat_column,str) and isinstance(edit_seat_row,int) and isinstance(edit_seat_column,str):
             for seatbook in booking.seat_book:
                 if seat_row == seatbook.seat_row and seat_column == seatbook.seat_column:
+                    book = seatbook
                     break
             seat_list = booking._flight.aircraft.seat_list
             for i in seat_list:
                 if edit_seat_row == i.seat_row and edit_seat_column == i.seat_column:
+                    new = i
                     break
-            booking.seat_book.remove(seatbook)
-            booking.seat_book.append(i)
+            booking.seat_book.remove(book)
+            booking.seat_book.append(new)
 
             for ticket in booking.ticket:
                 if seatbook == ticket.seatbook:
+                    tk = ticket
                     break
-                ticket.seatbook = i
+            tk.seatbook = i
         else:
             raise TypeError("Parameter type not correct")
         
         
-    def add_promotion(self,promotion_code,discount):
+    def add_promotion(self,promotion_code,discount,promotioncatalog):
         if isinstance(promotion_code,str) and isinstance(discount,int) :
-                PromotionCatalog._promotion_list.append((promotion_code,discount))
+                promotioncatalog.promotion_list.append(Promotion(promotion_code,discount))
         else:
             raise TypeError("Parameter type is not correct")

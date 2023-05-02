@@ -10,9 +10,9 @@ from promotion import PromotionCatalog
 app = FastAPI()
 ## Airport instance 
 airportcatalog = AirportCatalog()
-AirportA = Airport("AirportA")
+AirportA = Airport("Donmuang")
 airportcatalog.add_airport(AirportA)
-AirportB = Airport("AirportB")
+AirportB = Airport("Chiang Mai")
 airportcatalog.add_airport(AirportB)
 HoshiminhCity = Airport("Ho chi minh city")
 airportcatalog.add_airport(HoshiminhCity)
@@ -28,14 +28,16 @@ dm254 = Aircraft("DM254")
 aircraftcatalog.add_aircraft(dm254)
 ## Flight instance
 AdminA.create_flight("DD405",90,False,AirportA,AirportB,)
-AdminA.create_flight("DD406",90,False,AirportA,AirportB)
+AdminA.create_flight("DD406",90,False,AirportB,AirportA)
 AdminA.create_flight("DD415",120,True,AirportA,HoshiminhCity)
+AdminA.create_flight("DD416",120,True,HoshiminhCity,AirportA)
 ## FlightInstance instance
 AdminA.create_flight_instance(AirportA,"DD405","2023-05-01","18.30","20.00",dm254,1000.00)
 AdminA.create_flight_instance(AirportA,"DD405","2023-05-18","18.30","20.00",dm254,1000.00)
 AdminA.create_flight_instance(AirportA,"DD405","2023-05-19","18.30","20.00",dm254,1000.00)
-AdminA.create_flight_instance(AirportA,"DD406","2023-05-18","20.30","22.00",dm254,1500.00)
-AdminA.create_flight_instance(AirportA,"DD415","2023-05-18","20.30","22.30",dm254,2000.00)
+AdminA.create_flight_instance(AirportB,"DD406","2023-05-18","20.30","22.00",dm254,1500.00)
+AdminA.create_flight_instance(AirportA,"DD415","2023-05-18","18.30","22.30",dm254,2000.00)
+AdminA.create_flight_instance(HoshiminhCity,"DD416","2023-05-18","21.00","23.00",dm254,2000.00)
 ## Package instance
 packagecatalog = PackageCatalog()
 packagecatalog.create_package("Normal",0.00,False,False,False,7,0)
@@ -68,12 +70,12 @@ test_meal = Meal("Krapow",1)
 test_specialbaggage = SpecialBaggage("No selection")
 test_specialAssistance = SpecialAssistance(False,False,False,False,False,False)
 ## Test object
-test_flight_instance = airportcatalog.search_flight_instance("AirportA","2023-05-18","DD405")
+test_flight_instance = airportcatalog.search_flight_instance("Donmuang","2023-05-18","DD405")
 test_package1 = packagecatalog.get_package("Max")
 test_package2 = packagecatalog.get_package("Normal")
 ## Test booking1
 test_booking_id1 = test_flight_instance.create_booking(test_flight_instance,test_package1,1,1,0)
-test_booking1 = airportcatalog.search_booking("AirportA","2023-05-18","DD405",test_booking_id1)
+test_booking1 = airportcatalog.search_booking("Donmuang","2023-05-18","DD405",test_booking_id1)
 test_booking1.add_passenger(fake_passenger_1)
 test_booking1.add_passenger(fake_passenger_2)
 test_seat1 = test_booking1.create_seatbook(1,"a")
@@ -82,7 +84,7 @@ test_booking1.create_ticket(fake_passenger_1,test_seat1,test_extraservice,test_b
 test_booking1.create_ticket(fake_passenger_2,test_seat2,test_extraservice,test_baggage,test_meal,test_specialbaggage,test_specialAssistance)
 ## Test booking2
 test_booking_id2 = test_flight_instance.create_booking(test_flight_instance,test_package2,1,0,1)
-test_booking2 = airportcatalog.search_booking("AirportA","2023-05-18","DD405",test_booking_id2)
+test_booking2 = airportcatalog.search_booking("Donmuang","2023-05-18","DD405",test_booking_id2)
 test_booking2.add_passenger(fake_passenger_3)
 test_booking2.add_passenger(fake_passenger_4)
 test_seat3 = test_booking2.create_seatbook(2,"a")
@@ -95,8 +97,8 @@ Data for add flights
     "Name":"DD405",
     "Flight Duration":90,
     "International":0,
-    "Depart Airport":"AirportA",
-    "Arrive Airport":"AirportB"
+    "Depart Airport":"Donmuang",
+    "Arrive Airport":"Chiang Mai"
 }
 
 Data for add flight instances 
@@ -111,8 +113,8 @@ Data for add flight instances
 
 Data for booking flight
 {
-    "Origin airport":"AirportA",
-    "Destination airport":"AirportB",
+    "Origin airport":"Donmuang",
+    "Destination airport":"Chiang Mai",
     "Date depart":"2023-05-18",
     "Flight name":"DD405",
     "Package name":"Max",
@@ -145,12 +147,14 @@ async def create_flight(flight:dict):
 
     print(type(international))
     
-    for depa in airport_list:
-        if depart_airport == depa._name:
+    for i in airport_list:
+        if depart_airport == i._name:
+            depa = i
             break 
-    
-    for arra in airport_list:
-        if arrive_airport == arra._name:
+    print(depa.name)
+    for j in airport_list:
+        if arrive_airport == j._name:
+            arra = j
             break 
 
     status = adminlist.check(username,password) 
@@ -175,18 +179,20 @@ async def create_flight_instance(flight_instance : dict):
     aircraft = flight_instance["Aircraft"]
     price = flight_instance["Price"]
 
-    for ac in aircraft_list:
-        if aircraft == ac._name:
+    for i in aircraft_list:
+        if aircraft == i._name:
+            ac = i
             break 
     
-    for depa in airport_list:
-        if depart_airport == depa._name:
+    for j in airport_list:
+        if depart_airport == j._name:
+            depa = j
             break 
     
     status = adminlist.check(username,password) 
     if status:
         admin = adminlist.login(username,password)
-        admin.create_flight_instance(flight,date,time_depart,time_arrive,ac,price)
+        admin.create_flight_instance(depa,flight,date,time_depart,time_arrive,ac,price)
         return {"flight instance is Added!"}
     else:
         return{"Cannot Add FlightInstance"}
@@ -204,7 +210,7 @@ async def edit_flight_instance(flight_instance:dict):
     edit_time_arrive = flight_instance["Edit Time Arrive"]
     edit_price = flight_instance["Edit Price"]
     flightins = airportcatalog.search_flight_instance(depart_airport,date_depart,flight)
-    
+    print (flightins)
     status = adminlist.check(username,password)
     if status:
         admin = adminlist.login(username,password) 
@@ -253,7 +259,7 @@ async def change_seat(data:dict):
     else:
         return{"Cannot Change Seat"}
     
-@app.post("add_promotion",tags=["admin"]) #Check
+@app.post("/add_promotion",tags=["admin"]) #Check
 async def add_promotion(data:dict):
     username = data["Username"]
     password = data["Password"]
@@ -263,7 +269,7 @@ async def add_promotion(data:dict):
     status = adminlist.check(username,password)
     if status:
         admin = adminlist.login(username,password)
-        admin.change_seat(promotion_code,discount)
+        admin.add_promotion(promotion_code,discount,promotioncatalog)
         return{"Promotion is Added!"}
     else:
         return{"Cannot Add Promotion"}
