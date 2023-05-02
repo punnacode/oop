@@ -166,7 +166,6 @@ class Application(tk.Tk):
                     "Depart Airport": self.frames[AdminPage].depfcancel.get(),
                     "Date": self.frames[AdminPage].datefcancel.get(),
                     "Flight": self.frames[AdminPage].flightfcancel.get(),
-                    "Seat": self.frames[AdminPage].edit_date.get(),
                     }
         response = requests.delete(API_CANCEL_FLIGHT_INSTANCE,json=payload)
         if response.ok:
@@ -1085,7 +1084,7 @@ class AdminPage(tk.Frame):
         tk.Entry(self, textvariable=self.promotion_code, width=12, justify="left").grid(row=14, column=1, padx=10)
         tk.Label(self, text = "Discount").grid(row=15,column=0, padx=10, ipady=5, sticky='E')
         tk.Entry(self, textvariable=self.discount, width=12, justify="left").grid(row=15, column=1, padx=10)
-        tk.Button(self, text=" Submit ", bg="green", command=lambda: controller.add_promotion(self)).grid(row=16, column=0, columnspan=2)
+        tk.Button(self, text=" Submit ", bg="green", command=lambda: controller.add_promotion()).grid(row=16, column=0, columnspan=2)
 
         self.pack(padx = 100, pady = 10)
 

@@ -9,7 +9,7 @@ class PromotionCatalog:
             raise TypeError("Parameter type not correct")
     
     @property
-    def get_promotion_list(self):
+    def promotion_list(self):
         return self._promotion_list
 
     def search_promotion(self,promotion_name):
