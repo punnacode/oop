@@ -492,6 +492,7 @@ class Application(tk.Tk):
             self.frames[PassengerInfo].passport_number.set('')
             self.frames[PassengerInfo].issued_by.set('')
             self.frames[PassengerInfo].passport_exp_date.set('')
+            self.frames[PassengerInfo].select_adult_list.set('')
 
             data["Booking ID"] = response.json()["Booking ID"]
             self.frames[PassengerInfo].adult_num = adult
@@ -544,7 +545,7 @@ class Application(tk.Tk):
             if self.frames[PassengerInfo].name.get() == "" and self.frames[PassengerInfo].last_name.get() == "" and self.frames[PassengerInfo].date_of_birth.get() == "":
                 messagebox.showerror("Error","Please enter infomation")
                 return
-            elif data["Adult"] - 1 == self.frames[PassengerInfo].adult_num and self.frames[PassengerInfo].phon_number.get() == "" and self.frames[PassengerInfo].email.get() == "":
+            elif data["Adult"] - 1 == self.frames[PassengerInfo].adult_num and self.frames[PassengerInfo].phon_number.get() == "" and self.frames[PassengerInfo].email.get() == "" and self.frames[PassengerInfo].select_passenger_type.get() == "ADULT":
                 messagebox.showerror("Error","Please enter infomation")
                 return 
             elif inter == True and self.frames[PassengerInfo].national.get() == "" and self.frames[PassengerInfo].country_residence.get() == "" and self.frames[PassengerInfo].passport_number.get() == "" and self.frames[PassengerInfo].issued_by.get() == "" and self.frames[PassengerInfo].passport_exp_date.get() == "":
@@ -587,6 +588,7 @@ class Application(tk.Tk):
                 self.frames[PassengerInfo].passport_number.set('')
                 self.frames[PassengerInfo].issued_by.set('')
                 self.frames[PassengerInfo].passport_exp_date.set('')
+                self.frames[PassengerInfo].select_adult_list.set('')
 
                 if self.frames[PassengerInfo].infant_num > 0 or self.frames[PassengerInfo].child_num > 0 or self.frames[PassengerInfo].adult_num > 0:
                     tk.Label(self.frames[PassengerInfo], text="Title :").grid(row=1, column=0,padx=10, ipady=5, sticky='E')

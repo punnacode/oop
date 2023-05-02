@@ -10,7 +10,7 @@ from promotion import PromotionCatalog
 app = FastAPI()
 ## Airport instance 
 airportcatalog = AirportCatalog()
-AirportA = Airport("Donmuang")
+AirportA = Airport("Don muang")
 airportcatalog.add_airport(AirportA)
 AirportB = Airport("Chiang Mai")
 airportcatalog.add_airport(AirportB)
@@ -70,12 +70,12 @@ test_meal = Meal("Krapow",1)
 test_specialbaggage = SpecialBaggage("No selection")
 test_specialAssistance = SpecialAssistance(False,False,False,False,False,False)
 ## Test object
-test_flight_instance = airportcatalog.search_flight_instance("Donmuang","2023-05-18","DD405")
+test_flight_instance = airportcatalog.search_flight_instance("Don muang","2023-05-18","DD405")
 test_package1 = packagecatalog.get_package("Max")
 test_package2 = packagecatalog.get_package("Normal")
 ## Test booking1
 test_booking_id1 = test_flight_instance.create_booking(test_flight_instance,test_package1,1,1,0)
-test_booking1 = airportcatalog.search_booking("Donmuang","2023-05-18","DD405",test_booking_id1)
+test_booking1 = airportcatalog.search_booking("Don muang","2023-05-18","DD405",test_booking_id1)
 test_booking1.add_passenger(fake_passenger_1)
 test_booking1.add_passenger(fake_passenger_2)
 test_seat1 = test_booking1.create_seatbook(1,"a")
@@ -84,7 +84,7 @@ test_booking1.create_ticket(fake_passenger_1,test_seat1,test_extraservice,test_b
 test_booking1.create_ticket(fake_passenger_2,test_seat2,test_extraservice,test_baggage,test_meal,test_specialbaggage,test_specialAssistance)
 ## Test booking2
 test_booking_id2 = test_flight_instance.create_booking(test_flight_instance,test_package2,1,0,1)
-test_booking2 = airportcatalog.search_booking("Donmuang","2023-05-18","DD405",test_booking_id2)
+test_booking2 = airportcatalog.search_booking("Don muang","2023-05-18","DD405",test_booking_id2)
 test_booking2.add_passenger(fake_passenger_3)
 test_booking2.add_passenger(fake_passenger_4)
 test_seat3 = test_booking2.create_seatbook(2,"a")
@@ -97,7 +97,7 @@ Data for add flights
     "Name":"DD405",
     "Flight Duration":90,
     "International":0,
-    "Depart Airport":"Donmuang",
+    "Depart Airport":"Don muang",
     "Arrive Airport":"Chiang Mai"
 }
 
@@ -113,7 +113,7 @@ Data for add flight instances
 
 Data for booking flight
 {
-    "Origin airport":"Donmuang",
+    "Origin airport":"Don muang",
     "Destination airport":"Chiang Mai",
     "Date depart":"2023-05-18",
     "Flight name":"DD405",
