@@ -46,14 +46,14 @@ class Admin:
         else:
             raise TypeError("Parameter type not correct")
 
-    def edit_flight_instance(self,flight_instance,edit_date_depart,edit_time_arrive,edit_time_depart,edit_price):
+    def edit_flight_instance(self,airport,flight_instance,edit_date_depart,edit_time_arrive,edit_time_depart,edit_price):
         flight_instance.date_depart = edit_date_depart
         flight_instance.time_arrive = edit_time_arrive
         flight_instance.time_depart = edit_time_depart
         flight_instance.price = edit_price
 
-    def cancel_flight_instance(self,flight_instance):
-        del flight_instance
+    def cancel_flight_instance(self,airport,flight_instance):
+        airport.flight_instance_list.remove(flight_instance)
 
     def change_seat(self,booking,seat_row,seat_column,edit_seat_row,edit_seat_column):
         for seatbook in booking.seat_book:

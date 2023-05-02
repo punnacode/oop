@@ -196,10 +196,6 @@ async def edit_flight_instance(flight_instance:dict):
     edit_price = flight_instance["Edit Price"]
     flightins = airportcatalog.search_flight_instance(depart_airport,date_depart,flight)
     
-    for depa in airport_list:
-        if depart_airport == depa._name:
-            break
-    
     status = adminlist.check(username,password)
     admin = adminlist.login(username,password) 
     if status:
@@ -209,18 +205,19 @@ async def edit_flight_instance(flight_instance:dict):
 
 @app.delete("/cancel_flight_instance",tags=["admin"])
 async def delete_flight_instance(flight_instance:dict):
-    username = flight_instance["Username"]
-    password = flight_instance["Password"]
+    #username = flight_instance["Username"]
+    #password = flight_instance["Password"]
     depart_airport = flight_instance["Depart Airport"]
     date_depart = flight_instance["Date"]
     flight = flight_instance["Flight"]
+    airport = airportcatalog.search_airport(depart_airport)
     flightins = airportcatalog.search_flight_instance(depart_airport,date_depart,flight)
 
-    status = adminlist.check(username,password)
-    admin = adminlist.login(username,password)
-    if status:
-        admin.cancel_flight_instance(flightins)
-        return{"Cancel Successfully"}
+    #status = adminlist.check(username,password)
+    #admin = adminlist.login(username,password)
+    #if status:
+    AdminA.cancel_flight_instance(airport,flightins)
+    return{"Cancel Successfully"}
     
 @app.put("/change_seat",tags=["admin"])
 async def change_seat(data:dict):

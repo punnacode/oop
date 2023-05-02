@@ -218,12 +218,13 @@ async def delete_flight_instance(flight_instance:dict):
     depart_airport = flight_instance["Depart Airport"]
     date_depart = flight_instance["Date"]
     flight = flight_instance["Flight"]
+    airport = airportcatalog.search_airport(depart_airport)
     flightins = airportcatalog.search_flight_instance(depart_airport,date_depart,flight)
 
     status = adminlist.check(username,password)
     if status:
         admin = adminlist.login(username,password)
-        admin.cancel_flight_instance(flightins)
+        admin.cancel_flight_instance(airport,flightins)
         return{"Cancel Successfully"}
     
 @app.put("/change_seat",tags=["admin"]) #Check
