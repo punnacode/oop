@@ -4,7 +4,7 @@ from aircraft import Aircraft,SeatType,AircraftCatalog
 from add_on import PackageCatalog,Meal,MealType,Baggage,SpecialBaggage,Extraservice,SpecialAssistance
 from admin import Adminlist,Admin
 from payment import PaymentType,CreditCardPayment,SMSVerifyPayment,PaymentStatus
-from Passenger import Passenger,TitleType
+from Passenger import Passenger,TitleType,InternationalPassenger
 from promotion import PromotionCatalog
 
 app = FastAPI()
@@ -14,6 +14,8 @@ AirportA = Airport("AirportA")
 airportcatalog.add_airport(AirportA)
 AirportB = Airport("AirportB")
 airportcatalog.add_airport(AirportB)
+HoshiminhCity = Airport("Ho chi minh city")
+airportcatalog.add_airport(HoshiminhCity)
 #Admin instance
 adminlist = Adminlist()
 AdminA = Admin("bob", "wowza567")
@@ -27,11 +29,13 @@ aircraftcatalog.add_aircraft(dm254)
 ## Flight instance
 AdminA.create_flight("DD405",90,False,AirportA,AirportB,)
 AdminA.create_flight("DD406",90,False,AirportA,AirportB)
+AdminA.create_flight("DD415",120,True,AirportA,HoshiminhCity)
 ## FlightInstance instance
 AdminA.create_flight_instance(AirportA,"DD405","2023-05-01","18.30","20.00",dm254,1000.00)
 AdminA.create_flight_instance(AirportA,"DD405","2023-05-18","18.30","20.00",dm254,1000.00)
 AdminA.create_flight_instance(AirportA,"DD405","2023-05-19","18.30","20.00",dm254,1000.00)
 AdminA.create_flight_instance(AirportA,"DD406","2023-05-18","20.30","22.00",dm254,1500.00)
+AdminA.create_flight_instance(AirportA,"DD415","2023-05-18","20.30","22.30",dm254,2000.00)
 ## Package instance
 packagecatalog = PackageCatalog()
 packagecatalog.create_package("Normal",0.00,False,False,False,7,0)
@@ -201,10 +205,6 @@ async def edit_flight_instance(flight_instance:dict):
     edit_price = flight_instance["Edit Price"]
     flightins = airportcatalog.search_flight_instance(depart_airport,date_depart,flight)
     
-    for depa in airport_list:
-        if depart_airport == depa._name:
-            break
-    
     status = adminlist.check(username,password)
     if status:
         admin = adminlist.login(username,password) 
@@ -218,12 +218,13 @@ async def delete_flight_instance(flight_instance:dict):
     depart_airport = flight_instance["Depart Airport"]
     date_depart = flight_instance["Date"]
     flight = flight_instance["Flight"]
+    airport = airportcatalog.search_airport(depart_airport)
     flightins = airportcatalog.search_flight_instance(depart_airport,date_depart,flight)
 
     status = adminlist.check(username,password)
     if status:
         admin = adminlist.login(username,password)
-        admin.cancel_flight_instance(flightins)
+        admin.cancel_flight_instance(airport,flightins)
         return{"Cancel Successfully"}
     
 @app.put("/change_seat",tags=["admin"]) #Check
@@ -234,15 +235,16 @@ async def change_seat(data:dict):
     depart_airport = data["Depart Airport"]
     date_depart = data["Date"]
     flight = data["Flight"]
-    seat = data["Seat"]
-    edit_seat = data["Edit Seat"]
+    seat_row = data["Seat Row"]
+    seat_column = data["Seat Column"]
+    edit_seat_row = data["Edit Seat Row"]
+    edit_seat_column = data["Edit Seat Column"]
     booking = airportcatalog.search_booking(depart_airport,date_depart,flight,booking_id)
-    ticket = booking.search_ticket(flight,seat)
 
     status = adminlist.check(username,password)
     if status:
         admin = adminlist.login(username,password)
-        admin.change_seat(booking,ticket,seat,edit_seat)
+        admin.change_seat(booking,seat_row,seat_column,edit_seat_row,edit_seat_column)
         return{"Change Successfully"}
     
 @app.post("add_promotion",tags=["admin"]) #Check
@@ -363,31 +365,28 @@ async def enter_passenger(type_passenger:str,title_passenger:str,data:dict):
                 return {"message":"Invalid phone number and email"}
             if phone_number != '' and email != '':
                 booking.main_passenger_info(phone_number,email)
-        passenger = Passenger("ADULT",title_passenger,name,last_name,date_of_birth)
-        if booking.flight_international_status and passenger.check_international_info(national,country_residence,passport_number,issued_by,passport_exp_date):
-            passenger.add_international_info(national,country_residence,passport_number,issued_by,passport_exp_date)
-        if booking.flight_international_status and not passenger.check_international_info(national,country_residence,passport_number,issued_by,passport_exp_date):
-            return f'<message>:check your infomation-->international'
+        if booking.flight_international_status == False:
+            passenger = Passenger("ADULT",title_passenger,name,last_name,date_of_birth)
+        if booking.flight_international_status :
+            passenger = InternationalPassenger("ADULT", title_passenger, name, last_name, date_of_birth,national,country_residence,passport_number,issued_by,passport_exp_date)
         booking.add_passenger(passenger)
             
     elif passenger_type == "CHILD" and title_passenger in [TitleType(i).name for i in range(3,5)]:        
         if len(booking.get_kid_list) >= booking.kid_num:
             return {"message": "Maximum number of kid passenger reached."}
-        passenger = Passenger("CHILD",title_passenger,name,last_name,date_of_birth)
-        if booking.flight_international_status and passenger.check_international_info(national,country_residence,passport_number,issued_by,passport_exp_date):
-            passenger.add_international_info(national,country_residence,passport_number,issued_by,passport_exp_date)
-        if booking.flight_international_status and not passenger.check_international_info(national,country_residence,passport_number,issued_by,passport_exp_date):
-                return f'<message>:check your infomation-->international'
+        if booking.flight_international_status == False:
+            passenger = Passenger("CHILD",title_passenger,name,last_name,date_of_birth)
+        if booking.flight_international_status :
+            passenger = InternationalPassenger("CHILD", title_passenger, name, last_name, date_of_birth,national,country_residence,passport_number,issued_by,passport_exp_date)
         booking.add_passenger(passenger)
 
     elif passenger_type == "INFANT" and title_passenger in [TitleType(i).name for i in range(5,7)]:
         if len(booking.get_infant_list) >= booking.infant_num:
             return {"message": "Maximum number of infant passenger reached."}    
-        passenger = Passenger("INFANT",title_passenger,name,last_name,date_of_birth)
-        if booking.flight_international_status and passenger.check_international_info(national,country_residence,passport_number,issued_by,passport_exp_date):
-            passenger.add_international_info(national,country_residence,passport_number,issued_by,passport_exp_date)
-        if booking.flight_international_status and not passenger.check_international_info(national,country_residence,passport_number,issued_by,passport_exp_date):
-            return f'<message>:check your infomation-->international'
+        if booking.flight_international_status == False:
+            passenger = Passenger("INFANT",title_passenger,name,last_name,date_of_birth)
+        if booking.flight_international_status :
+            passenger = InternationalPassenger("INFANT", title_passenger, name, last_name, date_of_birth,national,country_residence,passport_number,issued_by,passport_exp_date)
         
         for adult in booking.passenger_list:
             if adult.name == parent[0] and  adult.last_name == parent[1] and parent != '':

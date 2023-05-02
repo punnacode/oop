@@ -179,10 +179,13 @@ class Application(tk.Tk):
                     "Username":admin["Username"],
                     "Password":admin["Password"],
                     "Booking ID": self.frames[AdminPage].booking_id.get(),
+                    "Depart Airport":self.frames[AdminPage].depart_airportfseat.get(),
                     "Date": self.frames[AdminPage].date_departfseat.get(),
                     "Flight": self.frames[AdminPage].flightfseat.get(),
-                    "Seat":self.frames[AdminPage].seat.get(),
-                    "Change to:": self.frames[AdminPage].edit_seat.get()
+                    "Seat Row":self.frames[AdminPage].seat_row.get(),
+                    "Seat Column":self.frames[AdminPage].seat_column.get(),
+                    "Edit Seat Row":self.frames[AdminPage].edit_seat_row.get(),
+                    "Edit Seat Column":self.frames[AdminPage].edit_seat_column.get(),
                     }
         response = requests.put(API_CHANGE_SEAT,json=payload)
         if response.ok:
@@ -478,6 +481,19 @@ class Application(tk.Tk):
         print(data["Flight name"],data["Package name"])
         response = requests.post(API_CREATE_BOOKING,json=data)
         if response.ok:
+
+            self.frames[PassengerInfo].select_passenger_title.set('')
+            self.frames[PassengerInfo].name.set('')
+            self.frames[PassengerInfo].last_name.set('')
+            self.frames[PassengerInfo].date_of_birth.set('')
+            self.frames[PassengerInfo].phon_number.set('')
+            self.frames[PassengerInfo].email.set('')
+            self.frames[PassengerInfo].national.set('')
+            self.frames[PassengerInfo].country_residence.set('')
+            self.frames[PassengerInfo].passport_number.set('')
+            self.frames[PassengerInfo].issued_by.set('')
+            self.frames[PassengerInfo].passport_exp_date.set('')
+
             data["Booking ID"] = response.json()["Booking ID"]
             self.frames[PassengerInfo].adult_num = adult
             self.frames[PassengerInfo].child_num = child
@@ -504,7 +520,7 @@ class Application(tk.Tk):
             tk.Entry(self.frames[PassengerInfo], textvariable=self.frames[PassengerInfo].email, width=12, justify="left").grid(row=6, column=1, padx=10)            
 
             #inter = True
-            inter = requests.post(API_INTER_CHECK,json=data)
+            inter = requests.post(API_INTER_CHECK,json=data).json()
             if inter == True:
                 tk.Label(self.frames[PassengerInfo], text="Nationality :").grid(row=7, column=0,padx=10, ipady=5, sticky='E')
                 tk.Entry(self.frames[PassengerInfo], textvariable=self.frames[PassengerInfo].national, width=12, justify="left").grid(row=7, column=1, padx=10)
@@ -517,8 +533,8 @@ class Application(tk.Tk):
                 tk.Label(self.frames[PassengerInfo], text="Passport exp date :").grid(row=11, column=0,padx=10, ipady=5, sticky='E')
                 tk.Entry(self.frames[PassengerInfo], textvariable=self.frames[PassengerInfo].passport_exp_date, width=12, justify="left").grid(row=11, column=1, padx=10)
 
-            tk.Button(self.frames[PassengerInfo],text="Next", bg="green",command= lambda: self.next_passenger()).grid(row=12,column=0, ipadx=10, ipady=5)
-            tk.Button(self.frames[PassengerInfo],text="Back", bg="green",command= lambda: self.back_to_select_flight()).grid(row=12,column=1, ipadx=10, ipady=5)
+            tk.Button(self.frames[PassengerInfo],text="Next", bg="green",command= lambda: self.next_passenger()).grid(row=12,column=1, ipadx=10, ipady=5)
+            tk.Button(self.frames[PassengerInfo],text="Back", bg="green",command= lambda: self.back_to_select_flight()).grid(row=12,column=0, ipadx=10, ipady=5)
 
             self.frames[SelectFlight].forget()
             self.frames[PassengerInfo].tkraise()
@@ -593,8 +609,8 @@ class Application(tk.Tk):
                         tk.Entry(self.frames[PassengerInfo], textvariable=self.frames[PassengerInfo].issued_by, width=12, justify="left").grid(row=8, column=1, padx=10)
                         tk.Label(self.frames[PassengerInfo], text="Passport exp date :").grid(row=9, column=0,padx=10, ipady=5, sticky='E')
                         tk.Entry(self.frames[PassengerInfo], textvariable=self.frames[PassengerInfo].passport_exp_date, width=12, justify="left").grid(row=9, column=1, padx=10)
-                    tk.Button(self.frames[PassengerInfo],text="Next", bg="green",command= lambda: self.next_passenger()).grid(row=13,column=0, ipadx=10, ipady=5)
-                    tk.Button(self.frames[PassengerInfo],text="Back", bg="green",command= lambda: self.back_to_select_flight()).grid(row=13,column=1, ipadx=10, ipady=5)
+                    tk.Button(self.frames[PassengerInfo],text="Next", bg="green",command= lambda: self.next_passenger()).grid(row=13,column=1, ipadx=10, ipady=5)
+                    tk.Button(self.frames[PassengerInfo],text="Back", bg="green",command= lambda: self.back_to_select_flight()).grid(row=13,column=0, ipadx=10, ipady=5)
                 else:
                     self.finish_passenger(data["Adult"],data["Child"])
 
@@ -1034,35 +1050,41 @@ class AdminPage(tk.Frame):
         tk.Button(self, text=" Cancel ", bg="green", command=lambda: controller.cancel_flight_instance()).grid(row=11, column=3, columnspan=2)
 
         #change seat
-        self.booking_id = tk.StringVar()
+        self.booking_id = tk.IntVar()
         self.depart_airportfseat = tk.StringVar()
         self.date_departfseat = tk.StringVar()
         self.flightfseat = tk.StringVar()
-        self.seat = tk.StringVar()
-        self.edit_seat = tk.StringVar()
+        self.seat_row = tk.IntVar()
+        self.seat_column = tk.StringVar()
+        self.edit_seat_row = tk.IntVar()
+        self.edit_seat_column = tk.StringVar()
 
         tk.Label(self, text = "Booking ID").grid(row=12,column=3, padx=10, ipady=5, sticky='E')
-        tk.Entry(self, textvariable=self.depfedit, width=12, justify="left").grid(row=12, column=4, padx=10)
+        tk.Entry(self, textvariable=self.booking_id, width=12, justify="left").grid(row=12, column=4, padx=10)
         tk.Label(self, text = "Depart Airport").grid(row=13,column=3, padx=10, ipady=5, sticky='E')
-        tk.Entry(self, textvariable=self.datefedit, width=12, justify="left").grid(row=13, column=4, padx=10)
+        tk.Entry(self, textvariable=self.depart_airportfseat, width=12, justify="left").grid(row=13, column=4, padx=10)
         tk.Label(self, text = "Date").grid(row=14,column=3, padx=18, ipady=5, sticky='E')
-        tk.Entry(self, textvariable=self.flightfedit, width=12, justify="left").grid(row=14, column=4, padx=10)
+        tk.Entry(self, textvariable=self.date_departfseat, width=12, justify="left").grid(row=14, column=4, padx=10)
         tk.Label(self, text = "Flight").grid(row=15,column=3, padx=10, ipady=5, sticky='E')
-        tk.Entry(self, textvariable=self.edit_date, width=12, justify="left").grid(row=15, column=4, padx=10)
-        tk.Label(self, text = "Seat").grid(row=16,column=3, padx=10, ipady=5, sticky='E')
-        tk.Entry(self, textvariable=self.edit_time_depart, width=12, justify="left").grid(row=16, column=4, padx=10)
-        tk.Label(self, text = "Edit Seat").grid(row=17,column=3, padx=10, ipady=5, sticky='E')
-        tk.Entry(self, textvariable=self.edit_time_arrive, width=12, justify="left").grid(row=17, column=4, padx=10)
-        tk.Button(self, text=" Submit ", bg="green", command=lambda: controller.change_seat()).grid(row=18, column=3, columnspan=2)
+        tk.Entry(self, textvariable=self.flightfseat, width=12, justify="left").grid(row=15, column=4, padx=10)
+        tk.Label(self, text = "Seat Row").grid(row=16,column=3, padx=10, ipady=5, sticky='E')
+        tk.Entry(self, textvariable=self.seat_row, width=12, justify="left").grid(row=16, column=4, padx=10)
+        tk.Label(self, text = "Seat Column").grid(row=17,column=3, padx=10, ipady=5, sticky='E')
+        tk.Entry(self, textvariable=self.seat_column, width=12, justify="left").grid(row=17, column=4, padx=10)
+        tk.Label(self, text = "Edit Seat Row").grid(row=18,column=3, padx=10, ipady=5, sticky='E')
+        tk.Entry(self, textvariable=self.edit_seat_row, width=12, justify="left").grid(row=18, column=4, padx=10)
+        tk.Label(self, text = "Edit Seat Column").grid(row=19,column=3, padx=10, ipady=5, sticky='E')
+        tk.Entry(self, textvariable=self.edit_seat_column, width=12, justify="left").grid(row=19, column=4, padx=10)
+        tk.Button(self, text=" Submit ", bg="green", command=lambda: controller.change_seat()).grid(row=20, column=3, columnspan=2)
 
         #add promotion
         self.promotion_code = tk.StringVar()
         self.discount = tk.IntVar()
 
         tk.Label(self, text = "Promotion Code").grid(row=14,column=0, padx=10, ipady=5, sticky='E')
-        tk.Entry(self, textvariable=self.depfedit, width=12, justify="left").grid(row=14, column=1, padx=10)
+        tk.Entry(self, textvariable=self.promotion_code, width=12, justify="left").grid(row=14, column=1, padx=10)
         tk.Label(self, text = "Discount").grid(row=15,column=0, padx=10, ipady=5, sticky='E')
-        tk.Entry(self, textvariable=self.datefedit, width=12, justify="left").grid(row=15, column=1, padx=10)
+        tk.Entry(self, textvariable=self.discount, width=12, justify="left").grid(row=15, column=1, padx=10)
         tk.Button(self, text=" Submit ", bg="green", command=lambda: controller.add_promotion(self)).grid(row=16, column=0, columnspan=2)
 
         self.pack(padx = 100, pady = 10)
