@@ -14,6 +14,8 @@ AirportA = Airport("AirportA")
 airportcatalog.add_airport(AirportA)
 AirportB = Airport("AirportB")
 airportcatalog.add_airport(AirportB)
+HoshiminhCity = Airport("Ho chi minh city")
+airportcatalog.add_airport(HoshiminhCity)
 #Admin instance
 adminlist = Adminlist()
 AdminA = Admin("bob", "wowza567")
@@ -27,11 +29,13 @@ aircraftcatalog.add_aircraft(dm254)
 ## Flight instance
 AdminA.create_flight("DD405",90,False,AirportA,AirportB,)
 AdminA.create_flight("DD406",90,False,AirportA,AirportB)
+AdminA.create_flight("DD415",120,True,AirportA,HoshiminhCity)
 ## FlightInstance instance
 AdminA.create_flight_instance(AirportA,"DD405","2023-05-01","18.30","20.00",dm254,1000.00)
 AdminA.create_flight_instance(AirportA,"DD405","2023-05-18","18.30","20.00",dm254,1000.00)
 AdminA.create_flight_instance(AirportA,"DD405","2023-05-19","18.30","20.00",dm254,1000.00)
 AdminA.create_flight_instance(AirportA,"DD406","2023-05-18","20.30","22.00",dm254,1500.00)
+AdminA.create_flight_instance(AirportA,"DD415","2023-05-18","20.30","22.30",dm254,2000.00)
 ## Package instance
 packagecatalog = PackageCatalog()
 packagecatalog.create_package("Normal",0.00,False,False,False,7,0)
