@@ -718,7 +718,9 @@ class Application(tk.Tk):
                     }
 
         if (self.frames[SelectAddOn].adult_num == 1 and self.frames[SelectAddOn].child_num == 0) or (self.frames[SelectAddOn].adult_num == 0 and self.frames[SelectAddOn].child_num == 1):
-                self.frames[SelectAddOn].button.config(text = "confirm",command = lambda : self.finish_add_on())
+            self.frames[SelectAddOn].button.config(text = "confirm",command = lambda : self.finish_add_on())
+        else:
+            self.frames[SelectAddOn].button.config(text="Next",command= lambda: self.next_add_on())
 
         adult_list = requests.post(str(API_ADULT_LIST),json=payload_booking).json()
         self.frames[SelectAddOn].name_passenger.set(str(adult_list[self.frames[SelectAddOn].adult - self.frames[SelectAddOn].adult_num]))
@@ -797,6 +799,8 @@ class Application(tk.Tk):
         if response.ok:
             if (self.frames[SelectAddOn].adult_num == 1 and self.frames[SelectAddOn].child_num == 0) or (self.frames[SelectAddOn].adult_num == 0 and self.frames[SelectAddOn].child_num == 1):
                 self.frames[SelectAddOn].button.config(text = "confirm",command = lambda : self.finish_add_on())
+            else:
+                self.frames[SelectAddOn].button.config(text="Next",command= lambda: self.next_add_on())
 
             if self.frames[SelectAddOn].adult_num > 0:
                 adult_list = requests.post(str(API_ADULT_LIST),json=payload).json()

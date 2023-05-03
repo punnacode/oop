@@ -142,6 +142,7 @@ class Booking:
                 ticket_price.append(addon_price.get("Special Bagage"))
             if addon_price.get("Extra service") != None:
                 ticket_price.append(addon_price.get("Extra service"))
+            ticket_list.append(round(float(sum(ticket_price)),2))
         return ticket_list
     
     def create_payment(self):
