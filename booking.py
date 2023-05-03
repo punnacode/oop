@@ -1,6 +1,5 @@
 from ticket import Ticket
 from aircraft import SeatBook
-from Passenger import Passenger
 from payment import Payment,PaymentStatus
 
 class Booking:
@@ -27,20 +26,19 @@ class Booking:
         return self._id
     @property
     def flight(self):
-        return self._flight
-      
+        return self._flight 
     @property
     def flight_international_status(self):
         return self._flight.international
-    
+    @property
+    def package(self):
+        return self._package 
     @property
     def total_passenger_num(self):
         return self._adult_num+self._kid_num+self._infant_num
-    
     @property
     def passenger_list(self):
         return self._passenger_list
-    
     @property
     def get_adult_list(self):
         adult_list = []
@@ -48,7 +46,6 @@ class Booking:
             if passenger.type == "ADULT":
                 adult_list.append(str(passenger.name+" "+passenger.last_name))
         return adult_list
-    
     @property
     def get_kid_list(self):
         kid_list = []
@@ -56,7 +53,6 @@ class Booking:
             if passenger.type == "CHILD":
                 kid_list.append(str(passenger.name+" "+passenger.last_name))
         return kid_list
-    
     @property
     def get_infant_list(self):
         INFANT_list = []
@@ -64,29 +60,21 @@ class Booking:
             if passenger.type == "INFANT":
                 INFANT_list.append(str(passenger.name+" "+passenger.last_name))
         return INFANT_list
-    
     @property
     def payment(self):
         return self._payment
     @payment.setter
     def payment(self,new_payment):
         self._payment = new_payment
-    
     @property
     def adult_num(self):
         return self._adult_num
-
     @property
     def kid_num(self):
         return self._kid_num
-
     @property
     def infant_num(self):
         return self._infant_num
-    
-    @property
-    def payment_status(self):
-        return self._payment_status
     @property
     def seat_book(self):
         return self._seat_book

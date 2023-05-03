@@ -1,6 +1,6 @@
-from promotion import PromotionCatalog,Promotion
-from airport import Airport, AirportCatalog
-from aircraft import Aircraft, SeatBook
+from promotion import Promotion
+from airport import Airport, System
+from aircraft import Aircraft
 from flight import Flight, FlightInstance
 from booking import Booking
 
@@ -31,19 +31,19 @@ class Admin:
         self._username = username
         self._password = password
 
-    def create_flight(self,name,flight_duration,international,depart_airport,arrive_airport):
-        if isinstance(name,str) and isinstance(flight_duration,int) and isinstance(international,bool) and isinstance(depart_airport,Airport) and isinstance(arrive_airport,Airport):
-            depart_airport._flight_list.append(Flight(name,flight_duration,international,depart_airport,arrive_airport))
+    def create_flight(self,name,flight_duration,international,depart_airport,arrive_airport,system):
+        if isinstance(name,str) and isinstance(flight_duration,int) and isinstance(international,bool) and isinstance(depart_airport,Airport) and isinstance(arrive_airport,Airport) and isinstance(system,System):
+            system.flight_list.append(Flight(name,flight_duration,international,depart_airport,arrive_airport))
         else:
             raise TypeError("Parameter type not correct")
 
-    def create_flight_instance(self,depart_airport,flight_name,date_depart,time_depart,time_arrive,aircraft,price):
-        if isinstance(flight_name,str) and isinstance(date_depart,str) and isinstance(time_arrive,str) and isinstance(time_depart,str) and isinstance(aircraft,Aircraft) and isinstance(price,float) and isinstance(depart_airport,Airport):
-            for f in depart_airport._flight_list:
+    def create_flight_instance(self,depart_airport,flight_name,date_depart,time_depart,time_arrive,aircraft,price,system):
+        if isinstance(flight_name,str) and isinstance(date_depart,str) and isinstance(time_arrive,str) and isinstance(time_depart,str) and isinstance(aircraft,Aircraft) and isinstance(price,float) and isinstance(depart_airport,Airport) and isinstance(system,System):
+            for f in system._flight_list:
                 if f.name == flight_name:
                     flight = f
                     break
-            flight.depart_airport._flight_instance_list.append(FlightInstance(flight.name,flight.flight_duration,flight.international,flight.depart_airport,flight.arrive_airport,date_depart,time_arrive,time_depart,aircraft,price))
+            system.flight_instance_list.append(FlightInstance(flight.name,flight.flight_duration,flight.international,flight.depart_airport,flight.arrive_airport,date_depart,time_arrive,time_depart,aircraft,price))
         else:
             raise TypeError("Parameter type not correct")
 
@@ -56,9 +56,9 @@ class Admin:
         else:
             raise TypeError("Parameter type not correct")
 
-    def cancel_flight_instance(self,airport,flight_instance):
-        if isinstance(airport,Airport) and isinstance(flight_instance,FlightInstance):
-            airport.flight_instance_list.remove(flight_instance)
+    def cancel_flight_instance(self,system,flight_instance):
+        if isinstance(system,System) and isinstance(flight_instance,FlightInstance):
+            system.flight_instance_list.remove(flight_instance)
         else:
             raise TypeError("Parameter type not correct")
 

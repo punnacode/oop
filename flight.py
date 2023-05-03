@@ -1,8 +1,6 @@
-from aircraft import Aircraft
 from add_on import Package
 from booking import Booking
 from datetime import date
-from payment import Payment
 
 class Flight:
     def __init__(self,name,flight_duration,international,depart_airport,arrive_airport):
