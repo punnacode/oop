@@ -33,23 +33,6 @@ API_CREDIT_CARD = "http://127.0.0.1:8000/credit_card_payment"
 API_COUNTER = "http://127.0.0.1:8000/counter_payment"
 API_DEL_BOOKING = "http://127.0.0.1:8000/del_booking"
 
-admin = {
-        "Username":"",
-        "Password":"",
-        }
-
-data = {
-        "Origin airport":"",
-        "Destination airport":"",
-        "Date depart":"",
-        "Flight name":"",
-        "Package name":"",
-        "Adult":0,
-        "Child":0,
-        "Infant":0,
-        "Booking ID":0
-        }
-
 class Application(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
@@ -96,8 +79,8 @@ class Application(tk.Tk):
         response = requests.post(API_LOGIN,json=payload)
         if response.ok:
             if response.json()["result"] == "LOGIN SUCCESSFULLY":
-                admin["Username"] = self.frames[AdminLoginPage].username.get()
-                admin["Password"] = self.frames[AdminLoginPage].password.get()
+                self.frames[AdminPage].username = response.json()["Username"]
+                self.frames[AdminPage].password = response.json()["Password"]
                 self.frames[AdminLoginPage].forget()
                 self.frames[AdminPage].tkraise()
                 self.frames[AdminPage].pack(padx = 100, pady = 50)
@@ -109,8 +92,8 @@ class Application(tk.Tk):
 
     def create_flight(self):
         payload = {
-                    "Username":admin["Username"],
-                    "Password":admin["Password"],
+                    "Username":self.frames[AdminPage].username,
+                    "Password":self.frames[AdminPage].password,
                     "Name": self.frames[AdminPage].name.get(),
                     "Flight Duration": self.frames[AdminPage].duration.get(),
                     "International":self.frames[AdminPage].international.get(),
@@ -125,8 +108,8 @@ class Application(tk.Tk):
 
     def create_flight_instance(self):
         payload = {
-            "Username":admin["Username"],
-            "Password":admin["Password"],
+            "Username":self.frames[AdminPage].username,
+            "Password":self.frames[AdminPage].password,
             "Depart Airport": self.frames[AdminPage].depart_airport.get(),
             "Flight": self.frames[AdminPage].flight.get(),
             "Date": self.frames[AdminPage].date.get(),
@@ -143,8 +126,8 @@ class Application(tk.Tk):
 
     def edit_flight_instance(self):
         payload = {
-                    "Username":admin["Username"],
-                    "Password":admin["Password"],
+                    "Username":self.frames[AdminPage].username,
+                    "Password":self.frames[AdminPage].password,
                     "Depart Airport": self.frames[AdminPage].depfedit.get(),
                     "Date": self.frames[AdminPage].datefedit.get(),
                     "Flight": self.frames[AdminPage].flightfedit.get(),
@@ -161,8 +144,8 @@ class Application(tk.Tk):
 
     def cancel_flight_instance(self):
         payload = {
-                    "Username":admin["Username"],
-                    "Password":admin["Password"],
+                    "Username":self.frames[AdminPage].username,
+                    "Password":self.frames[AdminPage].password,
                     "Depart Airport": self.frames[AdminPage].depfcancel.get(),
                     "Date": self.frames[AdminPage].datefcancel.get(),
                     "Flight": self.frames[AdminPage].flightfcancel.get(),
@@ -175,8 +158,8 @@ class Application(tk.Tk):
 
     def change_seat(self):
         payload = {
-                    "Username":admin["Username"],
-                    "Password":admin["Password"],
+                    "Username":self.frames[AdminPage].username,
+                    "Password":self.frames[AdminPage].password,
                     "Booking ID": self.frames[AdminPage].booking_id.get(),
                     "Depart Airport":self.frames[AdminPage].depart_airportfseat.get(),
                     "Date": self.frames[AdminPage].date_departfseat.get(),
@@ -194,8 +177,8 @@ class Application(tk.Tk):
 
     def add_promotion(self):
         payload = {
-                    "Username":admin["Username"],
-                    "Password":admin["Password"],
+                    "Username":self.frames[AdminPage].username,
+                    "Password":self.frames[AdminPage].password,
                     "Promotion Code": self.frames[AdminPage].promotion_code.get(),
                     "Discount": self.frames[AdminPage].discount.get()
                     }    
@@ -219,11 +202,14 @@ class Application(tk.Tk):
         self.frames[SearchFlight].tkraise()
         self.frames[SearchFlight].pack(padx = 100, pady = 50)
 
-    def oap_submit(self,airport):
-        data["Origin airport"] = airport
-        response = requests.post(API_DAP,json=data)
+    def oap_submit(self):
+        payload = {
+                    "Origin airport":self.frames[SearchFlight].selectOAP.get()
+                    }
+        response = requests.post(API_DAP,json=payload)
         if response.ok:
             airport_data = response.json()
+            self.frames[SearchFlight].origin_airport = airport_data["Origin airport"]
             menu = self.frames[SearchFlight].dap_om["menu"]
             menu.delete(0, "end")
             self.frames[SearchFlight].DAP_list.clear()
@@ -235,11 +221,15 @@ class Application(tk.Tk):
                     self.frames[SearchFlight].DAP_list.append(airport)
                     menu.add_command(label=airport, command=lambda value=airport: self.frames[SearchFlight].selectDAP.set(value))
     
-    def dap_submit(self,airport):
-        data["Destination airport"] = airport
-        reponse = requests.post(API_DATE,json=data)
+    def dap_submit(self):
+        payload = {
+                    "Origin airport":self.frames[SearchFlight].origin_airport,
+                    "Destination airport":self.frames[SearchFlight].selectDAP.get()
+                    }
+        reponse = requests.post(API_DATE,json=payload)
         if reponse.ok:
             date_data = reponse.json()
+            self.frames[SearchFlight].destination_airport = date_data["Destination airport"]
             menu = self.frames[SearchFlight].date_om["menu"]
             menu.delete(0, "end")
             self.frames[SearchFlight].date_list.clear()
@@ -264,11 +254,12 @@ class Application(tk.Tk):
         elif adult + child + infant > 9:
             messagebox.showinfo("Error","Maximum passenger is 9")
         else:
-            data["Date depart"] = date
-            data["Adult"] = adult
-            data["Child"] = child
-            data["Infant"] = infant
-            response = requests.post(API_SELECT_FLIGHT,json=data)
+            payload = {
+                    "Origin airport":self.frames[SearchFlight].origin_airport,
+                    "Destination airport":self.frames[SearchFlight].destination_airport,
+                    "Date depart":date,
+                    }
+            response = requests.post(API_SELECT_FLIGHT,json=payload)
             if response.ok:
                 response_data = response.json()
                 if response_data["Flight data"] == []:
@@ -276,6 +267,11 @@ class Application(tk.Tk):
                 else:
                     self.frames[SelectFlight].flight_list.clear()
                     self.frames[SelectFlight].package_list.clear()
+
+                    self.frames[SelectFlight].date_depart = date
+                    self.frames[SelectFlight].adult = adult
+                    self.frames[SelectFlight].child = child
+                    self.frames[SelectFlight].infant = infant
 
                     for flight in response_data["Flight data"]:
                         self.frames[SelectFlight].flight_list.append(flight[0])
@@ -288,7 +284,7 @@ class Application(tk.Tk):
                     tk.OptionMenu(self.frames[SelectFlight],self.frames[SelectFlight].select_package,*self.frames[SelectFlight].package_list).grid(row=0,column=3)
                     tk.Label(self.frames[SelectFlight],text = "Select flight").grid(row=0,column=0)
                     tk.Label(self.frames[SelectFlight],text = "Select package").grid(row=0,column=2)
-                    tk.Button(self.frames[SelectFlight],text="Submit",command= lambda: self.flight_submit(str(self.frames[SelectFlight].select_flight.get()),str(self.frames[SelectFlight].select_package.get()),data["Adult"],data["Child"],data["Infant"])).grid(row=0,column=4)
+                    tk.Button(self.frames[SelectFlight],text="Submit",command= lambda: self.flight_submit(str(self.frames[SelectFlight].select_flight.get()),str(self.frames[SelectFlight].select_package.get()),self.frames[SelectFlight].adult,self.frames[SelectFlight].child,self.frames[SelectFlight].infant,self.frames[SelectFlight].date_depart)).grid(row=0,column=4)
                     tk.Button(self.frames[SelectFlight],text="Back",command= lambda: self.back_to_search(SelectFlight)).grid(row=0,column=5)
 
                     for flight_data in response_data["Flight data"]:
@@ -304,7 +300,13 @@ class Application(tk.Tk):
                     self.frames[SelectFlight].pack(padx = 100, pady = 50)
 
     def flight_detail(self,flight_name):
-        response = requests.post(str(API_FLIGHT_DETAIL+flight_name),json=data)
+        payload = {
+                    "Date depart":self.frames[SelectFlight].date_depart,
+                    "Adult":self.frames[SelectFlight].adult,
+                    "Child":self.frames[SelectFlight].child,
+                    "Infant":self.frames[SelectFlight].infant
+                    }
+        response = requests.post(str(API_FLIGHT_DETAIL+flight_name),json=payload)
         if response.ok:
             flight_data = response.json()
             flight_detail = str("Flight name: " + flight_data["Name"] + "\n"
@@ -337,15 +339,8 @@ class Application(tk.Tk):
         for widjet in self.frames[SelectFlight].winfo_children():
             widjet.destroy()
 
-        data["Origin airport"] = ""
-        data["Destination airport"] = ""
-        data["Date depart"] = ""
-        data["Flight name"] = ""
-        data["Package name"] = ""
-        data["Adult"] = 0
-        data["Child"] = 0
-        data["Infant"] = 0
-        data["Booking ID"] = 0
+        self.frames[SearchFlight].origin_airport
+        self.frames[SearchFlight].destination_airport
 
         self.frames[SearchFlight].selectOAP.set("Select airport")
         self.frames[SearchFlight].selectDAP.set("Select airport")
@@ -370,20 +365,28 @@ class Application(tk.Tk):
         self.frames[SearchFlight].tkraise()
         self.frames[SearchFlight].pack(padx = 100, pady = 50)
 
-    def back_to_select_flight(self):
+    def back_to_select_flight(self,date,flight_name,booking_id):
         row = 1
         column = 1
 
-        requests.post(API_DEL_BOOKING,json=data)
+        del_booking = {
+                        "Date depart": date,
+                        "Flight name": flight_name,
+                        'Booking ID': booking_id
+                        }
+
+        backup = requests.post(API_DEL_BOOKING,json=del_booking).json()
 
         for widjet in self.frames[PassengerInfo].winfo_children():
             widjet.destroy()
 
-        data["Booking ID"] = 0
-        data["Flight name"] = ""
-        data["Package name"] = ""
+        payload = {
+                    "Origin airport":backup["Origin airport"],
+                    "Destination airport":backup["Destination airport"],
+                    "Date depart":date,
+                    }
 
-        response = requests.post(API_SELECT_FLIGHT,json=data)
+        response = requests.post(API_SELECT_FLIGHT,json=payload)
         if response.ok:
             response_data = response.json()
             if response_data["Flight data"] == []:
@@ -403,7 +406,7 @@ class Application(tk.Tk):
                 tk.OptionMenu(self.frames[SelectFlight],self.frames[SelectFlight].select_package,*self.frames[SelectFlight].package_list).grid(row=0,column=3)
                 tk.Label(self.frames[SelectFlight],text = "Select flight").grid(row=0,column=0)
                 tk.Label(self.frames[SelectFlight],text = "Select package").grid(row=0,column=2)
-                tk.Button(self.frames[SelectFlight],text="Submit",command= lambda: self.flight_submit(str(self.frames[SelectFlight].select_flight.get()),str(self.frames[SelectFlight].select_package.get()),data["Adult"],data["Child"],data["Infant"])).grid(row=0,column=4)
+                tk.Button(self.frames[SelectFlight],text="Submit",command= lambda: self.flight_submit(str(self.frames[SelectFlight].select_flight.get()),str(self.frames[SelectFlight].select_package.get()),self.frames[SelectFlight].adult,self.frames[SelectFlight].child,self.frames[SelectFlight].infant,self.frames[SelectFlight].date_depart)).grid(row=0,column=4)
                 tk.Button(self.frames[SelectFlight],text="Back",command= lambda: self.back_to_search(SelectFlight)).grid(row=0,column=5)
 
                 for flight_data in response_data["Flight data"]:
@@ -418,20 +421,58 @@ class Application(tk.Tk):
                 self.frames[SelectFlight].tkraise()
                 self.frames[SelectFlight].pack(padx = 100, pady = 50)
 
-    def back_to_passenger(self):
-        requests.post(API_DEL_BOOKING,json=data)
+    def back_to_passenger(self,date,flight_name,booking_id):
+
+        self.frames[SelectAddOn].seat_list.clear()
+        del_booking = {
+                        "Date depart": date,
+                        "Flight name": flight_name,
+                        'Booking ID': booking_id
+                        }
+        
+        backup = requests.post(API_DEL_BOOKING,json=del_booking).json()
 
         for widjet in self.frames[PassengerInfo].winfo_children():
-                    widjet.destroy()
+            widjet.destroy()
 
-        data["Booking ID"] = 0
-        response = requests.post(API_CREATE_BOOKING,json=data)
+        payload = {
+                    "Flight name" : flight_name,
+                    "Package name" : backup["Package name"],
+                    "Date depart" : date,
+                    "Adult" : backup["Adult"],
+                    "Child" : backup["Child"],
+                    "Infant" : backup["Infant"]
+                    }
+
+        response = requests.post(API_CREATE_BOOKING,json=payload)
         if response.ok:
-            data["Booking ID"] = response.json()["Booking ID"]
+            
+            adult = backup["Adult"]
+            child = backup["Child"]
+            infant = backup["Infant"]
 
-            self.frames[PassengerInfo].adult_num = data["Adult"]
-            self.frames[PassengerInfo].child_num = data["Child"]
-            self.frames[PassengerInfo].infant_num = data["Infant"]
+            self.frames[PassengerInfo].select_passenger_title.set('')
+            self.frames[PassengerInfo].name.set('')
+            self.frames[PassengerInfo].last_name.set('')
+            self.frames[PassengerInfo].date_of_birth.set('')
+            self.frames[PassengerInfo].phon_number.set('')
+            self.frames[PassengerInfo].email.set('')
+            self.frames[PassengerInfo].national.set('')
+            self.frames[PassengerInfo].country_residence.set('')
+            self.frames[PassengerInfo].passport_number.set('')
+            self.frames[PassengerInfo].issued_by.set('')
+            self.frames[PassengerInfo].passport_exp_date.set('')
+            self.frames[PassengerInfo].select_adult_list.set('')
+
+            self.frames[PassengerInfo].booking_id = response.json()["Booking ID"]
+            self.frames[PassengerInfo].flight_name = response.json()["Flight name"]
+            self.frames[PassengerInfo].date = response.json()["Date depart"]
+            self.frames[PassengerInfo].adult = adult
+            self.frames[PassengerInfo].child = child
+            self.frames[PassengerInfo].infant = infant
+            self.frames[PassengerInfo].adult_num = adult
+            self.frames[PassengerInfo].child_num = child
+            self.frames[PassengerInfo].infant_num = infant
 
             self.frames[PassengerInfo].adult_num -= 1
             self.frames[PassengerInfo].select_passenger_type.set("ADULT")
@@ -440,7 +481,7 @@ class Application(tk.Tk):
             title_om.config(width=10)
             title_om.grid(row=1,column=1)
 
-            tk.Label(self.frames[PassengerInfo],text=str("Adult : " + str(data["Adult"] - self.frames[PassengerInfo].adult_num))).grid(row=0,column=0,padx=10, ipady=5, sticky='E')
+            tk.Label(self.frames[PassengerInfo],text=str("Adult : " + str(self.frames[PassengerInfo].adult - self.frames[PassengerInfo].adult_num))).grid(row=0,column=0,padx=10, ipady=5, sticky='E')
             tk.Label(self.frames[PassengerInfo], text="Title :").grid(row=1, column=0,padx=10, ipady=5, sticky='E')
             tk.Label(self.frames[PassengerInfo], text="Name :").grid(row=2, column=0,padx=10, ipady=5, sticky='E')
             tk.Entry(self.frames[PassengerInfo], textvariable=self.frames[PassengerInfo].name, width=12, justify="left").grid(row=2, column=1, padx=10)
@@ -453,8 +494,8 @@ class Application(tk.Tk):
             tk.Label(self.frames[PassengerInfo], text="Email  :").grid(row=6, column=0,padx=10, ipady=5, sticky='E')
             tk.Entry(self.frames[PassengerInfo], textvariable=self.frames[PassengerInfo].email, width=12, justify="left").grid(row=6, column=1, padx=10)            
 
-            #inter = True
-            inter = requests.post(API_INTER_CHECK,json=data)
+            payload['Booking ID'] = self.frames[PassengerInfo].booking_id
+            inter = requests.post(API_INTER_CHECK,json=payload).json()
             if inter == True:
                 tk.Label(self.frames[PassengerInfo], text="Nationality :").grid(row=7, column=0,padx=10, ipady=5, sticky='E')
                 tk.Entry(self.frames[PassengerInfo], textvariable=self.frames[PassengerInfo].national, width=12, justify="left").grid(row=7, column=1, padx=10)
@@ -468,17 +509,23 @@ class Application(tk.Tk):
                 tk.Entry(self.frames[PassengerInfo], textvariable=self.frames[PassengerInfo].passport_exp_date, width=12, justify="left").grid(row=11, column=1, padx=10)
 
             tk.Button(self.frames[PassengerInfo],text="Next", bg="green",command= lambda: self.next_passenger()).grid(row=12,column=1, ipadx=10, ipady=5)
-            tk.Button(self.frames[PassengerInfo],text="Back", bg="green",command= lambda: self.back_to_select_flight()).grid(row=12,column=0, ipadx=10, ipady=5)
+            tk.Button(self.frames[PassengerInfo],text="Back", bg="green",command= lambda: self.back_to_select_flight(self.frames[PassengerInfo].date,self.frames[PassengerInfo].flight_name,self.frames[PassengerInfo].booking_id)).grid(row=12,column=0, ipadx=10, ipady=5)
 
-            self.frames[SelectAddOn].forget()
-            self.frames[PassengerInfo].tkraise()
-            self.frames[PassengerInfo].pack(padx = 100, pady = 50)
+        
+        self.frames[SelectAddOn].forget()
+        self.frames[PassengerInfo].tkraise()
+        self.frames[PassengerInfo].pack(padx = 100, pady = 50)
 
-    def flight_submit(self,flight_name,package_name,adult,child,infant):
-        data["Flight name"] = flight_name
-        data["Package name"] = package_name
-        print(data["Flight name"],data["Package name"])
-        response = requests.post(API_CREATE_BOOKING,json=data)
+    def flight_submit(self,flight_name,package_name,adult,child,infant,date):
+        payload = {
+                    "Flight name" : flight_name,
+                    "Package name" : package_name,
+                    "Date depart" : date,
+                    "Adult" : adult,
+                    "Child" : child,
+                    "Infant" : infant
+                    }
+        response = requests.post(API_CREATE_BOOKING,json=payload)
         if response.ok:
 
             self.frames[PassengerInfo].select_passenger_title.set('')
@@ -494,7 +541,12 @@ class Application(tk.Tk):
             self.frames[PassengerInfo].passport_exp_date.set('')
             self.frames[PassengerInfo].select_adult_list.set('')
 
-            data["Booking ID"] = response.json()["Booking ID"]
+            self.frames[PassengerInfo].booking_id = response.json()["Booking ID"]
+            self.frames[PassengerInfo].flight_name = response.json()["Flight name"]
+            self.frames[PassengerInfo].date = response.json()["Date depart"]
+            self.frames[PassengerInfo].adult = adult
+            self.frames[PassengerInfo].child = child
+            self.frames[PassengerInfo].infant = infant
             self.frames[PassengerInfo].adult_num = adult
             self.frames[PassengerInfo].child_num = child
             self.frames[PassengerInfo].infant_num = infant
@@ -506,7 +558,7 @@ class Application(tk.Tk):
             title_om.config(width=10)
             title_om.grid(row=1,column=1)
 
-            tk.Label(self.frames[PassengerInfo],text=str("Adult : " + str(data["Adult"] - self.frames[PassengerInfo].adult_num))).grid(row=0,column=0,padx=10, ipady=5, sticky='E')
+            tk.Label(self.frames[PassengerInfo],text=str("Adult : " + str(self.frames[PassengerInfo].adult - self.frames[PassengerInfo].adult_num))).grid(row=0,column=0,padx=10, ipady=5, sticky='E')
             tk.Label(self.frames[PassengerInfo], text="Title :").grid(row=1, column=0,padx=10, ipady=5, sticky='E')
             tk.Label(self.frames[PassengerInfo], text="Name :").grid(row=2, column=0,padx=10, ipady=5, sticky='E')
             tk.Entry(self.frames[PassengerInfo], textvariable=self.frames[PassengerInfo].name, width=12, justify="left").grid(row=2, column=1, padx=10)
@@ -519,8 +571,8 @@ class Application(tk.Tk):
             tk.Label(self.frames[PassengerInfo], text="Email  :").grid(row=6, column=0,padx=10, ipady=5, sticky='E')
             tk.Entry(self.frames[PassengerInfo], textvariable=self.frames[PassengerInfo].email, width=12, justify="left").grid(row=6, column=1, padx=10)            
 
-            #inter = True
-            inter = requests.post(API_INTER_CHECK,json=data).json()
+            payload['Booking ID'] = self.frames[PassengerInfo].booking_id
+            inter = requests.post(API_INTER_CHECK,json=payload).json()
             if inter == True:
                 tk.Label(self.frames[PassengerInfo], text="Nationality :").grid(row=7, column=0,padx=10, ipady=5, sticky='E')
                 tk.Entry(self.frames[PassengerInfo], textvariable=self.frames[PassengerInfo].national, width=12, justify="left").grid(row=7, column=1, padx=10)
@@ -534,18 +586,23 @@ class Application(tk.Tk):
                 tk.Entry(self.frames[PassengerInfo], textvariable=self.frames[PassengerInfo].passport_exp_date, width=12, justify="left").grid(row=11, column=1, padx=10)
 
             tk.Button(self.frames[PassengerInfo],text="Next", bg="green",command= lambda: self.next_passenger()).grid(row=12,column=1, ipadx=10, ipady=5)
-            tk.Button(self.frames[PassengerInfo],text="Back", bg="green",command= lambda: self.back_to_select_flight()).grid(row=12,column=0, ipadx=10, ipady=5)
+            tk.Button(self.frames[PassengerInfo],text="Back", bg="green",command= lambda: self.back_to_select_flight(self.frames[PassengerInfo].date,self.frames[PassengerInfo].flight_name,self.frames[PassengerInfo].booking_id)).grid(row=12,column=0, ipadx=10, ipady=5)
 
             self.frames[SelectFlight].forget()
             self.frames[PassengerInfo].tkraise()
             self.frames[PassengerInfo].pack(padx = 100, pady = 50)
 
     def next_passenger(self):
-            inter = requests.post(API_INTER_CHECK,json=data).json()
+            inter_payload = {
+                            'Booking ID':self.frames[PassengerInfo].booking_id,
+                            "Flight name":self.frames[PassengerInfo].flight_name,
+                            "Date depart":self.frames[PassengerInfo].date
+                            }
+            inter = requests.post(API_INTER_CHECK,json=inter_payload).json()
             if self.frames[PassengerInfo].name.get() == "" and self.frames[PassengerInfo].last_name.get() == "" and self.frames[PassengerInfo].date_of_birth.get() == "":
                 messagebox.showerror("Error","Please enter infomation")
                 return
-            elif data["Adult"] - 1 == self.frames[PassengerInfo].adult_num and self.frames[PassengerInfo].phon_number.get() == "" and self.frames[PassengerInfo].email.get() == "" and self.frames[PassengerInfo].select_passenger_type.get() == "ADULT":
+            elif self.frames[PassengerInfo].adult - 1 == self.frames[PassengerInfo].adult_num and self.frames[PassengerInfo].phon_number.get() == "" and self.frames[PassengerInfo].email.get() == "" and self.frames[PassengerInfo].select_passenger_type.get() == "ADULT":
                 messagebox.showerror("Error","Please enter infomation")
                 return 
             elif inter == True and self.frames[PassengerInfo].national.get() == "" and self.frames[PassengerInfo].country_residence.get() == "" and self.frames[PassengerInfo].passport_number.get() == "" and self.frames[PassengerInfo].issued_by.get() == "" and self.frames[PassengerInfo].passport_exp_date.get() == "":
@@ -566,10 +623,9 @@ class Application(tk.Tk):
                         "issued_by": self.frames[PassengerInfo].issued_by.get(),
                         "passport_exp_date": self.frames[PassengerInfo].passport_exp_date.get(),
                         "parent": self.frames[PassengerInfo].select_adult_list.get(),
-                        "Origin airport": data["Origin airport"],
-                        "Date depart": data["Date depart"],
-                        "Flight name": data["Flight name"],
-                        'Booking ID': data["Booking ID"]
+                        "Date depart": self.frames[PassengerInfo].date,
+                        "Flight name": self.frames[PassengerInfo].flight_name,
+                        'Booking ID': self.frames[PassengerInfo].booking_id
                         }
             response = requests.post(str(API_PASSENGER+'/'+self.frames[PassengerInfo].select_passenger_type.get()+'/'+self.frames[PassengerInfo].select_passenger_title.get()),json=payload)
             if response.ok:
@@ -611,9 +667,9 @@ class Application(tk.Tk):
                         tk.Label(self.frames[PassengerInfo], text="Passport exp date :").grid(row=9, column=0,padx=10, ipady=5, sticky='E')
                         tk.Entry(self.frames[PassengerInfo], textvariable=self.frames[PassengerInfo].passport_exp_date, width=12, justify="left").grid(row=9, column=1, padx=10)
                     tk.Button(self.frames[PassengerInfo],text="Next", bg="green",command= lambda: self.next_passenger()).grid(row=13,column=1, ipadx=10, ipady=5)
-                    tk.Button(self.frames[PassengerInfo],text="Back", bg="green",command= lambda: self.back_to_select_flight()).grid(row=13,column=0, ipadx=10, ipady=5)
+                    tk.Button(self.frames[PassengerInfo],text="Back", bg="green",command= lambda: self.back_to_select_flight(self.frames[PassengerInfo].date,self.frames[PassengerInfo].flight_name,self.frames[PassengerInfo].booking_id)).grid(row=13,column=0, ipadx=10, ipady=5)
                 else:
-                    self.finish_passenger(data["Adult"],data["Child"])
+                    self.finish_passenger(self.frames[PassengerInfo].adult,self.frames[PassengerInfo].child,self.frames[PassengerInfo].date,self.frames[PassengerInfo].flight_name,self.frames[PassengerInfo].booking_id)
 
                 if self.frames[PassengerInfo].adult_num > 0:
                     self.frames[PassengerInfo].adult_num -= 1
@@ -622,7 +678,7 @@ class Application(tk.Tk):
                     title_om = tk.OptionMenu(self.frames[PassengerInfo],self.frames[PassengerInfo].select_passenger_title,*title_list)
                     title_om.config(width=10)
                     title_om.grid(row=1,column=1)
-                    tk.Label(self.frames[PassengerInfo],text=str("Adult : " + str(data["Adult"] - self.frames[PassengerInfo].adult_num))).grid(row=0,column=0,padx=10, ipady=5, sticky='E')
+                    tk.Label(self.frames[PassengerInfo],text=str("Adult : " + str(self.frames[PassengerInfo].adult - self.frames[PassengerInfo].adult_num))).grid(row=0,column=0,padx=10, ipady=5, sticky='E')
                 elif self.frames[PassengerInfo].child_num > 0:
                     self.frames[PassengerInfo].child_num -= 1
                     self.frames[PassengerInfo].select_passenger_type.set("CHILD")
@@ -630,7 +686,7 @@ class Application(tk.Tk):
                     title_om = tk.OptionMenu(self.frames[PassengerInfo],self.frames[PassengerInfo].select_passenger_title,*title_list)
                     title_om.config(width=10)
                     title_om.grid(row=1,column=1)
-                    tk.Label(self.frames[PassengerInfo],text=str("Child : " + str(data["Child"] - self.frames[PassengerInfo].child_num))).grid(row=0,column=0,padx=10, ipady=5, sticky='E')
+                    tk.Label(self.frames[PassengerInfo],text=str("Child : " + str(self.frames[PassengerInfo].child - self.frames[PassengerInfo].child_num))).grid(row=0,column=0,padx=10, ipady=5, sticky='E')
                 elif self.frames[PassengerInfo].infant_num > 0:
                     self.frames[PassengerInfo].infant_num -= 1
                     self.frames[PassengerInfo].select_passenger_type.set("INFANT")
@@ -639,26 +695,37 @@ class Application(tk.Tk):
                     title_om.config(width=10)
                     title_om.grid(row=1,column=1)
                     tk.Label(self.frames[PassengerInfo], text="Parent :").grid(row=12, column=0,padx=10, ipady=5, sticky='E')
-                    adult_list = requests.post(API_ADULT_LIST,json=data).json()
+                    adult_list = requests.post(API_ADULT_LIST,json=payload).json()
                     adult_list_om = tk.OptionMenu(self.frames[PassengerInfo],self.frames[PassengerInfo].select_adult_list,*adult_list)
                     adult_list_om.config(width=10)
                     adult_list_om.grid(row=12,column=1)
-                    tk.Label(self.frames[PassengerInfo],text=str("Infant : " + str(data["Infant"] - self.frames[PassengerInfo].infant_num))).grid(row=0,column=0,padx=10, ipady=5, sticky='E')
+                    tk.Label(self.frames[PassengerInfo],text=str("Infant : " + str(self.frames[PassengerInfo].infant - self.frames[PassengerInfo].infant_num))).grid(row=0,column=0,padx=10, ipady=5, sticky='E')
 
-    def finish_passenger(self,adult,child):
+    def finish_passenger(self,adult,child,date,flight_name,booking_id):
 
+        self.frames[SelectAddOn].date = date
+        self.frames[SelectAddOn].flight_name = flight_name
+        self.frames[SelectAddOn].booking_id = booking_id
+        self.frames[SelectAddOn].adult = adult
+        self.frames[SelectAddOn].child = child
         self.frames[SelectAddOn].adult_num = adult
         self.frames[SelectAddOn].child_num = child
+
+        payload_booking = {
+                    "Date depart":self.frames[SelectAddOn].date,
+                    "Flight name":self.frames[SelectAddOn].flight_name,
+                    'Booking ID':self.frames[SelectAddOn].booking_id
+                    }
 
         if (self.frames[SelectAddOn].adult_num == 1 and self.frames[SelectAddOn].child_num == 0) or (self.frames[SelectAddOn].adult_num == 0 and self.frames[SelectAddOn].child_num == 1):
                 self.frames[SelectAddOn].button.config(text = "confirm",command = lambda : self.finish_add_on())
 
-        adult_list = requests.post(str(API_ADULT_LIST),json=data).json()
-        self.frames[SelectAddOn].name_passenger.set(str(adult_list[data["Adult"] - self.frames[SelectAddOn].adult_num]))
-        self.frames[SelectAddOn].name.config(text= "Passenger name: " + str(adult_list[data["Adult"] - self.frames[SelectAddOn].adult_num]))
+        adult_list = requests.post(str(API_ADULT_LIST),json=payload_booking).json()
+        self.frames[SelectAddOn].name_passenger.set(str(adult_list[self.frames[SelectAddOn].adult - self.frames[SelectAddOn].adult_num]))
+        self.frames[SelectAddOn].name.config(text= "Passenger name: " + str(adult_list[self.frames[SelectAddOn].adult - self.frames[SelectAddOn].adult_num]))
         self.frames[SelectAddOn].adult_num -=1
 
-        add_on = requests.post(str(API_ADD_ON),json=data)
+        add_on = requests.post(str(API_ADD_ON),json=payload_booking)
         tk.Label(self.frames[SelectAddOn], text=str(add_on.json()["extra service"][0])).grid(row=4, column=0, padx=10, ipady=5, sticky='E')
         tk.Label(self.frames[SelectAddOn], text=str(add_on.json()["extra service"][1])).grid(row=4, column=3, padx=10, ipady=5, sticky='E')
         tk.Label(self.frames[SelectAddOn], text=str(add_on.json()["extra service"][2])).grid(row=4, column=6, padx=10, ipady=5, sticky='E')
@@ -669,7 +736,7 @@ class Application(tk.Tk):
         tk.Label(self.frames[SelectAddOn], text=str(add_on.json()["special assistance"][4])).grid(row=7, column=3, padx=10, ipady=5, sticky='E')
         tk.Label(self.frames[SelectAddOn], text=str(add_on.json()["special assistance"][5])).grid(row=7, column=6, padx=10, ipady=5, sticky='E')
 
-        seat_list = requests.post(str(API_SEAT+data["Flight name"]),json=data)
+        seat_list = requests.post(str(API_SEAT+payload_booking["Flight name"]),json=payload_booking)
         for i in seat_list.json()['Seat']:
             st = str(str(i[0])+" "+str(i[1])+" "+str(i[2]))
             self.frames[SelectAddOn].seat_list.append(st)
@@ -707,10 +774,9 @@ class Application(tk.Tk):
 
     def next_add_on(self):
         payload = {
-                    "Booking ID": data['Booking ID'],
-                    "Origin airport":data['Origin airport'],
-                    "Destination airport":data['Destination airport'],
-                    "Date depart":data['Date depart'],
+                    "Booking ID": self.frames[SelectAddOn].booking_id,
+                    "Flight name":self.frames[SelectAddOn].flight_name,
+                    "Date depart":self.frames[SelectAddOn].date,
                     "select_seat": self.frames[SelectAddOn].select_seat.get(),
                     "FastTrack": self.frames[SelectAddOn].FastTrack.get(),
                     "Insurance": self.frames[SelectAddOn].Insurance.get(),
@@ -727,23 +793,23 @@ class Application(tk.Tk):
                     "Special_baggage": self.frames[SelectAddOn].Special_baggage.get(),
                     "Name" : self.frames[SelectAddOn].name_passenger.get()
                     }
-        response = requests.post(str(API_CREATE_TICKET+data["Flight name"]),json=payload)
+        response = requests.post(str(API_CREATE_TICKET+payload["Flight name"]),json=payload)
         if response.ok:
             if (self.frames[SelectAddOn].adult_num == 1 and self.frames[SelectAddOn].child_num == 0) or (self.frames[SelectAddOn].adult_num == 0 and self.frames[SelectAddOn].child_num == 1):
                 self.frames[SelectAddOn].button.config(text = "confirm",command = lambda : self.finish_add_on())
 
             if self.frames[SelectAddOn].adult_num > 0:
-                adult_list = requests.post(str(API_ADULT_LIST),json=data).json()
-                self.frames[SelectAddOn].name_passenger.set(str(adult_list[data["Adult"] - self.frames[SelectAddOn].adult_num]))
-                self.frames[SelectAddOn].name.config(text= "Passenger name: " + str(adult_list[data["Adult"] - self.frames[SelectAddOn].adult_num]))
+                adult_list = requests.post(str(API_ADULT_LIST),json=payload).json()
+                self.frames[SelectAddOn].name_passenger.set(str(adult_list[self.frames[SelectAddOn].adult - self.frames[SelectAddOn].adult_num]))
+                self.frames[SelectAddOn].name.config(text= "Passenger name: " + str(adult_list[self.frames[SelectAddOn].adult - self.frames[SelectAddOn].adult_num]))
                 self.frames[SelectAddOn].adult_num -=1
             elif self.frames[SelectAddOn].child_num > 0:
-                child_list = requests.post(str(API_CHILD_LIST),json=data).json()
-                self.frames[SelectAddOn].name_passenger.set(str(child_list[data["Child"] - self.frames[SelectAddOn].child_num]))
-                self.frames[SelectAddOn].name.config(text= "Passenger name: " + str(child_list[data["Child"] - self.frames[SelectAddOn].child_num]))
+                child_list = requests.post(str(API_CHILD_LIST),json=payload).json()
+                self.frames[SelectAddOn].name_passenger.set(str(child_list[self.frames[SelectAddOn].child - self.frames[SelectAddOn].child_num]))
+                self.frames[SelectAddOn].name.config(text= "Passenger name: " + str(child_list[self.frames[SelectAddOn].child - self.frames[SelectAddOn].child_num]))
                 self.frames[SelectAddOn].child_num -=1
             
-            add_on = requests.post(str(API_ADD_ON),json=data)
+            add_on = requests.post(str(API_ADD_ON),json=payload)
             tk.Label(self.frames[SelectAddOn], text=str(add_on.json()["extra service"][0])).grid(row=4, column=0, padx=10, ipady=5, sticky='E')
             tk.Label(self.frames[SelectAddOn], text=str(add_on.json()["extra service"][1])).grid(row=4, column=3, padx=10, ipady=5, sticky='E')
             tk.Label(self.frames[SelectAddOn], text=str(add_on.json()["extra service"][2])).grid(row=4, column=6, padx=10, ipady=5, sticky='E')
@@ -784,10 +850,9 @@ class Application(tk.Tk):
     
     def finish_add_on(self):
         payload = {
-                    "Booking ID": data['Booking ID'],
-                    "Origin airport":data['Origin airport'],
-                    "Destination airport":data['Destination airport'],
-                    "Date depart":data['Date depart'],
+                    "Booking ID": self.frames[SelectAddOn].booking_id,
+                    "Flight name":self.frames[SelectAddOn].flight_name,
+                    "Date depart":self.frames[SelectAddOn].date,
                     "select_seat": self.frames[SelectAddOn].select_seat.get(),
                     "FastTrack": self.frames[SelectAddOn].FastTrack.get(),
                     "Insurance": self.frames[SelectAddOn].Insurance.get(),
@@ -804,16 +869,21 @@ class Application(tk.Tk):
                     "Special_baggage": self.frames[SelectAddOn].Special_baggage.get(),
                     "Name" : self.frames[SelectAddOn].name_passenger.get()
                     } 
-        response = requests.post(str(API_CREATE_TICKET+data["Flight name"]),json=payload)
+        response = requests.post(str(API_CREATE_TICKET+payload["Flight name"]),json=payload)
         if response.ok:
             row = 1
-            ticket_summary = requests.post(API_TICKET_SUMMARY,json=data).json()
+
+            self.frames[PaymentSummary].date = response.json()["Date depart"]
+            self.frames[PaymentSummary].flight_name = response.json()["Flight name"]
+            self.frames[PaymentSummary].booking_id = response.json()["Booking ID"]
+
+            ticket_summary = requests.post(API_TICKET_SUMMARY,json=payload).json()
             for ticket in ticket_summary:
                 for key,value in ticket.items():
                     tk.Label(self.frames[PaymentSummary],text=str(key+" "+value)).grid(row=row,column=0, sticky='W')
                     row += 1
             
-            sum_price = requests.post(API_SUM_PRICE,json=data).json()
+            sum_price = requests.post(API_SUM_PRICE,json=payload).json()
             tk.Label(self.frames[PaymentSummary],text="Payment info").grid(row=0,column=0, sticky='E')
             tk.Label(self.frames[PaymentSummary],text="Adult price: " + str(sum_price["Flight price"][0]) + "Baht").grid(row=1,column=1, sticky='E')
             tk.Label(self.frames[PaymentSummary],text="Child price: " + str(sum_price["Flight price"][1]) + "Baht").grid(row=2,column=1, sticky='E')
@@ -832,10 +902,9 @@ class Application(tk.Tk):
 
     def submit_code(self,promotion_code):
         payload = { 
-                    "Origin airport" : data["Origin airport"],
-                    "Date depart" : data["Date depart"],
-                    "Flight name" : data["Flight name"],
-                    "Booking ID" : data["Booking ID"],
+                    "Date depart" : self.frames[PaymentSummary].date,
+                    "Flight name" : self.frames[PaymentSummary].flight_name,
+                    "Booking ID" : self.frames[PaymentSummary].booking_id,
                     "Promotion code" : promotion_code
                     }
         response = requests.post(API_PROMOTION,json=payload)
@@ -847,42 +916,42 @@ class Application(tk.Tk):
             else:
                 self.frames[PaymentSummary].total_price.config(text = "Total price: " + str(response.json()) + "Baht")
 
-    def submit_payment_type(self,payment_type):
+    def submit_payment_type(self,payment_type,date,flight_name,booking_id):
         payment_type_list = requests.get(API_PAYMENT_TYPE).json()
+        page = None
         if payment_type == payment_type_list[0]:
-            self.frames[PaymentSummary].forget()
-            self.frames[CreditPayment].tkraise()
-            self.frames[CreditPayment].pack(padx = 100, pady = 50)
+            page = CreditPayment
         elif payment_type == payment_type_list[1]:
-            self.frames[PaymentSummary].forget()
-            self.frames[QRPayment].tkraise()
-            self.frames[QRPayment].pack(padx = 100, pady = 50)
+            page = QRPayment
         elif payment_type == payment_type_list[2]:
+            page = CounterServicePayment
+        if page != None:
             self.frames[PaymentSummary].forget()
-            self.frames[CounterServicePayment].tkraise()
-            self.frames[CounterServicePayment].pack(padx = 100, pady = 50)
+            self.frames[page].date = date
+            self.frames[page].flight_name = flight_name
+            self.frames[page].booking_id = booking_id
+            self.frames[page].tkraise()
+            self.frames[page].pack(padx = 100, pady = 50)
         else:
             messagebox.showerror("Error","Please select payment type")
 
     def qr_submit(self):
         payload = { 
-                    "Origin airport" : data["Origin airport"],
-                    "Date depart" : data["Date depart"],
-                    "Flight name" : data["Flight name"],
-                    "Booking ID" : data["Booking ID"],
+                    "Date depart" : self.frames[QRPayment].date,
+                    "Flight name" : self.frames[QRPayment].flight_name,
+                    "Booking ID" : self.frames[QRPayment].booking_id,
                     "Phone number" : self.frames[QRPayment].phone_number.get()
                     }
         response = requests.post(API_QR_CODE,json=payload)
         if response.ok:
             self.frames[QRPayment].forget()
-            self.show_ticket()
+            self.show_ticket(self.frames[QRPayment].date,self.frames[QRPayment].flight_name,self.frames[QRPayment].booking_id)
     
     def credit_submit(self):
         payload = { 
-                    "Origin airport" : data["Origin airport"],
-                    "Date depart" : data["Date depart"],
-                    "Flight name" : data["Flight name"],
-                    "Booking ID" : data["Booking ID"],
+                    "Date depart" : self.frames[CreditPayment].date,
+                    "Flight name" : self.frames[CreditPayment].flight_name,
+                    "Booking ID" : self.frames[CreditPayment].booking_id,
                     "Card number" : self.frames[CreditPayment].card_number.get(),
                     "Expired date" : self.frames[CreditPayment].expired_date.get(),
                     "Card holder" : self.frames[CreditPayment].card_holder.get(),
@@ -891,25 +960,29 @@ class Application(tk.Tk):
         response = requests.post(API_CREDIT_CARD,json=payload)
         if response.ok:
             self.frames[CreditPayment].forget()
-            self.show_ticket()
+            self.show_ticket(self.frames[CreditPayment].date,self.frames[CreditPayment].flight_name,self.frames[CreditPayment].booking_id)
     
     def counter_submit(self):
         payload = { 
-                    "Origin airport" : data["Origin airport"],
-                    "Date depart" : data["Date depart"],
-                    "Flight name" : data["Flight name"],
-                    "Booking ID" : data["Booking ID"],
+                    "Date depart" : self.frames[CounterServicePayment].date,
+                    "Flight name" : self.frames[CounterServicePayment].flight_name,
+                    "Booking ID" : self.frames[CounterServicePayment].booking_id,
                     "Phone number" : self.frames[CounterServicePayment].phone_number.get()
                     }
         response = requests.post(API_COUNTER,json=payload)
         if response.ok:
             self.frames[CounterServicePayment].forget()
-            self.show_ticket()
+            self.show_ticket(self.frames[CounterServicePayment].date,self.frames[CounterServicePayment].flight_name,self.frames[CounterServicePayment].booking_id)
 
-    def show_ticket(self):
-        tk.Label(self.frames[ShowTicket],text="Booking ID: "+ str(data["Booking ID"])).grid(row=0,column=0)
+    def show_ticket(self,date,flight_name,booking_id):
+        tk.Label(self.frames[ShowTicket],text="Booking ID: "+ str(booking_id)).grid(row=0,column=0)
 
-        response = requests.post(str(API_FLIGHT_DETAIL+data["Flight name"]),json=data)
+        payload = { 
+                    "Date depart" : date,
+                    "Flight name" : flight_name,
+                    "Booking ID" : booking_id,
+                    }
+        response = requests.post(str(API_FLIGHT_DETAIL+flight_name),json=payload)
         if response.ok:
             flight_data = response.json()
             flight_detail = str("Flight name: " + flight_data["Name"] + "  " + "Origin Airport: " + flight_data["Origin Airport"] + "  " + "Time Depart: " + flight_data["Time Depart"] + "\n" +
@@ -917,7 +990,7 @@ class Application(tk.Tk):
                                 "Flight Duration: " + str(flight_data["Flight Duration"]) + " minute  " + "Date Depart: " + flight_data["Date Depart"] + "\n")
             tk.Label(self.frames[ShowTicket],text=flight_detail).grid(row=1,column=0)
         
-        ticket_summary = requests.post(API_TICKET_SUMMARY,json=data).json()
+        ticket_summary = requests.post(API_TICKET_SUMMARY,json=payload).json()
         passenger_list = []
         for ticket in ticket_summary:
             key_list = []
@@ -965,6 +1038,9 @@ class AdminLoginPage(tk.Frame):
 class AdminPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
+
+        self.username = ""
+        self.password = ""
 
         # create flight
         self.name = tk.StringVar()
@@ -1094,6 +1170,9 @@ class SearchFlight(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
+        self.origin_airport = ""
+        self.destination_airport = ""
+
         #select origin airport
         self.OAP_list = ["-"]
         self.selectOAP = tk.StringVar(self)
@@ -1102,7 +1181,7 @@ class SearchFlight(tk.Frame):
         tk.Label(self, text = "Select origin airport").grid(row=0,column=0,columnspan=2, padx=10, ipady=5, sticky='W')
         self.oap_om = tk.OptionMenu(self,self.selectOAP,*self.OAP_list)
         self.oap_om.grid(row=0,column=2,columnspan=2)
-        tk.Button(self,text="Submit", bg="green",command= lambda: controller.oap_submit(self.selectOAP.get())).grid(row=0,column=4,columnspan=2)
+        tk.Button(self,text="Submit", bg="green",command= lambda: controller.oap_submit()).grid(row=0,column=4,columnspan=2)
 
         #select destination airport
         self.DAP_list = ["-"]
@@ -1112,7 +1191,7 @@ class SearchFlight(tk.Frame):
         tk.Label(self, text = "Select Destination airport").grid(row=1,column=0,columnspan=2, padx=10, ipady=5, sticky='W')
         self.dap_om = tk.OptionMenu(self,self.selectDAP,*self.DAP_list)
         self.dap_om.grid(row=1,column=2,columnspan=2)
-        tk.Button(self,text="Submit", bg="green",command= lambda: controller.dap_submit(self.selectDAP.get())).grid(row=1,column=4,columnspan=2)
+        tk.Button(self,text="Submit", bg="green",command= lambda: controller.dap_submit()).grid(row=1,column=4,columnspan=2)
 
         #select date
         self.date_list = ["-"]
@@ -1137,6 +1216,11 @@ class SearchFlight(tk.Frame):
 class SelectFlight(tk.Frame):
     def __init__(self, parent):
         tk.Frame.__init__(self, parent)
+        self.date_depart = ""
+        self.adult = 0
+        self.child = 0
+        self.infant = 0
+
         self.flight_list = ["-"]
         self.package_list = ["-"]
         self.select_flight = tk.StringVar(self)
@@ -1148,6 +1232,12 @@ class PassengerInfo(tk.Frame):
     def __init__(self, parent):
         tk.Frame.__init__(self, parent)
 
+        self.date = ""
+        self.flight_name = ""
+        self.booking_id = 0
+        self.adult = 0
+        self.child = 0
+        self.infant = 0
         self.adult_num = 0
         self.child_num = 0
         self.infant_num = 0
@@ -1178,6 +1268,11 @@ class SelectAddOn(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
+        self.date = ""
+        self.flight_name = ""
+        self.booking_id = ""
+        self.adult = 0
+        self.child = 0
         self.adult_num = 0
         self.child_num = 0
 
@@ -1197,7 +1292,7 @@ class SelectAddOn(tk.Frame):
         self.meal_amount = tk.IntVar()
         self.Special_baggage = tk.StringVar()
 
-        self.meal_number = [1,2,3]
+        self.meal_number = [0,1,2,3]
         self.baggage_size = [7,15,20,25,30]
         self.special_baggage_list = ['No selection','Bicycle',20 ,25 ,30 ]
         self.seat_list = []
@@ -1256,11 +1351,15 @@ class SelectAddOn(tk.Frame):
 
         self.button = tk.Button(self, text="Next",bg="green", command= lambda: controller.next_add_on())
         self.button.grid(row=11, column=3, columnspan=2)
-        tk.Button(self, text="Back",bg="green", command= lambda: controller.back_to_passenger()).grid(row=11, column=2)
+        tk.Button(self, text="Back",bg="green", command= lambda: controller.back_to_passenger(self.date,self.flight_name,self.booking_id)).grid(row=11, column=2)
 
 class PaymentSummary(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
+
+        self.date = ""
+        self.flight_name = ""
+        self.booking_id = ""
 
         self.total_price = tk.Label(self,text="")
         self.total_price.grid(row=6,column=1, sticky='E')
@@ -1269,14 +1368,17 @@ class PaymentSummary(tk.Frame):
         self.payment_type.set("Plaese select")
         tk.Entry(self, textvariable=self.promotion_code, width=12).grid(row=7, column=1, padx=10)
         tk.Button(self,text= "Add code",command=lambda: controller.submit_code(self.promotion_code.get())).grid(row=7, column=2, sticky='E')
-        tk.Button(self,text= "Submit",command=lambda: controller.submit_payment_type(self.payment_type.get())).grid(row=8, column=2, sticky='E')
+        tk.Button(self,text= "Submit",command=lambda: controller.submit_payment_type(self.payment_type.get(),self.date,self.flight_name,self.booking_id)).grid(row=8, column=2, sticky='E')
 
         self.pack(padx = 100, pady = 10)
 
 class QRPayment(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
-        
+
+        self.date = ""
+        self.flight_name = ""
+        self.booking_id = ""
         self.phone_number = tk.StringVar()
 
         tk.Label(self,text="1. Key *481*111# Press Call on your Mobile Phone").grid(row=0,column=0,columnspan=2)
@@ -1294,6 +1396,9 @@ class CounterServicePayment(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
+        self.date = ""
+        self.flight_name = ""
+        self.booking_id = ""
         self.phone_number = tk.StringVar()
 
         tk.Label(self,text="1. Key *481*111# Press Call on your Mobile Phone").grid(row=0,column=0,columnspan=2)
@@ -1308,6 +1413,9 @@ class CreditPayment(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
 
+        self.date = ""
+        self.flight_name = ""
+        self.booking_id = ""
         self.card_number = tk.IntVar()
         self.expired_date = tk.StringVar()
         self.card_holder = tk.StringVar()

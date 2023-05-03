@@ -1,5 +1,4 @@
 from enum import Enum
-from promotion import PromotionCatalog
 
 class Payment:
     def __init__(self,id,payment_status):
