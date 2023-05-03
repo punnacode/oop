@@ -34,7 +34,7 @@ class Passenger:
         return self._date_of_birth
                         
     def add_parent(self,passenger):
-        if isinstance(passenger,Passenger) and passenger._type == "INFANT" and self._type != "INFANT" :
+        if (isinstance(passenger,Passenger) or isinstance(passenger,InternationalPassenger)) and passenger._type == "INFANT" and self._type != "INFANT" :
             self.parent.append(passenger)
         else:
             raise TypeError("Parameter type not correct")
@@ -50,12 +50,6 @@ class InternationalPassenger(Passenger):
         self._passport_number = passport_number
         self._issued_by = issued_by
         self._passport_exp_date = passport_exp_date
-    
-    def add_parent(self,passenger):
-        if isinstance(passenger,Passenger) and passenger._type == "INFANT" and self._type != "INFANT" :
-            self.parent.append(passenger)
-        else:
-            raise TypeError("Parameter type not correct")
         
     def __str__(self):
         passenger_str = f"\nType:{self._type}\nTitle:{self._title}\nName:{self._name}\nLastname:{self._last_name}\nbirthdate:{self._date_of_birth}"
