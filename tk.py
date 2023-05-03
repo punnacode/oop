@@ -775,6 +775,9 @@ class Application(tk.Tk):
         self.frames[SelectAddOn].pack(padx = 100, pady = 50)
 
     def next_add_on(self):
+        if self.frames[SelectAddOn].select_seat.get() == "Please select" or (self.frames[SelectAddOn].meal_amount.get() != 0 and self.frames[SelectAddOn].meal.get() == "NONE"):
+            messagebox.showerror("Error","Please enter infomation")
+            return
         payload = {
                     "Booking ID": self.frames[SelectAddOn].booking_id,
                     "Flight name":self.frames[SelectAddOn].flight_name,
@@ -849,10 +852,14 @@ class Application(tk.Tk):
             self.frames[SelectAddOn].baggage.set(add_on.json()['package'][0][2]['_extra_bag']) 
 
             self.frames[SelectAddOn].meal.set(add_on.json()['meal'][0])
+            self.frames[SelectAddOn].meal_amount.set(add_on.json()['package'][0][3]['_meal_amount'])
 
             self.frames[SelectAddOn].Special_baggage.set(self.frames[SelectAddOn].special_baggage_list[0])
     
     def finish_add_on(self):
+        if self.frames[SelectAddOn].select_seat.get() == "Please select" or (self.frames[SelectAddOn].meal_amount.get() != 0 and self.frames[SelectAddOn].meal.get() == "NONE"):
+            messagebox.showerror("Error","Please enter infomation")
+            return
         payload = {
                     "Booking ID": self.frames[SelectAddOn].booking_id,
                     "Flight name":self.frames[SelectAddOn].flight_name,
