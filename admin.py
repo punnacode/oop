@@ -16,12 +16,12 @@ class Adminlist:
     
     def login(self,username,password):
         for i in self._admin_list:
-            if username == i._username and password == i._password:
+            if username == i.username and password == i.password:
                 return i
             
     def check(self,username,password):
         for i in self._admin_list:
-            if username == i._username and password == i._password:
+            if username == i.username and password == i.password:
                 return True
             else:
                 return False
@@ -30,6 +30,14 @@ class Admin:
     def __init__(self, username, password):
         self._username = username
         self._password = password
+
+    @property
+    def username(self):
+        return self._username
+    
+    @property
+    def password(self):
+        return self._password
 
     def create_flight(self,name,flight_duration,international,depart_airport,arrive_airport,system):
         if isinstance(name,str) and isinstance(flight_duration,int) and isinstance(international,bool) and isinstance(depart_airport,Airport) and isinstance(arrive_airport,Airport) and isinstance(system,System):
