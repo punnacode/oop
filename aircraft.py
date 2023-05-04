@@ -84,4 +84,9 @@ class AircraftCatalog:
             
     def get_list_aircraft(self):
         return self._aircraft_list
+    
+    def search_aircraft(self,aircraft):
+        for i in self._aircraft_list:
+            if aircraft == i._name:
+                return i
          

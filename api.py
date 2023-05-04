@@ -163,7 +163,6 @@ async def create_flight(flight:dict):
     
 @app.post("/flight_instance",tags=["admin"]) #Check
 async def create_flight_instance(flight_instance : dict):
-    aircraft_list = aircraftcatalog.get_list_aircraft()
     username = flight_instance["Username"]
     password = flight_instance["Password"]
     depart_airport = flight_instance["Depart Airport"]
@@ -173,11 +172,7 @@ async def create_flight_instance(flight_instance : dict):
     time_arrive = flight_instance["Time Arrive"]
     aircraft = flight_instance["Aircraft"]
     price = flight_instance["Price"]
-
-    for i in aircraft_list:
-        if aircraft == i._name:
-            ac = i
-            break 
+    ac = aircraftcatalog.search_aircraft(aircraft)
     
     depa = system.search_airport(depart_airport)
     
