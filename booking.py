@@ -82,12 +82,6 @@ class Booking:
     def ticket(self):
         return self._ticket
         
-    def set_num_passenger(self,adult_num,kid_num,infant_num):
-        self._adult_num = adult_num
-        self._kid_num = kid_num
-        self._infant_num = infant_num
-        return [self._adult_num,self._kid_num,self._infant_num]
-        
     def add_passenger(self,passenger):
         self._passenger_list.append(passenger)
         return self._passenger_list
