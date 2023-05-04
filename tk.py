@@ -633,6 +633,15 @@ class Application(tk.Tk):
                 for widjet in self.frames[PassengerInfo].winfo_children():
                     widjet.destroy()
 
+                if self.frames[PassengerInfo].infant == self.frames[PassengerInfo].infant_num and self.frames[PassengerInfo].adult_num == 0 and self.frames[PassengerInfo].child_num == 0 and self.frames[PassengerInfo].infant_num > 0:
+                        self.frames[PassengerInfo].adult_list = requests.post(API_ADULT_LIST,json=payload).json()
+                elif self.frames[PassengerInfo].infant > self.frames[PassengerInfo].infant_num and self.frames[PassengerInfo].adult_num == 0 and self.frames[PassengerInfo].child_num == 0 and self.frames[PassengerInfo].infant_num > 0:
+                    print("check",self.frames[PassengerInfo].select_adult_list.get())
+                    for adult in self.frames[PassengerInfo].adult_list:
+                        if adult == self.frames[PassengerInfo].select_adult_list.get():
+                            print("del")
+                            self.frames[PassengerInfo].adult_list.remove(adult)
+
                 self.frames[PassengerInfo].select_passenger_title.set('')
                 self.frames[PassengerInfo].name.set('')
                 self.frames[PassengerInfo].last_name.set('')
@@ -695,8 +704,7 @@ class Application(tk.Tk):
                     title_om.config(width=10)
                     title_om.grid(row=1,column=1)
                     tk.Label(self.frames[PassengerInfo], text="Parent :").grid(row=12, column=0,padx=10, ipady=5, sticky='E')
-                    adult_list = requests.post(API_ADULT_LIST,json=payload).json()
-                    adult_list_om = tk.OptionMenu(self.frames[PassengerInfo],self.frames[PassengerInfo].select_adult_list,*adult_list)
+                    adult_list_om = tk.OptionMenu(self.frames[PassengerInfo],self.frames[PassengerInfo].select_adult_list,*self.frames[PassengerInfo].adult_list)
                     adult_list_om.config(width=10)
                     adult_list_om.grid(row=12,column=1)
                     tk.Label(self.frames[PassengerInfo],text=str("Infant : " + str(self.frames[PassengerInfo].infant - self.frames[PassengerInfo].infant_num))).grid(row=0,column=0,padx=10, ipady=5, sticky='E')
@@ -1252,6 +1260,7 @@ class PassengerInfo(tk.Frame):
         self.adult_num = 0
         self.child_num = 0
         self.infant_num = 0
+        self.adult_list = []
 
         self.select_passenger_type = tk.StringVar()
         self.select_passenger_title = tk.StringVar()
