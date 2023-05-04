@@ -1,6 +1,6 @@
 from promotion import Promotion
 from airport import Airport, System
-from aircraft import Aircraft
+from aircraft import Aircraft,SeatBook
 from flight import Flight, FlightInstance
 from booking import Booking
 
@@ -79,7 +79,7 @@ class Admin:
             seat_list = booking._flight.aircraft.seat_list
             for i in seat_list:
                 if edit_seat_row == i.seat_row and edit_seat_column == i.seat_column:
-                    new = i
+                    new = SeatBook(False,i.seat_row,i.seat_column,i.seat_type)
                     break
             booking.seat_book.remove(book)
             booking.seat_book.append(new)
@@ -88,7 +88,7 @@ class Admin:
                 if seatbook == ticket.seatbook:
                     tk = ticket
                     break
-            tk.seatbook = i
+            tk.seatbook = new
         else:
             raise TypeError("Parameter type not correct")
         
