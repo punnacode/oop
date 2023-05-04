@@ -106,17 +106,11 @@ class FlightInstance(Flight):
         if isinstance(flight_instance,FlightInstance) and isinstance(package,Package) and isinstance(adult,int) and isinstance(child,int) and isinstance(infant,int):
             booking = Booking(flight_instance,package,adult,child,infant)
             payment = booking.create_payment()
-            payment.add_booking(booking)
+            #payment.add_booking(booking)
             self._booking.append(booking)
         else:
             raise TypeError("please check payment status")
         return booking.id
-
-    def add_booking(self,booking):
-        if booking.payment_status == True:
-            self._booking.append(booking)
-        else:
-            raise TypeError("please check payment status")
         
     def get_booking(self,booking_id):
         for booking in self._booking:

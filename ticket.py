@@ -9,9 +9,6 @@ class Ticket:
         self._specialbaggage = specialbaggage
         self._specialAssistance = specialAssistance
 
-    def get_ticket():
-        pass
-
     def get_seat_book(self):
         return self._seatbook
     

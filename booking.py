@@ -99,9 +99,6 @@ class Booking:
     def create_ticket(self, passenger, seatbook, extraservice, baggage, meal, specialbaggage,specialAssistance):
             self._ticket.append(Ticket(self._flight, passenger, seatbook, extraservice, baggage, meal, specialbaggage,specialAssistance))
 
-    def add_book_seat(self,book_seat):
-        return self.seat_book.append(book_seat)
-
     def create_seatbook(self,row,column):
         seat_list = self._flight.aircraft.seat_list
         for seat in seat_list:
