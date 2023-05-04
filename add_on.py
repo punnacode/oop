@@ -108,9 +108,6 @@ class SpecialAssistance:
             i += 1
         return specialassitance_list
 
-    def get_specialassistance():
-        pass
-
 class Baggage:
     def __init__(self,extra_bag):
         self._extra_bag = extra_bag
@@ -123,8 +120,6 @@ class Baggage:
         if self._extra_bag != 0:
             return self._extra_bag
         return
-    
-    
         
 class Meal:
     def __init__(self,meal_type,meal_amout):
